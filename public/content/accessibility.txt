@@ -1,0 +1,49 @@
+## **Accessibility Statement**
+
+Houston Cardiology Consultants (“HCC”) is committed to ensuring digital accessibility for all patients, including those with disabilities. We are actively working to improve the usability of our website and digital tools, and to make our online presence accessible to the widest possible audience.
+
+---
+
+### **Our Commitment**
+
+We strive to meet the **Web Content Accessibility Guidelines (WCAG) 2.1, Level AA** standards, which help make content accessible to individuals with vision, hearing, cognitive, and mobility impairments.
+
+Our accessibility efforts include:
+
+- Providing clear and consistent navigation
+- Ensuring all form fields are properly labeled
+- Supporting screen reader and keyboard-only navigation
+- Offering alt-text for images and visual content
+- Using appropriate color contrast for text visibility
+
+---
+
+### **Assistance and Alternative Access**
+
+If you encounter any accessibility barriers on our website or need assistance accessing any part of it, we are here to help.
+
+You may contact us via:
+
+- **Phone:** 713‑464‑4140
+- **Email:** info@hccheart.com
+- **Office Visits:** Accessible facilities available at both locations
+
+We will do our best to provide the information or services you need through alternative methods if necessary.
+
+---
+
+### **Ongoing Improvements**
+
+We regularly evaluate our digital tools and content for accessibility improvements. We welcome feedback and suggestions to make our services more accessible to all.
+
+---
+
+### **Feedback**
+
+If you have feedback or suggestions regarding the accessibility of this website, please contact us at:
+
+**Houston Cardiology Consultants**
+
+Email: info@hccheart.com
+
+Phone: 713‑464‑4140

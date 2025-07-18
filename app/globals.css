@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* background.default: #FFFFFF */
+    --foreground: 222.2 84% 4.9%; /* text.primary: #1A202C */
+
+    --card: 0 0% 100%; /* background.surface: #FFFFFF */
+    --card-foreground: 222.2 84% 4.9%; /* text.primary: #1A202C */
+
+    --popover: 0 0% 100%; /* background.surface: #FFFFFF */
+    --popover-foreground: 222.2 84% 4.9%; /* text.primary: #1A202C */
+
+    --primary: 0 72.2% 50.6%; /* primary.500: #E53E3E */
+    --primary-foreground: 0 0% 100%; /* text.onPrimary: #FFFFFF */
+
+    --secondary: 210 11% 92%; /* background.muted: #E9EBED */
+    --secondary-foreground: 215.4 16.3% 46.9%; /* text.secondary: #4A5568 */
+
+    --muted: 210 11% 92%; /* background.muted: #E9EBED */
+    --muted-foreground: 215 13.8% 46.5%; /* text.muted: #718096 */
+
+    --accent: 210 11% 92%; /* #E9EBED */
+    --accent-foreground: 222.2 84% 4.9%; /* text.primary: #1A202C */
+
+    --destructive: 0 72.2% 50.6%; /* state.error: #E53E3E */
+    --destructive-foreground: 0 0% 100%; /* text.onPrimary: #FFFFFF */
+
+    --border: 215.2 20.2% 65.1%; /* border.default: #CBD5E0 */
+    --input: 215.2 20.2% 65.1%; /* border.default: #CBD5E0 */
+    --ring: 0 72.2% 50.6%; /* primary.500: #E53E3E */
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 220 13% 5%; /* background.default: #0D1117 */
+    --foreground: 210 40% 96.1%; /* text.primary: #E2E8F0 */
+
+    --card: 216 15% 14%; /* background.surface: #1E2228 */
+    --card-foreground: 210 40% 96.1%; /* text.primary: #E2E8F0 */
+
+    --popover: 216 15% 14%; /* background.surface: #1E2228 */
+    --popover-foreground: 210 40% 96.1%; /* text.primary: #E2E8F0 */
+
+    --primary: 0 89.7% 67.8%; /* primary.500: #F56565 */
+    --primary-foreground: 222.2 84% 4.9%; /* text.primary (light): #1A202C for contrast */
+
+    --secondary: 215 28% 11%; /* background.muted: #161B22 */
+    --secondary-foreground: 210 16.7% 69%; /* text.secondary: #A0AEC0 */
+
+    --muted: 215 28% 11%; /* background.muted: #161B22 */
+    --muted-foreground: 215 13.8% 46.5%; /* text.muted: #718096 */
+
+    --accent: 222.2 22.2% 22.9%; /* border.default: #2D3748 */
+    --accent-foreground: 210 40% 96.1%; /* text.primary: #E2E8F0 */
+
+    --destructive: 0 89.7% 67.8%; /* state.error: #F56565 */
+    --destructive-foreground: 222.2 84% 4.9%; /* text.primary (light): #1A202C for contrast */
+
+    --border: 222.2 22.2% 22.9%; /* border.default: #2D3748 */
+    --input: 222.2 22.2% 22.9%; /* border.default: #2D3748 */
+    --ring: 0 89.7% 67.8%; /* primary.500: #F56565 */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+}
