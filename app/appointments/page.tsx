@@ -12,7 +12,7 @@ export default function AppointmentsPage() {
     <>
       <SectionWrapper className="bg-muted/20 pt-12 pb-12">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Appointments & Requests</h1>
+          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Appointments & Requests</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Select the appropriate form for your needs. Our team will respond within 1 business day.
           </p>

@@ -10,7 +10,7 @@ export default function AboutUsPage() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">About HCC</h1>
+          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">About Us</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Our commitment to compassionate, state-of-the-art cardiac care.
           </p>

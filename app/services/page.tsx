@@ -18,55 +18,63 @@ const services = [
           "A quick, painless test that records your heart's electrical activity to detect rhythm abnormalities, previous heart attacks, and other cardiac conditions.",
         detailedDescription:
           "A 10-minute test where small electrodes are attached to your chest, arms, and legs to record your heart's electrical activity. It's painless and requires no special preparation. It helps detect arrhythmias, previous heart attacks, and overall heart rhythm abnormalities.",
+        duration: "10 minutes",
       },
       {
         name: "Echocardiogram",
         defaultDescription:
           "An ultrasound imaging test that provides detailed pictures of your heart's structure, function, and blood flow through the heart chambers and valves.",
         detailedDescription:
-          "An ultrasound of your heart performed while you lie on your side. A technician moves a probe across your chest to visualize heart structure and function. No preparation needed. It helps detect valve issues, heart failure, and congenital defects.",
+          "An ultrasound of your heart performed while you lie on your side. A technician moves a probe across your chest to visualize heart structure and function. No preparation needed. Takes 30–45 minutes. It helps detect valve issues, heart failure, and congenital defects.",
+        duration: "30–45 minutes",
       },
       {
         name: "Doppler Ultrasound",
         defaultDescription:
           "A non-invasive imaging test that uses sound waves to evaluate blood flow through your arteries and veins, helping detect blockages or circulation problems.",
         detailedDescription:
-          "This test evaluates blood flow through vessels using sound waves. A gel is applied to the skin and a handheld probe is used to scan. Non-invasive and painless. Often used to check for clots, venous insufficiency, or blocked arteries.",
+          "This test evaluates blood flow through vessels using sound waves. A gel is applied to the skin and a handheld probe is used to scan. Non-invasive and painless. Lasts about 30 minutes. Often used to check for clots, venous insufficiency, or blocked arteries.",
+        duration: "30 minutes",
       },
       {
         name: "ABI (Ankle-Brachial Index)",
         defaultDescription:
           "A simple test that compares blood pressure in your arms and ankles to screen for peripheral artery disease and circulation problems in your legs.",
         detailedDescription:
-          "Blood pressure cuffs are placed on your arms and ankles to assess circulation. No fasting needed. Identifies peripheral artery disease early, especially in patients with leg pain or diabetes.",
+          "Blood pressure cuffs are placed on your arms and ankles to assess circulation. Typically completed in 15–20 minutes. No fasting needed. Identifies peripheral artery disease early, especially in patients with leg pain or diabetes.",
+        duration: "15–20 minutes",
       },
       {
         name: "Cardiac CT",
         defaultDescription:
           "Advanced imaging that creates detailed 3D pictures of your heart and coronary arteries to assess calcium buildup and detect blockages.",
         detailedDescription:
-          "A fast, high-resolution X-ray that provides a 3D image of your heart and arteries. Often requires a contrast dye and fasting for 4 hours prior. Commonly used to evaluate calcium scores and coronary anatomy.",
+          "A fast, high-resolution X-ray that provides a 3D image of your heart and arteries. Often requires a contrast dye and fasting for 4 hours prior. The scan itself takes 10–15 minutes. Commonly used to evaluate calcium scores and coronary anatomy.",
+        duration: "10–15 minutes",
       },
       {
         name: "Cardiac PET/CT",
         defaultDescription:
           "A sophisticated imaging test that combines two technologies to evaluate blood flow to your heart muscle and detect areas of damage or disease.",
         detailedDescription:
-          "A powerful imaging test combining PET and CT scans to assess blood flow and detect damage or disease in heart tissue. You may need to avoid caffeine or beta-blockers before the exam. Very effective in diagnosing coronary artery disease and viability of heart muscle.",
+          "A powerful imaging test combining PET and CT scans to assess blood flow and detect damage or disease in heart tissue. You may need to avoid caffeine or beta-blockers before the exam. Total time: 1.5–2 hours. Very effective in diagnosing coronary artery disease and viability of heart muscle.",
+        duration: "1.5–2 hours",
       },
       {
         name: "Nuclear Stress Test",
         defaultDescription:
           "A comprehensive test that evaluates how well blood flows to your heart muscle during rest and stress, helping identify blockages in coronary arteries.",
         detailedDescription:
-          "Involves a resting scan, a stress phase (via treadmill or medication), and another scan after activity. Radioactive dye is used to trace blood flow. Detailed instructions are provided ahead of time. Excellent for detecting blockages or ischemia.",
+          "Involves a resting scan, a stress phase (via treadmill or medication), and another scan after activity. Radioactive dye is used to trace blood flow. Duration: 2–4 hours. Detailed instructions are provided ahead of time. Excellent for detecting blockages or ischemia.",
+        duration: "2–4 hours",
       },
       {
         name: "AAA Screening",
         defaultDescription:
           "A quick ultrasound screening to check for abdominal aortic aneurysm, an enlargement of the main artery in your abdomen that can be life-threatening if undetected.",
         detailedDescription:
-          "An ultrasound of the abdomen to screen for abdominal aortic aneurysm. Non-invasive. Recommended for men over 65 or those with a smoking history. No prep needed unless specified.",
+          "An ultrasound of the abdomen to screen for abdominal aortic aneurysm. Non-invasive, takes 10–15 minutes. Recommended for men over 65 or those with a smoking history. No prep needed unless specified.",
+        duration: "10–15 minutes",
       },
     ],
   },
@@ -79,20 +87,23 @@ const services = [
           "A non-invasive treatment that improves blood flow to your heart by using external pressure cuffs, helping reduce chest pain and improve exercise tolerance.",
         detailedDescription:
           "Enhanced External Counterpulsation is a series of one-hour sessions where cuffs inflate on your legs in sync with your heartbeat. Non-invasive, done daily for about 7 weeks. No downtime. Improves circulation, especially in those with angina or heart failure.",
+        duration: "1 hour per session",
       },
       {
         name: "Vein Ablation",
         defaultDescription:
           "A minimally invasive procedure to treat varicose veins and venous insufficiency by closing problematic veins, improving circulation and reducing leg pain.",
         detailedDescription:
-          "A catheter-based procedure using heat or chemicals to close varicose or incompetent veins. Done under local anesthesia. You may wear compression stockings afterward. Quick return to activities. Often improves leg pain and swelling.",
+          "A catheter-based procedure using heat or chemicals to close varicose or incompetent veins. Done under local anesthesia in 30–60 minutes. You may wear compression stockings afterward. Quick return to activities. Often improves leg pain and swelling.",
+        duration: "30–60 minutes",
       },
       {
         name: "Pacemaker Services",
         defaultDescription:
           "Comprehensive care for patients with slow or irregular heart rhythms, including pacemaker implantation, monitoring, and ongoing device management.",
         detailedDescription:
-          "For patients with slow or irregular heart rhythms, we offer pacemaker implantation and ongoing management. The procedure is done under mild sedation. Follow-up includes regular device checks and adjustments as needed.",
+          "For patients with slow or irregular heart rhythms, we offer pacemaker implantation and ongoing management. The procedure takes 1–2 hours under mild sedation. Follow-up includes regular device checks and adjustments as needed.",
+        duration: "1–2 hours",
       },
     ],
   },
@@ -104,14 +115,16 @@ const services = [
         defaultDescription:
           "Comprehensive cardiovascular risk assessments designed to identify potential heart problems early and develop personalized prevention strategies.",
         detailedDescription:
-          "Comprehensive workups that include blood pressure, labs, EKGs, and risk factor analysis. Useful for individuals with family history or early signs of heart disease. Patients leave with actionable recommendations.",
+          "Comprehensive workups that include blood pressure, labs, EKGs, and risk factor analysis. Takes about 60–90 minutes. Useful for individuals with family history or early signs of heart disease. Patients leave with actionable recommendations.",
+        duration: "60–90 minutes",
       },
       {
         name: "Intensive Cardiac Rehab",
         defaultDescription:
           "A medically supervised program combining exercise, education, and lifestyle counseling to help patients recover from heart events and improve long-term outcomes.",
         detailedDescription:
-          "A structured program over several weeks involving supervised exercise, dietary counseling, stress management, and education. Proven to reduce hospital readmissions and improve quality of life.",
+          "A structured program over several weeks involving supervised exercise, dietary counseling, stress management, and education. Sessions are 1 hour, 2–3 times per week. Proven to reduce hospital readmissions and improve quality of life.",
+        duration: "1 hour per session",
       },
       {
         name: "Lifestyle & Risk Assessments",
@@ -119,6 +132,7 @@ const services = [
           "Personalized consultations focused on identifying cardiovascular risk factors and creating tailored lifestyle modification plans for optimal heart health.",
         detailedDescription:
           "30–60 minute consultations reviewing lifestyle habits, family history, and risk scores. Includes education on diet, activity, smoking cessation, and stress. Custom prevention plans are developed.",
+        duration: "30–60 minutes",
       },
     ],
   },
@@ -137,7 +151,8 @@ const services = [
         defaultDescription:
           "Convenient virtual consultations with your cardiologist from the comfort of your home or office, perfect for follow-ups and medication management.",
         detailedDescription:
-          "Remote visits via secure video from your home or office. Ideal for follow-ups or medication discussions. No special setup—just a phone, tablet, or computer with internet.",
+          "Remote visits via secure video from your home or office. Ideal for follow-ups or medication discussions. Scheduled in 15–30 minute slots. No special setup—just a phone, tablet, or computer with internet.",
+        duration: "15–30 minutes",
       },
       {
         name: "Preoperative Clearances",
@@ -145,6 +160,7 @@ const services = [
           "Rapid cardiovascular assessments required before non-cardiac surgery to ensure your heart is ready for the procedure and minimize surgical risks.",
         detailedDescription:
           "Comprehensive cardiovascular assessment required before non-cardiac surgery. Includes history review, physical exam, EKG, and possibly imaging. Coordinated quickly, often within 24–48 hours. Reports are sent directly to your surgical team.",
+        duration: "24–48 hours (coordination)",
       },
     ],
   },
@@ -155,7 +171,7 @@ export default function ServicesPage() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Our Services</h1>
+          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Our Services</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             We offer a full spectrum of cardiology services, diagnostics, and therapies tailored to your specific needs.
             All care is delivered with precision, compassion, and the latest medical technologies.
@@ -165,7 +181,7 @@ export default function ServicesPage() {
 
       {services.map((serviceCategory) => (
         <SectionWrapper key={serviceCategory.category} className="py-12 md:py-20">
-          <h2 className="text-3xl font-bold tracking-tight text-center mb-12">{serviceCategory.category}</h2>
+          <h2 className="text-xl font-bold tracking-tight text-center mb-6 sm:text-2xl md:text-3xl">{serviceCategory.category}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {serviceCategory.items.map((item) => (
               <ServiceCard
@@ -173,6 +189,7 @@ export default function ServicesPage() {
                 name={item.name}
                 defaultDescription={item.defaultDescription}
                 detailedDescription={item.detailedDescription}
+                duration={item.duration}
               />
             ))}
           </div>
@@ -265,10 +282,12 @@ function ServiceCard({
   name,
   defaultDescription,
   detailedDescription,
+  duration,
 }: {
   name: string
   defaultDescription: string
   detailedDescription: string
+  duration?: string
 }) {
   // Parse the detailed description to extract key information for hover state
   const parseServiceInfo = (desc: string) => {
@@ -295,7 +314,7 @@ function ServiceCard({
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col group">
       {/* Default View */}
-      <div className="group-hover:hidden flex flex-col h-[480px]">
+      <div className="group-hover:hidden flex flex-col min-h-[480px] h-full">
         <CardContent className="p-6 flex flex-col h-full">
           <h3 className="text-xl font-semibold mb-4">{name}</h3>
           <p className="text-muted-foreground leading-relaxed flex-grow">{defaultDescription}</p>
@@ -303,30 +322,26 @@ function ServiceCard({
       </div>
 
       {/* Hover View */}
-      <div className="hidden group-hover:flex group-hover:flex-col h-[480px]">
-        {/* Image placeholder - full width */}
-        <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0">
-          <Stethoscope className="h-8 w-8 text-primary/60" />
-        </div>
-
+      <div className="hidden group-hover:flex group-hover:flex-col min-h-[480px] h-full">
         <CardContent className="p-6 flex flex-col flex-grow">
           <h3 className="text-xl font-semibold mb-4">{name}</h3>
-
+          {/* Image placeholder - full width */}
+          <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
+            <Stethoscope className="h-8 w-8 text-primary/60" />
+          </div>
           {/* Main description */}
           <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>
-
           {/* Key details section */}
           <div className="space-y-3 pt-4 border-t border-muted flex-shrink-0">
-            {serviceInfo.duration && (
+            {duration && (
               <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 rounded-full bg-red-600 mt-2 flex-shrink-0"></div>
                 <div>
-                  <span className="text-xs font-medium text-primary uppercase tracking-wide">Duration</span>
-                  <p className="text-sm text-muted-foreground">{serviceInfo.duration}</p>
+                  <span className="text-xs font-medium text-red-600 uppercase tracking-wide">Duration</span>
+                  <p className="text-sm text-red-600">{duration}</p>
                 </div>
               </div>
             )}
-
             {serviceInfo.preparation && (
               <div className="flex items-start gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500 mt-2 flex-shrink-0"></div>
@@ -336,7 +351,6 @@ function ServiceCard({
                 </div>
               </div>
             )}
-
             {serviceInfo.process && (
               <div className="flex items-start gap-2">
                 <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
