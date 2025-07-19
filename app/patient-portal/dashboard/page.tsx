@@ -25,7 +25,7 @@ export default function PatientPortalDashboard() {
   return (
     <>
       <SectionWrapper className="bg-muted/20 pt-12 pb-12">
-        <div className="container">
+        <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold tracking-tighter">Welcome, {patientName}</h1>
           <p className="text-muted-foreground mt-2">
             Last Login: {new Date().toLocaleString()} | Your health information is securely stored and accessible 24/7.

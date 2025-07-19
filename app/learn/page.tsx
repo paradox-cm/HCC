@@ -219,12 +219,12 @@ export default function LearnPage() {
   return (
     <>
       {/* Sticky Sub-navigation */}
-      <div className="sticky top-[96px] z-30 inset-x-0 container">
-        <div className="flex h-auto md:h-16 items-center justify-between rounded-2xl border bg-background/90 backdrop-blur-sm px-4 flex-col md:flex-row gap-4 py-4 md:py-0">
-          <div className="flex items-center gap-4">
-            <Label className="text-sm font-medium">Topic:</Label>
+      <div className="sticky top-[96px] z-30 inset-x-0 px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8">
+        <div className="flex h-auto md:h-16 items-center justify-between rounded-2xl border bg-background/90 backdrop-blur-sm px-4 flex-row gap-2 py-3 md:py-0 max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 flex-1">
+            <Label className="text-xs font-medium hidden sm:block">Topic:</Label>
             <Select value={activeCategory} onValueChange={setActiveCategory}>
-              <SelectTrigger className="w-full md:w-[240px]">
+              <SelectTrigger className="w-full text-xs h-8 md:h-10 md:w-[240px]">
                 <SelectValue placeholder="Select a topic" />
               </SelectTrigger>
               <SelectContent>
@@ -237,10 +237,10 @@ export default function LearnPage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium hidden md:block">Language:</Label>
+          <div className="flex items-center gap-1">
+            <Label className="text-xs font-medium hidden md:block">Language:</Label>
             {languages.map((lang) => (
-              <Button key={lang} variant="outline" size="sm">
+              <Button key={lang} variant="outline" size="sm" className="h-8 px-2 text-xs">
                 {lang}
               </Button>
             ))}

@@ -19,7 +19,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="container h-full flex flex-col pb-12">
+    <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto h-full flex flex-col pb-12">
       <div className="flex-shrink-0 pt-6 flex justify-between items-center">
         <Button variant="outline" onClick={() => router.back()}>
           <ArrowLeft className="mr-2 h-4 w-4" />

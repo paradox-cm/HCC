@@ -47,7 +47,7 @@ export function Footer() {
 
   return (
     <footer className="border-t bg-muted relative z-40">
-      <div className="container py-16">
+      <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto py-16">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           <div className="lg:col-span-1 space-y-6">
             <Link href="/" className="flex items-center gap-2">
