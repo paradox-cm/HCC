@@ -43,10 +43,32 @@ export default function PatientPortalDashboard() {
 
       <SectionWrapper className="pt-0">
         
-        {/* Quick Actions - Mobile-first horizontal scroll */}
+        {/* Quick Actions - Mobile: 2x2 grid, Desktop: horizontal scroll */}
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          
+          {/* Mobile: 2x2 Grid */}
+          <div className="grid grid-cols-2 gap-3 md:hidden">
+            <Button variant="default" className="h-16 flex-col gap-2 p-3">
+              <Calendar className="h-5 w-5" />
+              <span className="text-sm font-medium">Book Appointment</span>
+            </Button>
+            <Button variant="outline" className="h-16 flex-col gap-2 p-3">
+              <MessageSquare className="h-5 w-5" />
+              <span className="text-sm font-medium">Message</span>
+            </Button>
+            <Button variant="outline" className="h-16 flex-col gap-2 p-3">
+              <Pill className="h-5 w-5" />
+              <span className="text-sm font-medium">Refill Rx</span>
+            </Button>
+            <Button variant="outline" className="h-16 flex-col gap-2 p-3">
+              <FileText className="h-5 w-5" />
+              <span className="text-sm font-medium">View Results</span>
+            </Button>
+          </div>
+
+          {/* Desktop/Tablet: Horizontal Scroll */}
+          <div className="hidden md:flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
             <Button size="sm" variant="default" className="flex-shrink-0 px-4 py-2">
               <Calendar className="mr-2 h-4 w-4" />
               Book Appointment
