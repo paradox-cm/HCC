@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useSearchParams } from "next/navigation"
+import { useState, useRef, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -45,7 +44,7 @@ const DOC_TYPES = [
 
 type Document = typeof MOCK_DOCUMENTS[number]
 
-export default function DashboardDocuments() {
+function DashboardDocumentsComponent() {
   const [documents, setDocuments] = useState<Document[]>(MOCK_DOCUMENTS)
   const [showUpload, setShowUpload] = useState(false)
   const [upload, setUpload] = useState({ file: null as File | null, type: "test", notes: "" })
@@ -212,5 +211,13 @@ export default function DashboardDocuments() {
         </Card>
       </SectionWrapper>
     </>
+  )
+}
+
+export default function DashboardDocuments() {
+  return (
+    <Suspense>
+      <DashboardDocumentsComponent />
+    </Suspense>
   )
 } 
