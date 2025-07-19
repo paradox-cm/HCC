@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useSearchParams } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -52,7 +51,7 @@ function getLatestMessage(thread: Thread) {
   return thread.messages[thread.messages.length - 1]
 }
 
-export default function DashboardMessages() {
+function DashboardMessagesComponent() {
   const [threads, setThreads] = useState<Thread[]>(MOCK_THREADS)
   const [expanded, setExpanded] = useState<number | null>(null)
   const [showNew, setShowNew] = useState(false)
@@ -181,5 +180,13 @@ export default function DashboardMessages() {
         </Card>
       </SectionWrapper>
     </>
+  )
+}
+
+export default function DashboardMessages() {
+  return (
+    <Suspense>
+      <DashboardMessagesComponent />
+    </Suspense>
   )
 } 
