@@ -24,17 +24,17 @@ export default function PatientPortalDashboard() {
 
   return (
     <>
-      <SectionWrapper className="bg-muted/20 pt-12 pb-12">
-        <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold tracking-tighter">Welcome, {patientName}</h1>
-          <p className="text-muted-foreground mt-2">
+      <SectionWrapper className="bg-muted/20 pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12">
+        <div className="px-2 sm:px-4 md:px-8 max-w-7xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">Welcome, {patientName}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
             Last Login: {new Date().toLocaleString()} | Your health information is securely stored and accessible 24/7.
           </p>
         </div>
       </SectionWrapper>
 
       <SectionWrapper className="pt-0">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {/* Upcoming Appointments */}
           <DashboardCard
             title="Upcoming Appointments"
@@ -273,14 +273,15 @@ function DashboardCard({
 }) {
   return (
     <Card className="flex flex-col">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          {icon}
-          <CardTitle>{title}</CardTitle>
+      <CardHeader className="p-4 sm:p-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Responsive icon size */}
+          <span className="text-xl sm:text-2xl">{icon}</span>
+          <CardTitle className="text-lg sm:text-xl md:text-2xl">{title}</CardTitle>
         </div>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="text-xs sm:text-sm">{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow">{children}</CardContent>
+      <CardContent className="flex-grow p-4 pt-0 sm:p-6 sm:pt-0">{children}</CardContent>
     </Card>
   )
 }
