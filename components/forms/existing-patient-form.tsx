@@ -5,8 +5,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { format } from "date-fns"
+import { useState } from "react"
+import { Calendar as CalendarIcon } from "lucide-react"
 
 export function ExistingPatientForm() {
+  const [preferredDate, setPreferredDate] = useState<Date | undefined>()
   return (
     <Card className="mt-6">
       <CardHeader>
@@ -41,6 +47,55 @@ export function ExistingPatientForm() {
 
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold mb-2">Appointment Details</legend>
+          <div className="space-y-2">
+            <Label htmlFor="ep-preferred-date">Preferred Appointment Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={preferredDate ? "outline" : "secondary"}
+                  className={"w-full justify-start text-left font-normal flex items-center gap-2" + (preferredDate ? "" : " text-muted-foreground")}
+                  type="button"
+                  id="ep-preferred-date"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {preferredDate ? format(preferredDate, "PPP") : "Select date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 mb-4" align="start">
+                <Calendar
+                  mode="single"
+                  selected={preferredDate}
+                  onSelect={setPreferredDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div className="space-y-2">
+            <Label>Preferred Appointment Days (Select all that apply)</Label>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox id="ep-day-mon" />
+                <Label htmlFor="ep-day-mon">Monday</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="ep-day-tue" />
+                <Label htmlFor="ep-day-tue">Tuesday</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="ep-day-wed" />
+                <Label htmlFor="ep-day-wed">Wednesday</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="ep-day-thu" />
+                <Label htmlFor="ep-day-thu">Thursday</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="ep-day-fri" />
+                <Label htmlFor="ep-day-fri">Friday</Label>
+              </div>
+            </div>
+          </div>
           <div className="space-y-2">
             <Label>Is this appointment related to a recent visit or new symptoms?</Label>
             <RadioGroup defaultValue="routine" disabled>

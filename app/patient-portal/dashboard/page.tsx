@@ -190,8 +190,8 @@ export default function PatientPortalDashboard() {
           {/* Left: Avatar, name/date */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mt-1">
-              <User className="h-6 w-6 text-white" />
-            </div>
+            <User className="h-6 w-6 text-white" />
+          </div>
             <div className="flex flex-col min-w-0">
               <h1 className="text-xl font-bold tracking-tight whitespace-nowrap">Welcome back, {patientName}</h1>
               <p className="text-sm text-muted-foreground whitespace-nowrap">Last login: {new Date().toLocaleDateString()}</p>
@@ -309,7 +309,7 @@ export default function PatientPortalDashboard() {
               ))}
               <div className="flex flex-1 justify-end mt-2">
                 <Button asChild variant="link" className="p-0 h-auto text-sm">
-                  <Link href="/patient-portal/dashboard/messages">View All Messages →</Link>
+                <Link href="/patient-portal/dashboard/messages">View All Messages →</Link>
                 </Button>
               </div>
               <Button asChild size="sm" variant="outline" className="w-full mt-3">
@@ -365,17 +365,17 @@ export default function PatientPortalDashboard() {
                     <div className="font-semibold text-base truncate">{rx.name} <span className="text-xs font-normal text-muted-foreground">{rx.dosage}</span></div>
                     <div className="text-xs text-muted-foreground truncate">{rx.instructions}</div>
                     <div className="text-xs text-muted-foreground mt-1">Status: <span className="font-medium text-primary">{rx.status}</span></div>
-                  </div>
+                </div>
                   <div className="flex flex-col gap-2 min-w-[100px] items-end">
                     {rx.canRefill ? (
                       <Button size="sm" variant="outline" className="border-red-600 text-red-600">Request Refill</Button>
                     ) : (
                       <span className="inline-block bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full text-center">Not Eligible</span>
                     )}
-                  </div>
+              </div>
                 </div>
               ))}
-            </div>
+              </div>
             <div className="flex flex-1 justify-end mt-2">
               <Button asChild variant="link" className="p-0 h-auto text-sm">
                 <Link href="/patient-portal/dashboard/prescriptions">View All Prescriptions →</Link>

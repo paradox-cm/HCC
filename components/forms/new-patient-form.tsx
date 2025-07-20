@@ -5,8 +5,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { format } from "date-fns"
+import { useState } from "react"
+import { Calendar as CalendarIcon } from "lucide-react"
 
 export function NewPatientForm() {
+  const [preferredDate, setPreferredDate] = useState<Date | undefined>()
   return (
     <Card className="mt-6">
       <CardHeader>
@@ -74,6 +80,30 @@ export function NewPatientForm() {
                 <Label htmlFor="np-loc-h">Heights - 509 W Tidwell Rd</Label>
               </div>
             </RadioGroup>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="np-preferred-date">Preferred Appointment Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={preferredDate ? "outline" : "secondary"}
+                  className={"w-full justify-start text-left font-normal flex items-center gap-2" + (preferredDate ? "" : " text-muted-foreground")}
+                  type="button"
+                  id="np-preferred-date"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {preferredDate ? format(preferredDate, "PPP") : "Select date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 mb-4" align="start">
+                <Calendar
+                  mode="single"
+                  selected={preferredDate}
+                  onSelect={setPreferredDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="space-y-2">
             <Label>Preferred Appointment Days (Select all that apply)</Label>
