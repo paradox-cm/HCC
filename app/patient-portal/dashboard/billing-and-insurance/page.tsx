@@ -1,5 +1,6 @@
 "use client"
 
+import React, { Suspense } from "react"
 import { useState } from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
@@ -19,7 +20,6 @@ import {
 import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useSearchParams } from "next/navigation"
-import React from "react"
 
 const MOCK_BILLING = {
   balance: 0.0,
@@ -35,7 +35,7 @@ const MOCK_BILLING = {
   },
 }
 
-export default function DashboardBillingAndInsurance() {
+function BillingAndInsuranceContent() {
   const router = useRouter()
   const searchParams = useSearchParams();
   const [amount, setAmount] = useState("")
@@ -435,5 +435,13 @@ export default function DashboardBillingAndInsurance() {
         </div>
       </SectionWrapper>
     </>
+  )
+}
+
+export default function DashboardBillingAndInsurance() {
+  return (
+    <Suspense>
+      <BillingAndInsuranceContent />
+    </Suspense>
   )
 } 
