@@ -9,7 +9,7 @@ export default function TestimonialsPage() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Patient Testimonials</h1>
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl fade-in-up">Patient Testimonials</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Hear directly from our patients about their experiences at Houston Cardiology Consultants.
           </p>

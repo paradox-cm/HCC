@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react"
 import { useChat } from "@/components/chat/chat-provider"
 import Image from "next/image"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, ArrowUp } from "lucide-react"
 
 const linkCategories = [
   {
@@ -70,6 +70,10 @@ export function Footer() {
     setWaMsg("")
   }
 
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
   return (
     <footer className="border-t bg-muted relative z-40">
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto py-16">
@@ -115,11 +119,22 @@ export function Footer() {
             ))}
           </div>
         </div>
+        <div className="flex justify-end mb-2">
+          <Button
+            variant="secondary"
+            size="icon"
+            className="rounded-full border"
+            aria-label="Scroll to top"
+            onClick={handleScrollTop}
+          >
+            <ArrowUp className="h-5 w-5" />
+          </Button>
+        </div>
         <div className="mt-12 border-t pt-8 flex justify-between items-center gap-4 flex-wrap">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Houston Cardiology Consultants. All Rights Reserved.
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Button variant="default" onClick={handleChatOpen}>
               Chat with us
             </Button>

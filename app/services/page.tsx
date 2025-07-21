@@ -5,8 +5,12 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Stethoscope, CheckCircle } from "lucide-react"
+import { Stethoscope, CheckCircle, ChevronDown, ChevronUp } from "lucide-react"
 import Link from "next/link"
+import { useState, useEffect } from "react"
+import { useRef } from "react"
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const services = [
   {
@@ -167,8 +171,110 @@ const services = [
 ]
 
 export default function ServicesPage() {
+  const [expandedCard, setExpandedCard] = useState<string | null>(null)
+  const [expandedSections, setExpandedSections] = useState<{ [category: string]: boolean }>(() => {
+    const initial: { [category: string]: boolean } = {}
+    services.forEach(s => { initial[s.category] = true })
+    return initial
+  })
+  const isMobile = useIsMobile()
+  const [showFixedSubnav, setShowFixedSubnav] = useState(false)
+
+  // Refs for scrolling and active category
+  const sectionRefs = useRef<{ [category: string]: HTMLDivElement | null }>({})
+  const [activeCategory, setActiveCategory] = useState<string>(services[0].category)
+
+  const handleScrollTo = (category: string) => {
+    const el = sectionRefs.current[category]
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }
+
+  // Active category highlight on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      let found = services[0].category
+      for (const s of services) {
+        const ref = sectionRefs.current[s.category]
+        if (ref) {
+          const top = ref.getBoundingClientRect().top + window.scrollY - 120 // 120px offset for nav/subnav
+          if (scrollY >= top) {
+            found = s.category
+          }
+        }
+      }
+      setActiveCategory(found)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Show fixed subnav when original is out of view
+  useEffect(() => {
+    const handleScroll = () => {
+      const subnav = document.getElementById("category-subnav-anchor")
+      if (subnav) {
+        const { top } = subnav.getBoundingClientRect()
+        setShowFixedSubnav(top <= 80) // 80px header height
+      }
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
     <>
+      {/* Anchor for subnav position */}
+      <div id="category-subnav-anchor"></div>
+      {/* Fixed subnav (appears after scroll) */}
+      {showFixedSubnav && (
+        <div className="fixed top-20 left-0 w-full z-50 flex justify-center mt-4 pointer-events-none">
+          {isMobile ? (
+            <div className="pointer-events-auto max-w-7xl w-full px-4">
+              <Select value={activeCategory} onValueChange={val => handleScrollTo(val)}>
+                <SelectTrigger className="w-full rounded-lg border bg-white/70 dark:bg-background/80 backdrop-blur shadow-sm">
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {services.map((serviceCategory) => (
+                    <SelectItem key={serviceCategory.category} value={serviceCategory.category}>
+                      {serviceCategory.category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : (
+            <div className="w-full px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8">
+              <nav
+                className="pointer-events-auto w-full max-w-7xl mx-auto rounded-lg border bg-white/70 dark:bg-background/80 backdrop-blur shadow-sm"
+                aria-label="Service Categories"
+              >
+                <ul className="flex flex-wrap justify-center gap-2 py-2">
+                  {services.map((serviceCategory, idx) => (
+                    <li key={serviceCategory.category}>
+                      <button
+                        onClick={() => handleScrollTo(serviceCategory.category)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium border border-muted-foreground/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60
+                          ${activeCategory === serviceCategory.category
+                            ? "bg-primary text-primary-foreground shadow"
+                            : "bg-muted hover:bg-primary hover:text-primary-foreground"
+                        }`}
+                        type="button"
+                        aria-current={activeCategory === serviceCategory.category ? "page" : undefined}
+                      >
+                        {serviceCategory.category}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          )}
+        </div>
+      )}
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">Our Services</h1>
@@ -176,22 +282,88 @@ export default function ServicesPage() {
             We offer a full spectrum of cardiology services, diagnostics, and therapies tailored to your specific needs.
             All care is delivered with precision, compassion, and the latest medical technologies.
           </p>
+          {/* Original subnav (in flow) - hide on scroll */}
+          <nav
+            className={`py-2 mb-2 transition-opacity duration-200 ${showFixedSubnav ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            aria-label="Service Categories"
+          >
+            <ul className="flex flex-wrap justify-center gap-2">
+              {services.map((serviceCategory) => (
+                <li key={serviceCategory.category}>
+                  <button
+                    onClick={() => handleScrollTo(serviceCategory.category)}
+                    className="px-4 py-2 rounded-full text-sm font-medium border border-muted-foreground/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 bg-muted hover:bg-primary hover:text-primary-foreground"
+                    type="button"
+                  >
+                    {serviceCategory.category}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </SectionWrapper>
 
       {services.map((serviceCategory) => (
-        <SectionWrapper key={serviceCategory.category} className="py-12 md:py-20">
-          <h2 className="text-xl font-bold tracking-tight text-center mb-6 sm:text-2xl md:text-3xl">{serviceCategory.category}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {serviceCategory.items.map((item) => (
-              <ServiceCard
-                key={item.name}
-                name={item.name}
-                defaultDescription={item.defaultDescription}
-                detailedDescription={item.detailedDescription}
-                duration={item.duration}
-              />
-            ))}
+        <SectionWrapper
+          key={serviceCategory.category}
+          className="py-4 md:py-8 relative z-0 !bg-transparent"
+        >
+          <div
+            ref={el => { sectionRefs.current[serviceCategory.category] = el; }}
+            id={serviceCategory.category.replace(/\s+/g, "-").toLowerCase()}
+            className="scroll-mt-[152px]"
+          >
+            <div className="flex items-center justify-between mb-2 border-b pb-2">
+              <h2 className="text-xl font-bold tracking-tight text-left sm:text-2xl md:text-3xl">
+                {serviceCategory.category}
+              </h2>
+              <button
+                type="button"
+                aria-label={expandedSections[serviceCategory.category] ? `Collapse ${serviceCategory.category}` : `Expand ${serviceCategory.category}`}
+                aria-expanded={expandedSections[serviceCategory.category]}
+                aria-controls={serviceCategory.category.replace(/\s+/g, "-").toLowerCase() + "-section"}
+                onClick={() => setExpandedSections(s => ({ ...s, [serviceCategory.category]: !s[serviceCategory.category] }))}
+                className="ml-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+              >
+                {expandedSections[serviceCategory.category] ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
+              </button>
+            </div>
+            {/* Category description (generic, by type) */}
+            <p className="text-muted-foreground text-sm mb-4 text-left">
+              {serviceCategory.category === "Diagnostics" &&
+                "Comprehensive tests and imaging to evaluate your heart’s structure, function, and blood flow, helping diagnose a wide range of cardiovascular conditions."
+              }
+              {serviceCategory.category === "Treatments & Therapies" &&
+                "Advanced procedures and therapies designed to treat heart disease, improve circulation, and support your recovery and long-term heart health."
+              }
+              {serviceCategory.category === "Cardiac Wellness" &&
+                "Preventive care, lifestyle guidance, and rehabilitation programs to help you maintain optimal heart health and reduce your risk of future problems."
+              }
+              {serviceCategory.category === "Special Services" &&
+                "Personalized and innovative services, including telemedicine and preoperative clearances, to meet unique patient needs and provide convenient, accessible care."
+              }
+            </p>
+            <div
+              id={serviceCategory.category.replace(/\s+/g, "-").toLowerCase() + "-section"}
+              className={`transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden ${expandedSections[serviceCategory.category] ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              aria-hidden={!expandedSections[serviceCategory.category]}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
+                {serviceCategory.items.map((item) => (
+                  <ServiceCard
+                    key={item.name}
+                    name={item.name}
+                    defaultDescription={item.defaultDescription}
+                    detailedDescription={item.detailedDescription}
+                    duration={item.duration}
+                    expanded={expandedCard === item.name}
+                    onExpand={() => setExpandedCard(expandedCard === item.name ? null : item.name)}
+                    isMobile={isMobile}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </SectionWrapper>
       ))}
@@ -283,11 +455,17 @@ function ServiceCard({
   defaultDescription,
   detailedDescription,
   duration,
+  expanded,
+  onExpand,
+  isMobile,
 }: {
   name: string
   defaultDescription: string
   detailedDescription: string
   duration?: string
+  expanded?: boolean
+  onExpand?: () => void
+  isMobile?: boolean
 }) {
   // Parse the detailed description to extract key information for hover state
   const parseServiceInfo = (desc: string) => {
@@ -311,58 +489,114 @@ function ServiceCard({
 
   const serviceInfo = parseServiceInfo(detailedDescription)
 
+  // Responsive: mobile = accordion, md+ = hover/expand
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col group">
-      {/* Default View */}
-      <div className="group-hover:hidden flex flex-col min-h-[480px] h-full">
+    <Card className={"overflow-hidden transition-all duration-300 flex flex-col group z-10 hover:z-20 " + (expanded ? "shadow-lg -translate-y-1" : "") + " " + (isMobile ? "cursor-pointer" : "hover:shadow-lg hover:-translate-y-1")}> 
+      {/* Mobile: Accordion */}
+      <div
+        className={
+          "flex flex-col " +
+          (isMobile ? "" : "group-hover:hidden min-h-[480px] h-full")
+        }
+        style={isMobile ? { minHeight: 0, height: 'auto' } : {}}
+        onClick={isMobile ? onExpand : undefined}
+      >
         <CardContent className="p-6 flex flex-col h-full">
-          <h3 className="text-xl font-semibold mb-4">{name}</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold mb-4">{name}</h3>
+            {isMobile && (
+              <button type="button" className="ml-2" onClick={onExpand} aria-label={expanded ? "Collapse" : "Expand"}>
+                {expanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              </button>
+            )}
+          </div>
           <p className="text-muted-foreground leading-relaxed flex-grow">{defaultDescription}</p>
         </CardContent>
       </div>
-
-      {/* Hover View */}
-      <div className="hidden group-hover:flex group-hover:flex-col min-h-[480px] h-full">
-        <CardContent className="p-6 flex flex-col flex-grow">
-          <h3 className="text-xl font-semibold mb-4">{name}</h3>
-          {/* Image placeholder - full width */}
-          <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
-            <Stethoscope className="h-8 w-8 text-primary/60" />
-          </div>
-          {/* Main description */}
-          <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>
-          {/* Key details section */}
-          <div className="space-y-3 pt-4 border-t border-muted flex-shrink-0">
-            {duration && (
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-600 mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-xs font-medium text-red-600 uppercase tracking-wide">Duration</span>
-                  <p className="text-sm text-red-600">{duration}</p>
+      {/* Mobile: Expanded details */}
+      {isMobile && expanded && (
+        <div className="flex flex-col">
+          <CardContent className="p-6 pt-0 flex flex-col">
+            <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
+              <Stethoscope className="h-8 w-8 text-primary/60" />
+            </div>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>
+            <div className="space-y-3 pt-4 border-t border-muted flex-shrink-0">
+              {duration && (
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-600 mt-2 flex-shrink-0"></div>
+                  <div>
+                    <span className="text-xs font-medium text-red-600 uppercase tracking-wide">Duration</span>
+                    <p className="text-sm text-red-600">{duration}</p>
+                  </div>
                 </div>
-              </div>
-            )}
-            {serviceInfo.preparation && (
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500 mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-xs font-medium text-green-700 uppercase tracking-wide">Preparation</span>
-                  <p className="text-sm text-muted-foreground">{serviceInfo.preparation}</p>
+              )}
+              {serviceInfo.preparation && (
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 mt-2 flex-shrink-0"></div>
+                  <div>
+                    <span className="text-xs font-medium text-green-700 uppercase tracking-wide">Preparation</span>
+                    <p className="text-sm text-muted-foreground">{serviceInfo.preparation}</p>
+                  </div>
                 </div>
-              </div>
-            )}
-            {serviceInfo.process && (
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-xs font-medium text-blue-700 uppercase tracking-wide">What to Expect</span>
-                  <p className="text-sm text-muted-foreground">{serviceInfo.process}</p>
+              )}
+              {serviceInfo.process && (
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
+                  <div>
+                    <span className="text-xs font-medium text-blue-700 uppercase tracking-wide">What to Expect</span>
+                    <p className="text-sm text-muted-foreground">{serviceInfo.process}</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </div>
+              )}
+            </div>
+          </CardContent>
+        </div>
+      )}
+      {/* Desktop/Tablet: Hover View */}
+      {!isMobile && (
+        <div className="hidden group-hover:flex group-hover:flex-col min-h-[480px] h-full">
+          <CardContent className="p-6 flex flex-col flex-grow">
+            <h3 className="text-xl font-semibold mb-4">{name}</h3>
+            {/* Image placeholder - full width */}
+            <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
+              <Stethoscope className="h-8 w-8 text-primary/60" />
+            </div>
+            {/* Main description */}
+            <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>
+            {/* Key details section */}
+            <div className="space-y-3 pt-4 border-t border-muted flex-shrink-0">
+              {duration && (
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-600 mt-2 flex-shrink-0"></div>
+                  <div>
+                    <span className="text-xs font-medium text-red-600 uppercase tracking-wide">Duration</span>
+                    <p className="text-sm text-red-600">{duration}</p>
+                  </div>
+                </div>
+              )}
+              {serviceInfo.preparation && (
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 mt-2 flex-shrink-0"></div>
+                  <div>
+                    <span className="text-xs font-medium text-green-700 uppercase tracking-wide">Preparation</span>
+                    <p className="text-sm text-muted-foreground">{serviceInfo.preparation}</p>
+                  </div>
+                </div>
+              )}
+              {serviceInfo.process && (
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
+                  <div>
+                    <span className="text-xs font-medium text-blue-700 uppercase tracking-wide">What to Expect</span>
+                    <p className="text-sm text-muted-foreground">{serviceInfo.process}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </div>
+      )}
     </Card>
   )
 }

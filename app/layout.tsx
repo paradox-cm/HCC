@@ -7,6 +7,9 @@ import { Footer } from "@/components/layout/footer"
 import { ChatbotPlaceholder } from "@/components/chatbot-placeholder"
 import { ChatWidget } from "@/components/chat/chat-widget"
 import { ChatProvider } from "@/components/chat/chat-provider"
+// Remove usePathname from here
+// Client-only wrapper for ChatWidget
+import ClientOnlyChatWidget from "@/components/ClientOnlyChatWidget"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,6 +27,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // If using app directory and server components, usePathname must be used in a client component
+  // So, we need a ClientWrapper for this logic
   return (
     <html lang="en">
       <body className={`${inter.className} bg-background text-foreground`}>
@@ -31,7 +36,8 @@ export default function RootLayout({
           <Header />
           <main className="flex-grow pt-28">{children}</main>
           <ChatbotPlaceholder />
-          <ChatWidget />
+          {/* Only show ChatWidget if not on /chat (client-only check) */}
+          <ClientOnlyChatWidget />
           <Footer />
         </ChatProvider>
       </body>

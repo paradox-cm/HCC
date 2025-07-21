@@ -2,37 +2,88 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Send, Minus, Maximize2, X } from "lucide-react"
+import { Send, Minus, Maximize2, X, User, RotateCcw, Download, Square } from "lucide-react"
 import { useChat } from "./chat-provider"
 import Link from "next/link"
 
+// Master list of 20 conversation starters
+const SUGGESTIONS = [
+  "I’d like to schedule an appointment.",
+  "Can I reschedule or cancel my appointment?",
+  "What are your clinic hours and locations?",
+  "I need help with my bill or insurance.",
+  "How do I access my test results?",
+  "Can I get a prescription refill?",
+  "I have a question about my medication.",
+  "How do I contact my doctor?",
+  "What should I bring to my appointment?",
+  "I’m a new patient. How do I register?",
+  "Can I speak with a nurse?",
+  "I need help with the patient portal.",
+  "What services do you offer?",
+  "How do I prepare for my procedure?",
+  "I have a question about my symptoms.",
+  "Can I get a copy of my medical records?",
+  "How do I update my personal information?",
+  "I need directions to the clinic.",
+  "What insurance plans do you accept?",
+  "I want to provide feedback about my visit."
+]
+
+function getRandomSuggestions() {
+  // Always include the first two
+  const fixed = SUGGESTIONS.slice(0, 2)
+  // Get 3 random from the rest
+  const rest = SUGGESTIONS.slice(2)
+  const shuffled = rest.sort(() => 0.5 - Math.random())
+  return [...fixed, ...shuffled.slice(0, 3)]
+}
+
 export function ChatWidget() {
-  const { isChatOpen, setChatOpen, isChatMinimized, setChatMinimized, messages, addMessage } = useChat()
+  const { isChatOpen, setChatOpen, isChatMinimized, setChatMinimized, messages, addMessage, clearChat, exportChat } = useChat()
   const [input, setInput] = useState("")
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [isAnswering, setIsAnswering] = useState(false)
+  const answerTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    setSuggestions(getRandomSuggestions())
+  }, [])
 
   if (!isChatOpen) return null
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim()) return
+    if (!input.trim() || isAnswering) return
 
     // Add user message
     addMessage(input.trim(), "user")
+    setIsAnswering(true)
 
     // Simulate assistant response
-    setTimeout(() => {
+    answerTimeout.current = setTimeout(() => {
       addMessage(
         "Thank you for your message. This is a simulated response. Our AI integration is coming soon!",
         "assistant",
       )
+      setIsAnswering(false)
+      answerTimeout.current = null
     }, 1000)
 
     setInput("")
+  }
+
+  const handleStop = () => {
+    if (answerTimeout.current) {
+      clearTimeout(answerTimeout.current)
+      answerTimeout.current = null
+    }
+    setIsAnswering(false)
   }
 
   return (
@@ -46,8 +97,7 @@ export function ChatWidget() {
           >
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" alt="HCC Assistant" />
-                <AvatarFallback>HA</AvatarFallback>
+                <AvatarImage src="/images/hcc-logo.png" alt="HCC Assistant" className="w-1/2 h-1/2 object-contain mx-auto my-auto" />
               </Avatar>
               <div>
                 <CardTitle className="text-sm">HCC Assistant</CardTitle>
@@ -73,8 +123,7 @@ export function ChatWidget() {
           <CardHeader className="flex flex-row items-center justify-between p-4 border-b">
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" alt="HCC Assistant" />
-                <AvatarFallback>HA</AvatarFallback>
+                <AvatarImage src="/images/hcc-logo.png" alt="HCC Assistant" className="w-1/2 h-1/2 object-contain mx-auto my-auto" />
               </Avatar>
               <div>
                 <CardTitle className="text-sm">HCC Assistant</CardTitle>
@@ -100,11 +149,29 @@ export function ChatWidget() {
           </CardHeader>
 
           <CardContent className="flex-grow overflow-y-auto p-4 space-y-4 bg-muted/40">
+            {/* Suggestion bubbles */}
+            {suggestions.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {suggestions.map((s, i) => (
+                  <Button
+                    key={i}
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    className="rounded-full px-3 py-1 text-xs"
+                    onClick={() => setInput(s)}
+                  >
+                    {s}
+                  </Button>
+                ))}
+              </div>
+            )}
+            {/* Chat messages */}
             {messages.slice(-10).map((message) => (
               <div key={message.id} className={`flex items-end gap-2 ${message.role === "user" ? "justify-end" : ""}`}>
                 {message.role === "assistant" && (
                   <Avatar className="h-6 w-6">
-                    <AvatarFallback className="text-xs">HA</AvatarFallback>
+                    <AvatarImage src="/images/hcc-logo.png" alt="HCC Assistant" className="w-1/2 h-1/2 object-contain mx-auto my-auto" />
                   </Avatar>
                 )}
                 <div
@@ -116,14 +183,14 @@ export function ChatWidget() {
                 </div>
                 {message.role === "user" && (
                   <Avatar className="h-6 w-6">
-                    <AvatarFallback className="text-xs">U</AvatarFallback>
+                    <AvatarFallback className="text-xs"><User className="w-4 h-4" /></AvatarFallback>
                   </Avatar>
                 )}
               </div>
             ))}
           </CardContent>
 
-          <CardFooter className="p-3 border-t">
+          <CardFooter className="p-3 border-t flex flex-col gap-0">
             <form onSubmit={handleSubmit} className="flex w-full items-center space-x-2">
               <Textarea
                 placeholder="Type your message..."
@@ -138,11 +205,36 @@ export function ChatWidget() {
                   }
                 }}
               />
-              <Button type="submit" size="icon" className="h-8 w-8" disabled={!input.trim()}>
-                <Send className="h-3 w-3" />
-                <span className="sr-only">Send</span>
-              </Button>
+              {isAnswering ? (
+                <Button type="button" size="icon" className="h-8 w-8 bg-destructive hover:bg-destructive/80" onClick={handleStop}>
+                  <Square className="h-3 w-3" />
+                  <span className="sr-only">Stop</span>
+                </Button>
+              ) : (
+                <Button type="submit" size="icon" className="h-8 w-8" disabled={!input.trim()}>
+                  <Send className="h-3 w-3" />
+                  <span className="sr-only">Send</span>
+                </Button>
+              )}
             </form>
+            <div className="w-full flex flex-row justify-between items-center mt-2">
+              <button
+                type="button"
+                onClick={exportChat}
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Download className="w-3 h-3" />
+                <span>Export chat</span>
+              </button>
+              <button
+                type="button"
+                onClick={clearChat}
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>Reset chat</span>
+              </button>
+            </div>
           </CardFooter>
         </Card>
       )}

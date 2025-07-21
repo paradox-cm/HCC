@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -5,10 +7,12 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { ArrowRight, Calendar, HeartHandshake, Pill, Video } from "lucide-react"
 import Link from "next/link"
 import { DoctorProfileCard } from "@/components/doctor-profile-card"
+import { useEffect, useState } from "react"
 
 export default function HomePage() {
   return (
     <>
+      <CookieBanner />
       {/* Hero Section */}
       <SectionWrapper className="bg-muted/20">
         <div className="flex flex-col items-center gap-8 text-center">
@@ -57,14 +61,14 @@ export default function HomePage() {
           </p>
         </div>
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          <DoctorProfileCard name="Dr. Abdul" title="Cardiologist" />
-          <DoctorProfileCard name="Dr. Asif" title="Interventional Cardiologist" />
-          <DoctorProfileCard name="Dr. Sajid" title="Electrophysiologist" />
+          <DoctorProfileCard name="Dr. Abdul" title="Cardiologist" photo="/dr-abdul-ali.png" />
+          <DoctorProfileCard name="Dr. Asif" title="Interventional Cardiologist" photo="/dr-asif-ali.png" />
+          <DoctorProfileCard name="Dr. Sajid" title="Electrophysiologist" photo="/dr-sajid-ali.png" />
         </div>
         <div className="mt-8 text-center">
           <Button variant="link" asChild>
             <Link href="/about-us">
-              Meet Our Doctors <ArrowRight className="ml-2 h-4 w-4" />
+              Learn More About Us <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -182,5 +186,35 @@ function LocationPreview({ address, mapPlaceholder }: { address: string; mapPlac
         </Button>
       </CardContent>
     </Card>
+  )
+}
+
+function CookieBanner() {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const consent = localStorage.getItem("cookie-consent")
+      if (!consent) setVisible(true)
+    }
+  }, [])
+  const handleConsent = (accepted: boolean) => {
+    localStorage.setItem("cookie-consent", accepted ? "accepted" : "declined")
+    setVisible(false)
+  }
+  if (!visible) return null
+  return (
+    <div className="fixed bottom-0 left-0 w-full z-50 flex justify-center px-2 pb-2 pointer-events-none">
+      <Card className="w-full max-w-7xl mx-auto shadow-lg border bg-background pointer-events-auto">
+        <CardContent className="flex flex-col sm:flex-row items-center gap-4 p-4">
+          <div className="flex-1 text-sm text-muted-foreground text-left">
+            We use cookies to enhance your experience, analyze site usage, and assist in our marketing efforts. By clicking "Accept", you consent to the use of cookies. You can manage your preferences or decline non-essential cookies.
+          </div>
+          <div className="flex gap-2 mt-2 sm:mt-0">
+            <Button size="sm" onClick={() => handleConsent(true)} className="px-4">Accept</Button>
+            <Button size="sm" variant="outline" onClick={() => handleConsent(false)} className="px-4">Decline</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

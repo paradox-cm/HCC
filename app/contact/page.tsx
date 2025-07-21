@@ -11,7 +11,7 @@ export default function ContactPage() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Contact Us</h1>
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl fade-in-up">Contact Us</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             We're here to help. Reach out to us with any questions or concerns.
           </p>

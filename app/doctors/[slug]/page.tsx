@@ -14,7 +14,7 @@ const DOCTORS = [
   {
     slug: "dr-asif-ali",
     name: "Dr. Asif Ali, MD",
-    photo: "/images/hcc-logo.png",
+    photo: "/dr-asif-ali.png",
     title: "Cardiologist | Clinical Assistant Professor | Dysautonomia & POTS Specialist",
     certification: "Board-Certified in Cardiovascular Disease",
     bio: `Dr. Asif Ali is a highly regarded cardiovascular specialist and a key leader at Houston Cardiology Consultants. Known for his clinical expertise, academic involvement, and entrepreneurial innovation, Dr. Ali has been instrumental in the practice’s growth into the Memorial and Spring Branch communities of Houston.\n\nA graduate of McGovern Medical School’s prestigious cardiology fellowship program, Dr. Ali continues to serve as a Clinical Assistant Professor at the institution, where he mentors future physicians and contributes to advancing cardiovascular research.\n\nHe is recognized nationally as a renowned expert in Postural Orthostatic Tachycardia Syndrome (POTS) and dysautonomia care. His practice draws patients from across the region seeking comprehensive evaluation and treatment of these complex autonomic conditions. His innovative approach to managing POTS integrates leading-edge diagnostics, lifestyle-based protocols, and emerging therapies.\n\nDr. Ali also plays a significant role in shaping the future of cardiac care as a member of the national health technology advisory group for the American Heart Association. His insights help guide advancements in cardiovascular innovation and digital health integration.\n\nBeyond clinical practice, Dr. Ali is a serial healthcare entrepreneur. He is the founder of Cena Ventures, a business advisory firm that supports growth-stage healthcare technology companies, reflecting his passion for improving healthcare systems at scale.\n\nHe is widely recognized as a thought leader on topics such as student athlete cardiac arrest, personalized medicine, and the use of digital tools in chronic disease management. He is a frequent speaker at national forums, an active clinical trial investigator, and a published author of experimental papers on the future of cardiovascular healthcare.\n\nUnder Dr. Ali’s leadership, Houston Cardiology Consultants provides flexible, customized care plans tailored to each patient’s unique needs, with a special focus on prevention, education, and long-term wellness.`,
@@ -31,9 +31,9 @@ const DOCTORS = [
     awards: [],
   },
   {
-    slug: "dr-abdul",
+    slug: "dr-abdul-ali",
     name: "Dr. Abdul Ali, MD, FACC",
-    photo: "/images/hcc-logo.png",
+    photo: "/dr-abdul-ali.png",
     title: "Founder | Senior Cardiologist | Mentor in Cardiovascular Excellence",
     certification: "Board-Certified in Cardiovascular Disease",
     bio: `Dr. Abdul Ali is the visionary founder of Houston Cardiology Consultants and a cornerstone of cardiovascular care in Houston since 1979. With nearly five decades of clinical experience, he has earned a reputation for delivering compassionate, deeply personalized heart care to thousands of patients across generations.\n\nDr. Ali received his medical degree from Dow Medical College in Pakistan and completed his residency and fellowship training in the United States. A Fellow of the American College of Cardiology (FACC), he was trained under the legendary Dr. Denton Cooley—an experience that helped shape his enduring commitment to clinical excellence and mentorship.\n\nA pioneer in both invasive and non-invasive cardiology, Dr. Ali is known for developing individualized treatment plans that meet the unique needs of each patient. He integrates evidence-based care with intuitive understanding, ensuring patients are treated not just with expertise, but with empathy and respect.\n\nUnder Dr. Ali's leadership, Houston Cardiology Consultants has grown into a premier cardiovascular center that blends academic rigor with cutting-edge technologies. His influence remains present in every facet of the practice—from its core values to its dedication to advanced diagnostics and prevention.\n\nToday, Dr. Ali continues to care for both long-standing and new patients while mentoring the next generation of cardiologists. His legacy is reflected in the trust he has earned, the lives he has improved, and his enduring mission to help every patient live a healthier, heart-conscious life.`,
@@ -42,9 +42,9 @@ const DOCTORS = [
     awards: [],
   },
   {
-    slug: "dr-sajid",
+    slug: "dr-sajid-ali",
     name: "Dr. Sajid Ali, MD, FSCAI",
-    photo: "/images/hcc-logo.png",
+    photo: "/dr-sajid-ali.png",
     title: "Interventional Cardiologist | Clinical Educator | Researcher",
     certification: "Board-Certified in Cardiovascular Disease & Interventional Cardiology",
     bio: `Dr. Sajid Ali is a distinguished Interventional Cardiologist at Houston Cardiology Consultants, known for his clinical precision, academic leadership, and dedication to advancing cardiovascular care. His practice combines leading-edge procedures with evidence-based medicine to deliver exceptional outcomes for patients with complex heart and vascular conditions.\n\nDr. Ali completed his Interventional Cardiology fellowship at Wayne State University within the Detroit Medical Center, where he also served as Chief Resident in Internal Medicine and later as Chief Fellow in Cardiology—testaments to his exceptional leadership and expertise.\n\nAn active Clinical Teaching Physician at the University of Houston College of Medicine, Dr. Ali previously served as an Associate Professor at the University of Texas Medical Branch at Galveston. His academic focus remains centered on developing future cardiologists while integrating research and innovation into everyday care.\n\nDr. Ali is a principal investigator in ongoing experimental trials and regularly contributes to peer-reviewed publications, with a focus on interventional techniques, vascular therapies, and emerging technologies. His research enhances the evolving landscape of cardiovascular medicine.\n\nIn practice, Dr. Ali performs a wide range of advanced interventional procedures, including coronary and peripheral stenting, vein ablations, and diagnostic catheterizations. He is deeply committed to minimally invasive approaches that improve quality of life and reduce recovery times.\n\nUnder his guidance, Houston Cardiology Consultants continues to evolve as a hub for high-tech, personalized cardiovascular care. Dr. Ali’s work ensures that each patient receives a flexible, customized treatment plan grounded in the most current clinical evidence and delivered with compassion.`,
@@ -119,7 +119,7 @@ export default function DoctorProfilePage({ params }: { params: { slug: string }
               </div>
             </div>
             {/* Philosophy/Quote Section */}
-            {doctor.slug === "dr-abdul" && (
+            {doctor.slug === "dr-abdul-ali" && (
               <div className="mb-8">
                 <blockquote className="border-l-4 border-primary pl-4 italic text-lg text-muted-foreground bg-muted/50 py-3 rounded">
                   "His legacy is reflected in the trust he has earned, the lives he has improved, and his enduring mission to help every patient live a healthier, heart-conscious life."
@@ -133,7 +133,7 @@ export default function DoctorProfilePage({ params }: { params: { slug: string }
                 </blockquote>
               </div>
             )}
-            {doctor.slug === "dr-sajid" && (
+            {doctor.slug === "dr-sajid-ali" && (
               <div className="mb-8">
                 <blockquote className="border-l-4 border-primary pl-4 italic text-lg text-muted-foreground bg-muted/50 py-3 rounded">
                   "Dr. Ali’s work ensures that each patient receives a flexible, customized treatment plan grounded in the most current clinical evidence and delivered with compassion."

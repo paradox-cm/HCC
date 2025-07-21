@@ -8,7 +8,7 @@ export default function LocationsPage() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Our Locations</h1>
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl fade-in-up">Our Locations</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Find the Houston Cardiology Consultants clinic nearest to you.
           </p>
