@@ -124,8 +124,8 @@ export default function HomePage() {
       {/* Location Preview */}
       <SectionWrapper>
         <div className="grid gap-10 md:grid-cols-2">
-          <LocationPreview address="123 Heart Health Way, Houston, TX" mapPlaceholder />
-          <LocationPreview address="456 Wellness Blvd, Houston, TX" mapPlaceholder />
+          <LocationPreview name="HCC Long Point / Spring Branch" address="8830 Long Point, Suite 507\nHouston, Texas 77055" mapPlaceholder />
+          <LocationPreview name="HCC Tidwell / Heights" address="509 W Tidwell Rd, Suite 130\nHouston, TX 77091" mapPlaceholder />
         </div>
       </SectionWrapper>
     </>
@@ -172,12 +172,12 @@ function ServiceCard({ title, description }: { title: string; description: strin
   )
 }
 
-function LocationPreview({ address, mapPlaceholder }: { address: string; mapPlaceholder?: boolean }) {
+function LocationPreview({ name, address, mapPlaceholder }: { name: string; address: string; mapPlaceholder?: boolean }) {
   return (
     <Card>
       <CardContent className="p-6">
         {mapPlaceholder && <div className="h-40 w-full rounded-md bg-muted mb-4">{/* Map Thumbnail */}</div>}
-        <h3 className="font-semibold">Our Location</h3>
+        <h3 className="font-semibold">{name}</h3>
         <p className="text-muted-foreground">{address}</p>
         <Button variant="link" className="p-0 h-auto mt-2" asChild>
           <Link href="/locations">

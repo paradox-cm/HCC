@@ -18,16 +18,16 @@ export default function LocationsPage() {
       <SectionWrapper>
         <div className="grid gap-8 md:grid-cols-2">
           <LocationCard
-            name="Heart Health Way Clinic"
-            address="123 Heart Health Way, Houston, TX 77002"
+            name="HCC Long Point / Spring Branch"
+            address={"8830 Long Point, Suite 507\nHouston, Texas 77055"}
             phone="713-123-4567"
             fax="713-123-4568"
             hours="Mon - Fri: 8:00 AM - 5:00 PM"
             parking="Free patient parking available in adjacent garage."
           />
           <LocationCard
-            name="Wellness Boulevard Clinic"
-            address="456 Wellness Blvd, Houston, TX 77030"
+            name="HCC Tidwell / Heights"
+            address={"509 W Tidwell Rd, Suite 130\nHouston, TX 77091"}
             phone="832-987-6543"
             fax="832-987-6542"
             hours="Mon - Fri: 9:00 AM - 6:00 PM"
