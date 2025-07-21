@@ -250,7 +250,7 @@ export default function LearnPage() {
 
       <SectionWrapper className="bg-muted/20 pt-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Learn About Your Heart</h1>
+          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">Learn About Your Heart</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Educational videos to help you understand and manage your cardiac health.
           </p>

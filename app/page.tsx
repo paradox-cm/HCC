@@ -13,7 +13,7 @@ export default function HomePage() {
       <SectionWrapper className="bg-muted/20">
         <div className="flex flex-col items-center gap-8 text-center">
           <div className="space-y-4 text-center flex flex-col justify-center">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Your Journey Starts Here</h1>
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl fade-in-up">Your Journey Starts Here</h1>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed mx-auto">
               At Houston Cardiology Consultants, we provide personalized care and cutting-edge medical expertise to
               guide you on a transformative journey toward optimal heart health.

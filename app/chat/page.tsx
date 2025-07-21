@@ -36,6 +36,7 @@ export default function ChatPage() {
           </Button>
         </div>
       </div>
+      <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mt-8 mb-4 fade-in-up text-center">Chat with Us</h1>
       <div className="flex-grow border rounded-lg mt-4 flex flex-col">
         <ChatInterface />
       </div>

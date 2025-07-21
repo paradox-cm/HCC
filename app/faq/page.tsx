@@ -27,7 +27,7 @@ export default function FaqPage() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Frequently Asked Questions</h1>
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl fade-in-up">Frequently Asked Questions</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Answers to common questions from our patients.
           </p>

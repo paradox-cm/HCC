@@ -7,8 +7,25 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileText, HelpCircle, Mail, Phone, Shield, Wallet } from "lucide-react"
+import { FileText, HelpCircle, Mail, Phone, Shield, Wallet, ArrowLeft, ArrowRight } from "lucide-react"
 import Link from "next/link"
+
+// Mock insurance company data
+const INSURANCE_COMPANIES = [
+  { name: "Aetna", logo: "/images/insurers/Aetna.png" },
+  { name: "Amerigroup", logo: "/images/insurers/Amerigroup.png" },
+  { name: "Blue Cross Blue Shield", logo: "/images/insurers/BlueCross.png" },
+  { name: "Cigna", logo: "/images/insurers/Cigna.png" },
+  { name: "Humana", logo: "/images/insurers/Humana.png" },
+  { name: "Medicaid", logo: "/images/insurers/Medicaid.png" },
+  { name: "Medicare", logo: "/images/insurers/Medicare.png" },
+  { name: "Molina Healthcare", logo: "/images/insurers/MolinaHealthcare.png" },
+  { name: "Superior HealthPlan", logo: "/images/insurers/SuperiorHealthplan.png" },
+  { name: "Tricare", logo: "/images/insurers/Tricare.png" },
+  { name: "UnitedHealthcare", logo: "/images/insurers/UnitedHealthcare.png" },
+  { name: "WellCare", logo: "/images/insurers/Wellcare.png" },
+]
+import Image from "next/image"
 
 const navItems = [
   { id: "how-it-works", label: "How Billing Works" },
@@ -113,7 +130,7 @@ export default function BillingPage() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Billing & Insurance</h1>
+          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">Billing & Insurance</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">Your Care, Clearly Covered</p>
         </div>
       </SectionWrapper>
@@ -152,14 +169,19 @@ export default function BillingPage() {
                 We participate with most major carriers, including Medicare, Medicaid, and leading private insurers. As
                 an in-network provider, we help minimize your out-of-pocket costs.
               </p>
-              <Card className="mt-4 bg-muted/50">
-                <CardContent className="p-4">
-                  <p className="text-sm">
-                    <span className="font-semibold text-primary">Tip:</span> Review your plan’s deductible, copay, and
-                    coinsurance information before your visit.
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="mt-8 mb-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 items-center justify-center">
+                  {INSURANCE_COMPANIES.map((ins) => (
+                    <div key={ins.name} className="flex flex-col items-center text-center bg-white rounded-lg shadow-sm p-4 border border-muted/40">
+                      <div className="h-12 flex items-center justify-center mb-2">
+                        <Image src={ins.logo} alt={ins.name + ' logo'} width={64} height={48} className="object-contain max-h-12" />
+                      </div>
+                      <span className="text-sm font-medium text-muted-foreground">{ins.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <TipCarousel />
             </section>
 
             <section id="how-it-works">
@@ -354,5 +376,47 @@ function InfoItem({ title, text }: { title: string; text: string }) {
       <h4 className="font-semibold">{title}</h4>
       <p className="text-sm text-muted-foreground mt-1">{text}</p>
     </div>
+  )
+}
+
+const TIPS = [
+  "Review your plan’s deductible, copay, and coinsurance information before your visit.",
+  "Bring your insurance card and a photo ID to every appointment.",
+  "Notify us of any changes to your insurance coverage as soon as possible.",
+  "Ask for a Good Faith Estimate for non-emergency services.",
+  "Contact our billing office if you have questions about your statement or coverage."
+]
+
+// Tip carousel component
+function TipCarousel() {
+  const [tipIndex, setTipIndex] = useState(0)
+  return (
+    <Card className="mt-4 bg-muted/50">
+      <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <p className="text-sm flex-1">
+          <span className="font-semibold text-primary">Tip:</span> {TIPS[tipIndex]}
+        </p>
+        <div className="flex gap-1 items-center justify-end">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Previous tip"
+            onClick={() => setTipIndex(i => Math.max(0, i - 1))}
+            disabled={tipIndex === 0}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Next tip"
+            onClick={() => setTipIndex(i => Math.min(TIPS.length - 1, i + 1))}
+            disabled={tipIndex === TIPS.length - 1}
+          >
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
