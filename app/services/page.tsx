@@ -193,23 +193,30 @@ export default function ServicesPage() {
 
   // Active category highlight on scroll
   useEffect(() => {
+    const OFFSET = 200; // Increased offset for better alignment (added more space)
     const handleScroll = () => {
-      const scrollY = window.scrollY
-      let found = services[0].category
-      for (const s of services) {
-        const ref = sectionRefs.current[s.category]
+      const scrollY = window.scrollY;
+      let found = services[0].category;
+      for (let i = 0; i < services.length; i++) {
+        const s = services[i];
+        const ref = sectionRefs.current[s.category];
         if (ref) {
-          const top = ref.getBoundingClientRect().top + window.scrollY - 120 // 120px offset for nav/subnav
-          if (scrollY >= top) {
-            found = s.category
+          const top = ref.getBoundingClientRect().top + window.scrollY - OFFSET;
+          const nextRef = services[i + 1] ? sectionRefs.current[services[i + 1].category] : null;
+          const nextTop = nextRef
+            ? nextRef.getBoundingClientRect().top + window.scrollY - OFFSET
+            : Infinity;
+          if (scrollY >= top && scrollY < nextTop) {
+            found = s.category;
+            break;
           }
         }
       }
-      setActiveCategory(found)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+      setActiveCategory(found);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Show fixed subnav when original is out of view
   useEffect(() => {
@@ -315,7 +322,7 @@ export default function ServicesPage() {
             className="scroll-mt-[152px]"
           >
             <div className="flex items-center justify-between mb-2 border-b pb-2">
-              <h2 className="text-xl font-bold tracking-tight text-left sm:text-2xl md:text-3xl">
+              <h2 className="text-xl font-bold tracking-tight text-left sm:text-2xl md:text-3xl mt-4">
                 {serviceCategory.category}
               </h2>
               <button

@@ -1,3 +1,4 @@
+"use client"
 import type React from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,18 @@ import Link from "next/link"
 import { Mail as MailIcon } from "lucide-react"
 import { FileText as FileTextIcon } from "lucide-react"
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
+import { useChat } from "@/components/chat/chat-provider"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog"
+import { useState } from "react"
 
 const MOCK_THREADS = [
   {
@@ -180,7 +193,10 @@ const MOCK_PHARMACY = {
 }
 
 export default function PatientPortalDashboard() {
+  const { setChatOpen } = useChat();
   const patientName = "Jane" // Placeholder for patient name
+  const [insuranceModalOpen, setInsuranceModalOpen] = useState(false)
+  // Optionally, you could lift insurance state here if you want to sync with the billing page
 
   return (
     <>
@@ -210,7 +226,7 @@ export default function PatientPortalDashboard() {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button asChild size="icon" variant="outline" className="border-gray-300 text-gray-600 bg-white hover:bg-gray-100">
+                  <Button asChild size="icon" variant="outline" className="border-gray-300 text-gray-600 bg-white hover:bg-gray-100 dark:bg-[hsl(0,0%,14%)] dark:text-[hsl(0,0%,80%)] dark:border-[hsl(0,0%,20%)] dark:hover:bg-[hsl(0,0%,20%)]">
                     <Link href="/patient-portal"><LogOut className="h-5 w-5" /></Link>
                   </Button>
                 </TooltipTrigger>
@@ -290,6 +306,7 @@ export default function PatientPortalDashboard() {
             title="Messages & Alerts"
             icon={<Mail className="h-5 w-5 text-primary" />}
             badge={MOCK_THREADS.filter(t => t.unread).length > 0 ? `${MOCK_THREADS.filter(t => t.unread).length} new` : undefined}
+            href="/patient-portal/dashboard/messages"
           >
             <div className="space-y-2">
               {MOCK_THREADS.slice(0, 2).map(thread => (
@@ -322,6 +339,7 @@ export default function PatientPortalDashboard() {
           <MobileCard
             title="Documents & Results"
             icon={<FileTextIcon className="h-5 w-5 text-primary" />}
+            href="/patient-portal/dashboard/documents"
           >
             <div className="space-y-2">
               {MOCK_DOCUMENTS.slice(0, 2).map(doc => (
@@ -357,6 +375,7 @@ export default function PatientPortalDashboard() {
           <MobileCard
             title="Active Prescriptions"
             icon={<Pill className="h-5 w-5 text-primary" />}
+            href="/patient-portal/dashboard/prescriptions"
           >
             <div className="space-y-3">
               {MOCK_PRESCRIPTIONS.slice(0, 2).map(rx => (
@@ -368,9 +387,11 @@ export default function PatientPortalDashboard() {
                 </div>
                   <div className="flex flex-col gap-2 min-w-[100px] items-end">
                     {rx.canRefill ? (
-                      <Button size="sm" variant="outline" className="border-red-600 text-red-600">Request Refill</Button>
+                      <Button asChild size="sm" variant="outline" className="border-red-600 text-red-600">
+                        <Link href={`/patient-portal/dashboard/prescriptions?refill=${rx.id}`}>Request Refill</Link>
+                      </Button>
                     ) : (
-                      <span className="inline-block bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full text-center">Not Eligible</span>
+                      <span className="inline-block bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full text-center dark:bg-[hsl(0,0%,20%)] dark:text-[hsl(0,0%,60%)]">Not Eligible</span>
                     )}
               </div>
                 </div>
@@ -390,14 +411,15 @@ export default function PatientPortalDashboard() {
           <MobileCard
             title="Billing & Insurance"
             icon={<DollarSign className="h-5 w-5 text-primary" />}
+            href="/patient-portal/dashboard/billing-and-insurance"
           >
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900 dark:text-green-200 rounded-lg">
                 <div>
                   <p className="font-medium text-sm">Outstanding Balance</p>
                   <p className="text-xs text-muted-foreground">All accounts current</p>
                 </div>
-                <span className="text-lg font-bold text-green-600">$0.00</span>
+                <span className="text-lg font-bold text-green-600 dark:text-green-300">$0.00</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                 <div>
@@ -412,7 +434,7 @@ export default function PatientPortalDashboard() {
                 <Link href="/patient-portal/dashboard/billing-and-insurance">Pay Now</Link>
               </Button>
               <Button asChild size="sm" variant="outline" className="flex-1">
-                <Link href="/patient-portal/dashboard/billing-and-insurance">Update Insurance</Link>
+                <Link href="/patient-portal/dashboard/billing-and-insurance?update-insurance=1">Update Insurance</Link>
               </Button>
             </div>
           </MobileCard>
@@ -421,10 +443,10 @@ export default function PatientPortalDashboard() {
           <MobileCard
             title="Care Summary"
             icon={<HeartPulse className="h-5 w-5 text-primary" />}
+            href="/patient-portal/dashboard/care-plan"
           >
             <div className="space-y-3">
               <div className="text-sm text-muted-foreground mb-2">{MOCK_CARE_PLAN.summary}</div>
-              <Button variant="link" className="p-0 h-auto text-sm mb-2">View Care Plan</Button>
               <div className="space-y-2">
                 <p className="font-medium text-sm mb-1">Recent Visits</p>
                 <div className="space-y-2">
@@ -439,42 +461,14 @@ export default function PatientPortalDashboard() {
                   ))}
                 </div>
               </div>
+              <div className="flex flex-1 justify-end mt-2">
+                <Button asChild variant="link" className="p-0 h-auto text-sm">
+                  <Link href="/patient-portal/dashboard/care-plan">View Care Plan <span aria-hidden="true">→</span></Link>
+                </Button>
+              </div>
               <Button variant="outline" size="sm" className="w-full mt-3">
                 <Download className="mr-2 h-4 w-4" />
                 Download Visit Summary
-              </Button>
-            </div>
-          </MobileCard>
-
-          {/* Quick Forms */}
-          <MobileCard
-            title="Quick Forms"
-            icon={<ClipboardList className="h-5 w-5 text-primary" />}
-          >
-            <div className="space-y-2">
-              <Button variant="ghost" className="w-full justify-start h-auto py-3">
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-sm">Appointment Request</span>
-                  <ChevronRight className="h-4 w-4" />
-                </div>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start h-auto py-3">
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-sm">Prescription Renewal</span>
-                  <ChevronRight className="h-4 w-4" />
-                </div>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start h-auto py-3">
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-sm">Preoperative Clearance</span>
-                  <ChevronRight className="h-4 w-4" />
-                </div>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start h-auto py-3">
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-sm">Upload Medical Records</span>
-                  <ChevronRight className="h-4 w-4" />
-                </div>
               </Button>
             </div>
           </MobileCard>
@@ -485,11 +479,29 @@ export default function PatientPortalDashboard() {
             icon={<HelpCircle className="h-5 w-5 text-primary" />}
           >
             <div className="space-y-3">
-              <Button variant="secondary" className="w-full justify-start h-auto py-3">
+              <Button
+                variant="secondary"
+                className="w-full justify-start h-auto py-3"
+                onClick={() => setChatOpen(true)}
+              >
                 <MessageCircle className="mr-3 h-4 w-4" />
-                <span className="text-sm">Live Chat Support</span>
+                <span className="text-sm">Chat Support</span>
               </Button>
-              <Button variant="ghost" className="w-full justify-start h-auto py-3" asChild>
+              <Button
+                asChild
+                variant="secondary"
+                className="w-full justify-start h-auto py-3"
+              >
+                <Link href="/patient-portal/dashboard/billing-and-insurance">
+                  <CreditCard className="mr-3 h-4 w-4" />
+                  <span className="text-sm">Billing & Insurance</span>
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="secondary"
+                className="w-full justify-start h-auto py-3"
+              >
                 <Link href="/faq">
                   <HelpCircle className="mr-3 h-4 w-4" />
                   <span className="text-sm">Frequently Asked Questions</span>
@@ -524,12 +536,14 @@ function MobileCard({
   children,
   className = "",
   badge,
+  href,
 }: {
   title: string
   icon: React.ReactNode
   children: React.ReactNode
   className?: string
   badge?: string
+  href?: string
 }) {
   return (
     <Card className={`${className}`}>
@@ -537,7 +551,13 @@ function MobileCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {icon}
-            <CardTitle className="text-base">{title}</CardTitle>
+            {href ? (
+              <Link href={href} className="text-base font-semibold hover:underline focus:underline transition-colors">
+                <CardTitle className="text-base cursor-pointer">{title}</CardTitle>
+              </Link>
+            ) : (
+              <CardTitle className="text-base">{title}</CardTitle>
+            )}
           </div>
           {badge && (
             <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">

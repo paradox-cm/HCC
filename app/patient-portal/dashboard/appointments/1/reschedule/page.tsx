@@ -95,7 +95,7 @@ function RescheduleComponent() {
         <Card className="max-w-lg mx-auto">
           <CardHeader className="flex items-center gap-2 pb-2">
             <CalendarIcon className="h-5 w-5 text-primary" />
-            <CardTitle className="text-lg">Reschedule Appointment</CardTitle>
+            <CardTitle className="text-lg">{showCancel ? "Cancel Appointment" : "Reschedule Appointment"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="mb-4 text-xs text-muted-foreground">

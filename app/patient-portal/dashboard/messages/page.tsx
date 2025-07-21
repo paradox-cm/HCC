@@ -151,7 +151,11 @@ function DashboardMessagesComponent() {
                                 <Image src="/images/hcc-logo.png" alt="HCC Logo" width={28} height={28} className="rounded-full bg-white border" />
                               </div>
                             )}
-                            <div className={`max-w-[80%] px-3 py-2 rounded-lg text-sm ${msg.from === "You" ? "border-2 border-red-600 bg-white text-black" : "bg-white border"}`}>
+                            <div className={`max-w-[80%] px-3 py-2 rounded-lg text-sm
+                              ${msg.from === "You"
+                                ? "border-2 border-red-600 bg-white text-black dark:bg-[hsl(0,0%,14%)] dark:text-foreground dark:border-[hsl(0,0%,20%)]"
+                                : "bg-white border dark:bg-[hsl(0,0%,7%)] dark:text-foreground dark:border-[hsl(0,0%,20%)]"}
+                            `}>
                               <div className="font-medium mb-0.5">{msg.from}</div>
                               <div>{msg.text}</div>
                               <div className="text-xs text-muted-foreground mt-1 text-right">{msg.time}</div>

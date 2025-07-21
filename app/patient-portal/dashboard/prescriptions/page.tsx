@@ -2,12 +2,24 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useSearchParams, useRouter as useNextRouter } from "next/navigation"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Pill, ArrowLeft } from "lucide-react"
+import React from "react"
 
 const MOCK_PRESCRIPTIONS = [
   {
@@ -52,6 +64,23 @@ export default function DashboardPrescriptions() {
   const [showNew, setShowNew] = useState(false)
   const [newRx, setNewRx] = useState({ name: "", dosage: "", notes: "" })
   const router = useRouter()
+  const nextRouter = useNextRouter()
+  const searchParams = useSearchParams()
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalSuccess, setModalSuccess] = useState(false)
+  const refillParam = searchParams?.get("refill")
+  const modalRx = prescriptions.find(rx => String(rx.id) === refillParam)
+
+  // Open modal if ?refill=ID is present
+  React.useEffect(() => {
+    if (modalRx) {
+      setModalOpen(true)
+      setRefillNotes("")
+      setModalSuccess(false)
+    } else {
+      setModalOpen(false)
+    }
+  }, [refillParam, modalRx])
 
   function handleRefillRequest(id: number) {
     setRefillStatus(status => ({ ...status, [id]: true }))
@@ -74,6 +103,22 @@ export default function DashboardPrescriptions() {
     ])
     setShowNew(false)
     setNewRx({ name: "", dosage: "", notes: "" })
+  }
+
+  function handleModalRefill(e: React.FormEvent) {
+    e.preventDefault()
+    if (!modalRx) return
+    setRefillStatus(status => ({ ...status, [modalRx.id]: true }))
+    setModalSuccess(true)
+    setTimeout(() => {
+      setModalOpen(false)
+      setModalSuccess(false)
+      setRefillNotes("")
+      // Remove ?refill param from URL
+      const params = new URLSearchParams(Array.from(searchParams?.entries() || []))
+      params.delete("refill")
+      nextRouter.replace(`/patient-portal/dashboard/prescriptions${params.size ? "?" + params.toString() : ""}`)
+    }, 1200)
   }
 
   return (
@@ -142,26 +187,16 @@ export default function DashboardPrescriptions() {
                   <div className="flex flex-col gap-2 min-w-[160px]">
                     {refillStatus[rx.id] ? (
                       <span className="inline-block bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full text-center">Refill Requested</span>
-                    ) : refillId === rx.id ? (
-                      <form className="flex flex-col gap-2" onSubmit={e => { e.preventDefault(); handleRefillRequest(rx.id) }}>
-                        <Textarea
-                          value={refillNotes}
-                          onChange={e => setRefillNotes(e.target.value)}
-                          placeholder="Notes for your provider (optional)"
-                          rows={2}
-                          className="text-xs"
-                        />
-                        <div className="flex gap-2">
-                          <Button type="submit" size="sm" className="w-full">Submit</Button>
-                          <Button type="button" size="sm" variant="ghost" onClick={() => setRefillId(null)}>Cancel</Button>
-                        </div>
-                      </form>
                     ) : rx.canRefill ? (
-                      <Button size="sm" variant="outline" className="border-red-600 text-red-600" onClick={() => setRefillId(rx.id)}>
+                      <Button size="sm" variant="outline" className="border-red-600 text-red-600" onClick={() => {
+                        const params = new URLSearchParams(Array.from(searchParams?.entries() || []))
+                        params.set("refill", String(rx.id))
+                        nextRouter.replace(`/patient-portal/dashboard/prescriptions?${params.toString()}`)
+                      }}>
                         Request Refill
                       </Button>
                     ) : (
-                      <span className="inline-block bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full text-center">Not Eligible</span>
+                      <span className="inline-block bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full text-center dark:bg-[hsl(0,0%,20%)] dark:text-[hsl(0,0%,60%)]">Not Eligible</span>
                     )}
                   </div>
                 </div>
@@ -180,6 +215,46 @@ export default function DashboardPrescriptions() {
           </CardContent>
         </Card>
       </SectionWrapper>
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Request Refill</DialogTitle>
+            <DialogDescription>
+              {modalRx ? (
+                <>
+                  Request a refill for <b>{modalRx.name}</b> ({modalRx.dosage})
+                </>
+              ) : null}
+            </DialogDescription>
+          </DialogHeader>
+          {modalSuccess ? (
+            <div className="text-green-700 text-center py-8">Refill request submitted!</div>
+          ) : modalRx ? (
+            <form className="space-y-4" onSubmit={handleModalRefill}>
+              <div>
+                <label className="block text-xs font-medium mb-1">Notes for your provider (optional)</label>
+                <div className="mb-2" />
+                <Textarea
+                  value={refillNotes}
+                  onChange={e => setRefillNotes(e.target.value)}
+                  rows={2}
+                  className="text-xs"
+                />
+              </div>
+              <DialogFooter>
+                <Button type="submit" className="w-full">Submit Refill Request</Button>
+                <Button type="button" variant="ghost" className="w-full" onClick={() => {
+                  setModalOpen(false)
+                  // Remove ?refill param from URL
+                  const params = new URLSearchParams(Array.from(searchParams?.entries() || []))
+                  params.delete("refill")
+                  nextRouter.replace(`/patient-portal/dashboard/prescriptions${params.size ? "?" + params.toString() : ""}`)
+                }}>Cancel</Button>
+              </DialogFooter>
+            </form>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </>
   )
 } 

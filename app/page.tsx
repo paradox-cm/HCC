@@ -86,18 +86,26 @@ export default function HomePage() {
           <ServiceCard
             title="Diagnostics"
             description="Utilizing advanced technology to accurately assess your heart's condition."
+            image="/images/Diagnostics.png"
+            href="/services#diagnostics"
           />
           <ServiceCard
             title="Treatments & Therapies"
             description="Offering personalized and innovative treatments to manage and improve your cardiac health."
+            image="/images/Treatments.png"
+            href="/services#treatments-&-therapies"
           />
           <ServiceCard
             title="Cardiac Wellness"
             description="Focusing on preventive care and lifestyle management for long-term heart health."
+            image="/images/Wellness.png"
+            href="/services#cardiac-wellness"
           />
           <ServiceCard
             title="Concierge & Telemedicine"
             description="Providing convenient, accessible care options tailored to your busy lifestyle."
+            image="/images/Concierge.png"
+            href="/services#special-services"
           />
         </div>
         <div className="mt-8 text-center">
@@ -108,18 +116,18 @@ export default function HomePage() {
       </SectionWrapper>
 
       {/* Multilingual Education Teaser */}
-      <SectionWrapper className="bg-primary text-primary-foreground">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Understand Your Heart.</h2>
-          <p className="mt-4 text-lg text-primary-foreground/80">
-            Access a wealth of educational resources designed to empower you with knowledge about heart health.
-          </p>
-          <p className="mt-2 text-lg text-primary-foreground/80">In English, Español, हिंदी, Tiếng Việt</p>
-          <Button variant="secondary" size="lg" className="mt-6" asChild>
-            <Link href="/learn">Watch Now</Link>
-          </Button>
-        </div>
-      </SectionWrapper>
+      <SectionWrapper>
+        <div className="bg-primary text-primary-foreground rounded-2xl shadow-lg px-4 md:px-8 py-10 w-full max-w-7xl mx-auto text-center">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Understand Your Heart.</h2>
+            <p className="mt-4 text-lg text-primary-foreground/80">
+              Access a wealth of educational resources designed to empower you with knowledge about heart health.
+            </p>
+            <p className="mt-2 text-lg text-primary-foreground/80">In English, Español, हिंदी, Tiếng Việt</p>
+            <Button variant="secondary" size="lg" className="mt-6" asChild>
+              <Link href="/learn">Watch Now</Link>
+            </Button>
+          </div>
+        </SectionWrapper>
 
       {/* Location Preview */}
       <SectionWrapper>
@@ -157,19 +165,23 @@ function QuickAccessCard({
   )
 }
 
-function ServiceCard({ title, description }: { title: string; description: string }) {
-  return (
-    <Card className="text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
+function ServiceCard({ title, description, image, href }: { title: string; description: string; image: string; href?: string }) {
+  const cardContent = (
+    <Card className="text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full cursor-pointer">
       <CardContent className="p-6">
-        <div className="mx-auto mb-4 h-32 w-full rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
-          {/* Placeholder for service image */}
-          Image
+        <div className="mx-auto mb-4 h-32 w-full rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+          <img src={image} alt={title + ' image'} className="object-contain h-full w-full" />
         </div>
         <h3 className="font-semibold text-lg">{title}</h3>
         <p className="text-sm text-muted-foreground mt-2">{description}</p>
       </CardContent>
     </Card>
-  )
+  );
+  return href ? (
+    <Link href={href} scroll={true} passHref legacyBehavior>
+      <a>{cardContent}</a>
+    </Link>
+  ) : cardContent;
 }
 
 function LocationPreview({ name, address, mapPlaceholder }: { name: string; address: string; mapPlaceholder?: boolean }) {
@@ -207,11 +219,11 @@ function CookieBanner() {
       <Card className="w-full max-w-7xl mx-auto shadow-lg border bg-background pointer-events-auto">
         <CardContent className="flex flex-col sm:flex-row items-center gap-4 p-4">
           <div className="flex-1 text-sm text-muted-foreground text-left">
-            We use cookies to enhance your experience, analyze site usage, and assist in our marketing efforts. By clicking "Accept", you consent to the use of cookies. You can manage your preferences or decline non-essential cookies.
+            We use cookies to enhance your experience, analyze site usage, and assist in our marketing efforts. By clicking "Accept", you consent to the use of cookies.
           </div>
           <div className="flex gap-2 mt-2 sm:mt-0">
-            <Button size="sm" onClick={() => handleConsent(true)} className="px-4">Accept</Button>
             <Button size="sm" variant="outline" onClick={() => handleConsent(false)} className="px-4">Decline</Button>
+            <Button size="sm" onClick={() => handleConsent(true)} className="px-4">Accept</Button>
           </div>
         </CardContent>
       </Card>

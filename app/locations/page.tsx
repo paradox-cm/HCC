@@ -24,6 +24,10 @@ export default function LocationsPage() {
             fax="713-123-4568"
             hours="Mon - Fri: 8:00 AM - 5:00 PM"
             parking="Free patient parking available in adjacent garage."
+            mapEmbed={
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5986.508423557573!2d-95.51047508723434!3d29.804312174941284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c44fb5faaabb%3A0x424e26f293f7ede!2s8830%20Long%20Point%20Rd%20%23507%2C%20Houston%2C%20TX%2077055%2C%20USA!5e1!3m2!1sen!2smx!4v1753111881445!5m2!1sen!2smx" width="100%" height="100%" style={{border:0}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+            }
+            directionsUrl="https://maps.app.goo.gl/BzFeTPWZ3THN3o5J9"
           />
           <LocationCard
             name="HCC Tidwell / Heights"
@@ -32,6 +36,10 @@ export default function LocationsPage() {
             fax="832-987-6542"
             hours="Mon - Fri: 9:00 AM - 6:00 PM"
             parking="Validated parking available in the building."
+            mapEmbed={
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5983.984233842916!2d-95.41055728723349!3d29.846460974919847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c7ee9c31a5d9%3A0xc1e44f9d425adf26!2s509%20W%20Tidwell%20Rd%20Suite%20130%2C%20Houston%2C%20TX%2077091%2C%20USA!5e1!3m2!1sen!2smx!4v1753111902730!5m2!1sen!2smx" width="100%" height="100%" style={{border:0}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+            }
+            directionsUrl="https://maps.app.goo.gl/UYAsbqxg2Fwsnw8Q6"
           />
         </div>
       </SectionWrapper>
@@ -46,16 +54,21 @@ function LocationCard({
   fax,
   hours,
   parking,
-}: { name: string; address: string; phone: string; fax: string; hours: string; parking: string }) {
+  mapEmbed,
+  directionsUrl,
+}: { name: string; address: string; phone: string; fax: string; hours: string; parking: string; mapEmbed?: React.ReactNode; directionsUrl?: string }) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-64 w-full bg-muted rounded-md mb-6">
-          {/* Google Maps embed placeholder */}
-          <div className="flex items-center justify-center h-full text-muted-foreground">Map of {name}</div>
+        <div className="h-64 w-full bg-muted rounded-md mb-6 overflow-hidden">
+          {mapEmbed ? (
+            mapEmbed
+          ) : (
+            <div className="flex items-center justify-center h-full text-muted-foreground">Map of {name}</div>
+          )}
         </div>
         <div className="space-y-3">
           <p className="font-semibold">{address}</p>
@@ -71,7 +84,13 @@ function LocationCard({
           <p>
             <span className="font-semibold">Parking:</span> {parking}
           </p>
-          <Button className="w-full mt-4">Get Directions</Button>
+          {directionsUrl ? (
+            <Button className="w-full mt-4" asChild>
+              <a href={directionsUrl} target="_blank" rel="noopener noreferrer">Get Directions</a>
+            </Button>
+          ) : (
+            <Button className="w-full mt-4">Get Directions</Button>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -118,7 +118,7 @@ function DashboardDocumentsComponent() {
               </Button>
             </div>
             {showUpload && (
-              <div className="mb-6 border rounded-lg bg-white/90 shadow-sm p-4">
+              <div className="mb-6 border rounded-lg bg-white/90 dark:bg-[hsl(0,0%,14%)] dark:border-[hsl(0,0%,20%)] shadow-sm p-4">
                 <form className="space-y-3" onSubmit={handleUpload}>
                   <div>
                     <label className="block text-xs font-medium mb-1">File <span className="text-red-600">*</span></label>
