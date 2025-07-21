@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import React, { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -51,7 +51,7 @@ function getLatestMessage(thread: Thread) {
   return thread.messages[thread.messages.length - 1]
 }
 
-function DashboardMessagesComponent() {
+function MessagesContent() {
   const [threads, setThreads] = useState<Thread[]>(MOCK_THREADS)
   const [expanded, setExpanded] = useState<number | null>(null)
   const [showNew, setShowNew] = useState(false)
@@ -187,10 +187,10 @@ function DashboardMessagesComponent() {
   )
 }
 
-export default function DashboardMessages() {
+export default function DashboardMessagesPage() {
   return (
     <Suspense>
-      <DashboardMessagesComponent />
+      <MessagesContent />
     </Suspense>
   )
 } 

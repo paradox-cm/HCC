@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense } from "react"
+import React, { useState, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { useSearchParams } from "next/navigation"
 import { SectionWrapper } from "@/components/section-wrapper"
@@ -21,7 +21,7 @@ const MOCK_APPT = {
   location: "Heart Health Way Clinic",
 }
 
-function RescheduleComponent() {
+function RescheduleContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [form, setForm] = useState({ date: MOCK_APPT.date, time: MOCK_APPT.time, note: "" })
@@ -174,7 +174,7 @@ function RescheduleComponent() {
 export default function RescheduleAppointmentPage() {
   return (
     <Suspense>
-      <RescheduleComponent />
+      <RescheduleContent />
     </Suspense>
   )
 }

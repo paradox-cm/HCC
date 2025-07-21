@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Pill, ArrowLeft } from "lucide-react"
-import React from "react"
+import React, { Suspense } from "react"
 
 const MOCK_PRESCRIPTIONS = [
   {
@@ -56,7 +56,7 @@ const MOCK_PHARMACY = {
   phone: "(555) 987-6543",
 }
 
-export default function DashboardPrescriptions() {
+function PrescriptionsContent() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>(MOCK_PRESCRIPTIONS)
   const [refillId, setRefillId] = useState<number | null>(null)
   const [refillNotes, setRefillNotes] = useState("")
@@ -256,5 +256,13 @@ export default function DashboardPrescriptions() {
         </DialogContent>
       </Dialog>
     </>
+  )
+}
+
+export default function DashboardPrescriptions() {
+  return (
+    <Suspense>
+      <PrescriptionsContent />
+    </Suspense>
   )
 } 
