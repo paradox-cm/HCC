@@ -75,6 +75,11 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* Remove any transition for instant theme switch */
+    transition: none !important;
+  }
+  html, :root {
+    transition: none !important;
   }
 }
 
@@ -94,4 +99,37 @@
 .dark .mobile-nav-link:active,
 .dark .mobile-nav-link:focus {
   color: hsl(var(--foreground)) !important;
+}
+
+/* Force calendar table to use flexbox for full width */
+.calendar-full-width .rdp-table {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
+.calendar-full-width .rdp-row,
+.calendar-full-width .rdp-head_row {
+  display: flex !important;
+  width: 100% !important;
+}
+
+.calendar-full-width .rdp-cell,
+.calendar-full-width .rdp-head_cell {
+  display: flex !important;
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  aspect-ratio: unset !important;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+}
+
+.calendar-viewport {
+  height: calc(100vh - 64px);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }

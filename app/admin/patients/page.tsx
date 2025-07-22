@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,12 +16,31 @@ const MOCK_PATIENTS = [
 ]
 
 export default function AdminPatientsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [patients, setPatients] = useState(MOCK_PATIENTS)
   const [search, setSearch] = useState("")
   const [addOpen, setAddOpen] = useState(false)
   const [removePatient, setRemovePatient] = useState<any>(null)
   const [newPatient, setNewPatient] = useState({ name: "", dob: "", email: "", phone: "" })
   const [addError, setAddError] = useState("")
+
+  // Open modal if ?add=1 is present
+  useEffect(() => {
+    if (searchParams?.get("add") === "1") {
+      setAddOpen(true);
+    }
+  }, [searchParams]);
+
+  // When modal closes, remove ?add=1 from URL
+  function handleAddOpenChange(open: boolean) {
+    setAddOpen(open);
+    if (!open && searchParams?.get("add") === "1") {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.delete("add");
+      router.replace(`/admin/patients${params.size ? "?" + params.toString() : ""}`);
+    }
+  }
 
   const filtered = patients.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -50,10 +70,10 @@ export default function AdminPatientsPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold flex items-center gap-2"><Users className="h-6 w-6" /> Patients</h1>
-        <Button variant="default" onClick={() => setAddOpen(true)}><Plus className="h-4 w-4 mr-2" /> Add Patient</Button>
+        <Button variant="default" onClick={() => router.push("/admin/patients?add=1") }><Plus className="h-4 w-4 mr-2" /> Add Patient</Button>
       </div>
       <div className="mb-4 flex gap-2">
         <Input
@@ -64,18 +84,18 @@ export default function AdminPatientsPage() {
         />
       </div>
       <Card>
-        <CardContent className="p-0">
+        <CardContent className="p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted text-muted-foreground">
-                  <th className="py-2 px-3 text-left font-semibold">Name</th>
+                  <th className="py-2 px-3 text-left font-semibold rounded-tl-lg">Name</th>
                   <th className="py-2 px-3 text-left font-semibold">DOB</th>
                   <th className="py-2 px-3 text-left font-semibold">Email</th>
                   <th className="py-2 px-3 text-left font-semibold">Phone</th>
                   <th className="py-2 px-3 text-left font-semibold">Last Visit</th>
                   <th className="py-2 px-3 text-left font-semibold">Status</th>
-                  <th className="py-2 px-3 text-left font-semibold">Actions</th>
+                  <th className="py-2 px-3 text-left font-semibold rounded-tr-lg">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -105,7 +125,7 @@ export default function AdminPatientsPage() {
         </CardContent>
       </Card>
       {/* Add Patient Modal */}
-      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+      <Dialog open={addOpen} onOpenChange={handleAddOpenChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Patient</DialogTitle>

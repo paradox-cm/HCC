@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import "../globals.css";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("")
@@ -16,18 +17,13 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setLoading(true)
     setError("")
-    // Placeholder: Replace with real authentication logic
-    if (email === "info@hccheart.com" && password === "hcc2025") {
-      // Set a simple session (localStorage for demo; use cookies in production)
-      if (rememberMe) {
-        localStorage.setItem("hcc_admin_auth", "true")
-      } else {
-        sessionStorage.setItem("hcc_admin_auth", "true")
-      }
-      router.push("/admin/dashboard")
+    // Mock login: skip credential check, just set session and redirect
+    if (rememberMe) {
+      localStorage.setItem("hcc_admin_auth", "true")
     } else {
-      setError("Invalid email or password. Please try again.")
+      sessionStorage.setItem("hcc_admin_auth", "true")
     }
+    router.push("/admin/dashboard")
     setLoading(false)
   }
 
@@ -53,6 +49,7 @@ export default function AdminLoginPage() {
           className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
           required
           autoComplete="username"
+          disabled
         />
         <label htmlFor="password" className="font-medium">Password</label>
         <div className="relative flex items-center">
@@ -66,6 +63,7 @@ export default function AdminLoginPage() {
             required
             autoComplete="current-password"
             aria-describedby="forgot-password-link"
+            disabled
           />
           <button
             type="button"

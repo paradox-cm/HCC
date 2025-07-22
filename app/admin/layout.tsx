@@ -110,9 +110,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       setAuthChecked(true)
       return
     }
-    // Check for simple auth (localStorage)
+    // Check for simple auth (localStorage or sessionStorage)
     if (typeof window !== "undefined") {
-      const isAuthed = localStorage.getItem("hcc_admin_auth") === "true"
+      const isAuthed =
+        localStorage.getItem("hcc_admin_auth") === "true" ||
+        sessionStorage.getItem("hcc_admin_auth") === "true"
       if (!isAuthed) {
         router.replace("/admin-login")
       } else {
@@ -149,11 +151,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen flex flex-col bg-muted">
       {/* Admin Top Nav */}
-      <header className="w-full bg-background border-b flex items-center justify-between px-4 sm:px-6 h-16">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full bg-background border-b flex items-center justify-between px-4 sm:px-6 h-16">
         <div className="flex items-center gap-3">
-          {/* Hamburger menu for mobile */}
+          {/* Hamburger menu for mobile/tablet (below 1240px) */}
           <button
-            className="sm:hidden p-2 rounded-md hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
+            className="max-[1240px]:block hidden p-2 rounded-md hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
             type="button"
@@ -168,8 +170,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <span className="ml-2 sm:ml-6 text-sm text-muted-foreground font-medium min-w-max hidden xs:inline">{dateTime}</span>
         </div>
         <div className="flex items-center gap-4">
-          {/* System Status (desktop/tablet only) */}
-          <div className="hidden sm:flex items-center gap-1 group relative" title="All systems operational">
+          {/* System Status (desktop only - above 1240px) */}
+          <div className="hidden min-[1240px]:flex items-center gap-1 group relative" title="All systems operational">
             <Circle className="h-3 w-3 text-green-500" fill="#22c55e" />
             <span className="text-xs text-green-600 font-medium">All systems operational</span>
             <div className="absolute left-1/2 -bottom-7 -translate-x-1/2 bg-background border rounded px-2 py-1 text-xs text-muted-foreground shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
@@ -238,7 +240,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Logout button for desktop/tablet only */}
+          {/* Logout button for desktop only (above 1240px) */}
           <Button
             variant="outline"
             size="sm"
@@ -249,15 +251,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               }
               router.replace("/admin-login");
             }}
-            className="hidden sm:inline-flex"
+            className="hidden min-[1240px]:inline-flex"
           >
             Logout
           </Button>
         </div>
       </header>
-      {/* Sidebar as Drawer for mobile */}
+      {/* Sidebar as Drawer for mobile/tablet (below 1240px) */}
       <Drawer open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <DrawerContent className="sm:hidden">
+        <DrawerContent className="max-[1240px]:block hidden">
           <aside className="w-full bg-background border-r flex flex-col justify-between py-6 px-4 min-h-screen">
             {/* Drawer Logo */}
             <div className="flex items-center justify-between mb-6 w-full">
@@ -428,9 +430,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </DrawerContent>
       </Drawer>
       {/* Desktop Sidebar + Main Content */}
-      <div className="flex flex-1 min-h-0">
-        {/* Sidebar for desktop/tablet */}
-        <div className="hidden sm:flex fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-background border-r flex-col justify-between py-6 px-4 overflow-y-auto z-40">
+      <div className="flex flex-1 min-h-0 pt-16">
+        {/* Sidebar for desktop only (above 1240px) */}
+        <div className="hidden min-[1240px]:flex fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-background border-r flex-col justify-between py-6 px-4 overflow-y-auto z-40">
           <div>
             <nav className="flex flex-col gap-1">
               {navItems.map(({ href, label, icon: Icon }) => (
@@ -459,7 +461,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </div>
         </div>
-        <main className="flex-1 bg-background p-2 sm:p-8 overflow-x-auto sm:ml-64">
+        <main className="flex-1 bg-background p-2 sm:p-8 overflow-x-auto min-[1240px]:ml-64">
           {children}
         </main>
       </div>

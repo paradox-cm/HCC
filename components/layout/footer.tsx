@@ -196,6 +196,8 @@ export function Footer() {
               </div>
               <p className="text-sm text-muted-foreground break-words min-w-0">
                 © {new Date().getFullYear()} Houston Cardiology Consultants. All Rights Reserved.
+                <span className="mx-2">&middot;</span>
+                <Link href="/admin" className="underline hover:text-primary transition-colors">Admin</Link>
               </p>
             </div>
             {/* Right: Chat buttons (top on mobile) */}

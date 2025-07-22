@@ -18,7 +18,7 @@ const quickLinks = [
 
 export default function AdminDashboardPage() {
   return (
-    <div className="max-w-5xl mx-auto">
+    <div>
       <h1 className="text-3xl font-bold mb-4 pt-16 sm:pt-0">Welcome, Admin</h1>
       <p className="text-muted-foreground mb-8">Manage all aspects of the patient portal from this dashboard.</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-10">
@@ -68,19 +68,19 @@ export default function AdminDashboardPage() {
       </div>
       {/* 2nd Row: Quick Links as Buttons */}
       <div className="flex flex-col gap-3 mb-8 w-full max-w-xs mx-auto sm:flex-row sm:flex-wrap sm:justify-center sm:max-w-none">
-        <Link href="/admin/patients">
+        <Link href="/admin/patients?add=1">
           <Button className="w-full sm:min-w-[160px] shadow font-semibold flex items-center gap-2">
             <UsersIcon className="h-5 w-5" /> Add New Patient
           </Button>
         </Link>
-        <Link href="/admin/appointments">
+        <Link href="/admin/appointments?add=1">
           <Button className="w-full sm:min-w-[160px] shadow font-semibold flex items-center gap-2">
             <CalendarIcon className="h-5 w-5" /> Schedule Appointment
           </Button>
         </Link>
-        <Link href="/admin/prescriptions">
+        <Link href="/admin/prescriptions?add=1">
           <Button className="w-full sm:min-w-[160px] shadow font-semibold flex items-center gap-2">
-            <PillIcon className="h-5 w-5" /> Review Prescriptions
+            <PillIcon className="h-5 w-5" /> Add Prescription
           </Button>
         </Link>
         <Link href="/admin/messages">
