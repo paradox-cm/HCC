@@ -1,8 +1,14 @@
+import type { Metadata } from "next"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardContent } from "@/components/ui/card"
 import { Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Patient Testimonials | Houston Cardiology Consultants",
+  description: "Read real patient testimonials and reviews about their experiences with Houston Cardiology Consultants. Discover why patients trust us for their heart care.",
+}
 
 export default function TestimonialsPage() {
   return (

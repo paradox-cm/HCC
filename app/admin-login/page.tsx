@@ -3,6 +3,15 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import "../globals.css";
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Admin Login - HCC Portal",
+  description: "Admin login for Houston Cardiology Consultants.",
+  icons: {
+    icon: "/images/hcc-logo.ico",
+  },
+}
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("")

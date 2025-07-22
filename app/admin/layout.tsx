@@ -28,6 +28,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useRef } from "react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Drawer, DrawerTrigger, DrawerContent, DrawerClose } from "@/components/ui/drawer"
+import type { Metadata } from "next"
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: Home2FillIcon },
@@ -40,6 +41,14 @@ const navItems = [
   { href: "/admin/care-plans", label: "Care Plans", icon: HeartPulseFillIcon },
   { href: "/admin/settings", label: "Settings", icon: Settings2FillIcon },
 ]
+
+export const metadata: Metadata = {
+  title: "HCC Admin Portal",
+  description: "Admin portal for Houston Cardiology Consultants.",
+  icons: {
+    icon: "/images/hcc-logo.ico",
+  },
+}
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()

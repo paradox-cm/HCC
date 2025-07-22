@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Prescriptions | Patient Portal | Houston Cardiology Consultants",
+  description: "View, request refills, and manage your prescriptions securely in the Houston Cardiology Consultants Patient Portal.",
+}
+
 "use client"
 
 import { useState } from "react"

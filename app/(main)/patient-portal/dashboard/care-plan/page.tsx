@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Care Plan | Patient Portal | Houston Cardiology Consultants",
+  description: "Review your personalized care plan, goals, and recent visits in the Houston Cardiology Consultants Patient Portal.",
+}
+
 "use client"
 
 import { SectionWrapper } from "@/components/section-wrapper"

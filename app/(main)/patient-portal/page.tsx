@@ -1,9 +1,15 @@
+import type { Metadata } from "next"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Patient Portal | Houston Cardiology Consultants",
+  description: "Access your medical records, test results, and communicate securely with your care team through the Houston Cardiology Consultants Patient Portal.",
+}
 
 export default function PatientPortalPage() {
   return (

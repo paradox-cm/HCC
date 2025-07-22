@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "Houston Cardiology Consultants - Wireframe",
   description: "Wireframe for the Houston Cardiology Consultants website.",
   icons: {
-    icon: "/images/hcc-logo.png", // Set the favicon
+    icon: "/images/hcc-logo.ico", // Set the favicon
   },
     generator: 'v0.dev'
 }
