@@ -62,12 +62,14 @@ function PrescriptionsContent() {
   const [refillNotes, setRefillNotes] = useState("")
   const [refillStatus, setRefillStatus] = useState<{ [id: number]: boolean }>({})
   const [showNew, setShowNew] = useState(false)
+  const [newModalOpen, setNewModalOpen] = useState(false)
+  const [newModalSuccess, setNewModalSuccess] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalSuccess, setModalSuccess] = useState(false)
   const [newRx, setNewRx] = useState({ name: "", dosage: "", notes: "" })
   const router = useRouter()
   const nextRouter = useNextRouter()
   const searchParams = useSearchParams()
-  const [modalOpen, setModalOpen] = useState(false)
-  const [modalSuccess, setModalSuccess] = useState(false)
   const refillParam = searchParams?.get("refill")
   const modalRx = prescriptions.find(rx => String(rx.id) === refillParam)
 
@@ -101,8 +103,12 @@ function PrescriptionsContent() {
       },
       ...prev,
     ])
-    setShowNew(false)
-    setNewRx({ name: "", dosage: "", notes: "" })
+    setNewModalSuccess(true)
+    setTimeout(() => {
+      setNewModalOpen(false)
+      setNewModalSuccess(false)
+      setNewRx({ name: "", dosage: "", notes: "" })
+    }, 1200)
   }
 
   function handleModalRefill(e: React.FormEvent) {
@@ -138,36 +144,55 @@ function PrescriptionsContent() {
           <CardContent>
             <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <span className="font-semibold text-base">Your Current Prescriptions</span>
-              <Button size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => setShowNew(v => !v)}>
+              <Button size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => setNewModalOpen(true)}>
                 Request New Prescription
               </Button>
             </div>
-            {showNew && (
-              <form className="mb-6 p-3 border rounded-lg bg-muted/40 space-y-2" onSubmit={handleNewRx}>
-                <Input
-                  placeholder="Medication Name"
-                  value={newRx.name}
-                  onChange={e => setNewRx(rx => ({ ...rx, name: e.target.value }))}
-                  required
-                />
-                <Input
-                  placeholder="Dosage (optional)"
-                  value={newRx.dosage}
-                  onChange={e => setNewRx(rx => ({ ...rx, dosage: e.target.value }))}
-                />
-                <Textarea
-                  placeholder="Notes for your provider (optional)"
-                  value={newRx.notes}
-                  onChange={e => setNewRx(rx => ({ ...rx, notes: e.target.value }))}
-                  rows={2}
-                  className="text-xs"
-                />
-                <div className="flex gap-2">
-                  <Button type="submit" size="sm" className="w-full">Submit</Button>
-                  <Button type="button" size="sm" variant="ghost" onClick={() => setShowNew(false)}>Cancel</Button>
-                </div>
-              </form>
-            )}
+            <Dialog open={newModalOpen} onOpenChange={setNewModalOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Request New Prescription</DialogTitle>
+                  <DialogDescription>Fill out the form below to request a new prescription.</DialogDescription>
+                </DialogHeader>
+                {newModalSuccess ? (
+                  <div className="text-green-700 text-center py-8">Prescription request submitted!</div>
+                ) : (
+                  <form className="space-y-4" onSubmit={handleNewRx}>
+                    <div>
+                      <label className="block text-xs font-medium mb-1">Medication Name</label>
+                      <Input
+                        placeholder="Medication Name"
+                        value={newRx.name}
+                        onChange={e => setNewRx(rx => ({ ...rx, name: e.target.value }))}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium mb-1">Dosage (optional)</label>
+                      <Input
+                        placeholder="Dosage (optional)"
+                        value={newRx.dosage}
+                        onChange={e => setNewRx(rx => ({ ...rx, dosage: e.target.value }))}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium mb-1">Notes for your provider (optional)</label>
+                      <Textarea
+                        placeholder="Notes for your provider (optional)"
+                        value={newRx.notes}
+                        onChange={e => setNewRx(rx => ({ ...rx, notes: e.target.value }))}
+                        rows={2}
+                        className="text-xs"
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit" size="sm" className="w-full">Submit</Button>
+                      <Button type="button" size="sm" variant="ghost" className="w-full" onClick={() => setNewModalOpen(false)}>Cancel</Button>
+                    </DialogFooter>
+                  </form>
+                )}
+              </DialogContent>
+            </Dialog>
             <div className="space-y-4">
               {prescriptions.length === 0 && (
                 <div className="py-8 text-center text-muted-foreground">

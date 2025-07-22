@@ -89,3 +89,9 @@
     transform: translateY(0);
   }
 }
+
+/* Ensure mobile nav links stay white on press in dark mode */
+.dark .mobile-nav-link:active,
+.dark .mobile-nav-link:focus {
+  color: hsl(var(--foreground)) !important;
+}

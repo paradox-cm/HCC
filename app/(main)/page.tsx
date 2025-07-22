@@ -47,7 +47,7 @@ export default function HomePage() {
             description="Existing Patient"
             href="/patient-portal"
           />
-          <QuickAccessCard icon={Pill} title="Request Prescription" description="Quick Renewal" href="/appointments" />
+          <QuickAccessCard icon={Pill} title="Request Prescription" description="Manage Prescriptions" href="/patient-portal/dashboard/prescriptions?new=1" />
           <QuickAccessCard icon={Video} title="Watch Videos" description="Learn About Heart Health" href="/learn" />
         </div>
       </SectionWrapper>

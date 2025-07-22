@@ -140,13 +140,13 @@ export function Footer() {
         <div className="flex justify-between items-center mb-2 gap-2 min-w-0 max-w-full">
           <div className="flex gap-3 flex-wrap min-w-0 max-w-full overflow-x-auto">
             <a href="https://www.facebook.com/houstoncardiologyconsultants/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="min-w-0 max-w-full">
-              <Image src="/fb.png" alt="Facebook" width={20} height={20} className="h-5 w-5 opacity-80 hover:opacity-100 transition-opacity max-w-full min-w-0" />
+              <Image src="/FB.png" alt="Facebook" width={20} height={20} className="h-5 w-5 opacity-80 hover:opacity-100 transition-opacity max-w-full min-w-0" />
             </a>
             <a href="https://x.com/hccheart?lang=en" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="min-w-0 max-w-full">
-              <Image src="/x.png" alt="X (Twitter)" width={20} height={20} className="h-5 w-5 opacity-80 hover:opacity-100 transition-opacity max-w-full min-w-0" />
+              <Image src="/X.png" alt="X (Twitter)" width={20} height={20} className="h-5 w-5 opacity-80 hover:opacity-100 transition-opacity max-w-full min-w-0" />
             </a>
             <a href="https://www.instagram.com/houstoncardiologyconsultants" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="min-w-0 max-w-full">
-              <Image src="/ig.png" alt="Instagram" width={20} height={20} className="h-5 w-5 opacity-80 hover:opacity-100 transition-opacity max-w-full min-w-0" />
+              <Image src="/IG.png" alt="Instagram" width={20} height={20} className="h-5 w-5 opacity-80 hover:opacity-100 transition-opacity max-w-full min-w-0" />
             </a>
           </div>
           <Button

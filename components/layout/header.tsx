@@ -155,7 +155,7 @@ export function Header() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="text-base font-medium transition-colors hover:text-primary py-1.5 px-2 rounded-md hover:bg-accent"
+                      className="mobile-nav-link text-base font-medium transition-colors hover:text-primary py-1.5 px-2 rounded-md hover:bg-accent"
                       onClick={() => setIsOpen(false)}
                     >
                       {link.label}
@@ -176,19 +176,19 @@ export function Header() {
                   <div>
                     <h3 className="font-semibold uppercase text-xs mb-1.5 tracking-wider text-muted-foreground">Company</h3>
                     <ul className="flex flex-col gap-1">
-                      <li><Link href="/about-us" className="text-xs text-muted-foreground transition-colors hover:text-primary">About Us</Link></li>
-                      <li><Link href="/testimonials" className="text-xs text-muted-foreground transition-colors hover:text-primary">Testimonials</Link></li>
-                      <li><Link href="/locations" className="text-xs text-muted-foreground transition-colors hover:text-primary">Locations</Link></li>
-                      <li><Link href="/contact" className="text-xs text-muted-foreground transition-colors hover:text-primary">Contact</Link></li>
-                      <li><Link href="/faq" className="text-xs text-muted-foreground transition-colors hover:text-primary">FAQ</Link></li>
+                      <li><Link href="/about-us" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>About Us</Link></li>
+                      <li><Link href="/testimonials" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Testimonials</Link></li>
+                      <li><Link href="/locations" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Locations</Link></li>
+                      <li><Link href="/contact" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Contact</Link></li>
+                      <li><Link href="/faq" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>FAQ</Link></li>
                     </ul>
                   </div>
                   <div>
                     <h3 className="font-semibold uppercase text-xs mb-1.5 tracking-wider text-muted-foreground">Patient Info</h3>
                     <ul className="flex flex-col gap-1">
-                      <li><Link href="/services" className="text-xs text-muted-foreground transition-colors hover:text-primary">Services</Link></li>
-                      <li><Link href="/learn" className="text-xs text-muted-foreground transition-colors hover:text-primary">Learn</Link></li>
-                      <li><Link href="/billing-and-insurance" className="text-xs text-muted-foreground transition-colors hover:text-primary">Billing & Insurance</Link></li>
+                      <li><Link href="/services" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Services</Link></li>
+                      <li><Link href="/learn" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Learn</Link></li>
+                      <li><Link href="/billing-and-insurance" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Billing & Insurance</Link></li>
                     </ul>
                   </div>
                   <div className="col-span-2">
@@ -201,19 +201,19 @@ export function Header() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start" className="w-full">
                         <DropdownMenuItem asChild>
-                          <Link href="/patient-rights">Patient Rights</Link>
+                          <Link href="/patient-rights" className="mobile-nav-link" onClick={() => setIsOpen(false)}>Patient Rights</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/hipaa">HIPAA Notice</Link>
+                          <Link href="/hipaa" className="mobile-nav-link" onClick={() => setIsOpen(false)}>HIPAA Notice</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/privacy-policy">Privacy Policy</Link>
+                          <Link href="/privacy-policy" className="mobile-nav-link" onClick={() => setIsOpen(false)}>Privacy Policy</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/terms-of-use">Terms of Use</Link>
+                          <Link href="/terms-of-use" className="mobile-nav-link" onClick={() => setIsOpen(false)}>Terms of Use</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/accessibility">Accessibility</Link>
+                          <Link href="/accessibility" className="mobile-nav-link" onClick={() => setIsOpen(false)}>Accessibility</Link>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
