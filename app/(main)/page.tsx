@@ -4,7 +4,11 @@ import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { SectionWrapper } from "@/components/section-wrapper"
-import { ArrowRight, Calendar, HeartHandshake, Pill, Video } from "lucide-react"
+import ArrowRightSFillIcon from 'remixicon-react/ArrowRightSFillIcon';
+import CalendarFillIcon from 'remixicon-react/CalendarFillIcon';
+import HandHeartFillIcon from 'remixicon-react/HandHeartFillIcon';
+import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon';
+import VideoFillIcon from 'remixicon-react/VideoFillIcon';
 import Link from "next/link"
 import { DoctorProfileCard } from "@/components/doctor-profile-card"
 import { useEffect, useState } from "react"
@@ -40,15 +44,15 @@ export default function HomePage() {
       {/* Quick Access Cards */}
       <SectionWrapper>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <QuickAccessCard icon={Calendar} title="Schedule Visit" description="New Patient" href="/appointments" />
+          <QuickAccessCard icon={CalendarFillIcon} title="Schedule Visit" description="New Patient" href="/appointments" />
           <QuickAccessCard
-            icon={HeartHandshake}
+            icon={HandHeartFillIcon}
             title="Manage Your Care"
             description="Existing Patient"
             href="/patient-portal"
           />
-          <QuickAccessCard icon={Pill} title="Request Prescription" description="Manage Prescriptions" href="/patient-portal/dashboard/prescriptions?new=1" />
-          <QuickAccessCard icon={Video} title="Watch Videos" description="Learn About Heart Health" href="/learn" />
+          <QuickAccessCard icon={CapsuleFillIcon} title="Request Prescription" description="Manage Prescriptions" href="/patient-portal/dashboard/prescriptions?new=1" />
+          <QuickAccessCard icon={VideoFillIcon} title="Watch Videos" description="Learn About Heart Health" href="/learn" />
         </div>
       </SectionWrapper>
 
@@ -68,7 +72,7 @@ export default function HomePage() {
         <div className="mt-8 text-center">
           <Button variant="link" asChild>
             <Link href="/about-us">
-              Learn More About Us <ArrowRight className="ml-2 h-4 w-4" />
+              Learn More About Us <ArrowRightSFillIcon className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -193,7 +197,7 @@ function LocationPreview({ name, address, mapPlaceholder }: { name: string; addr
         <p className="text-muted-foreground">{address}</p>
         <Button variant="link" className="p-0 h-auto mt-2" asChild>
           <Link href="/locations">
-            View Details & Directions <ArrowRight className="ml-2 h-4 w-4" />
+            View Details & Directions <ArrowRightSFillIcon className="ml-2 h-4 w-4" />
           </Link>
         </Button>
       </CardContent>

@@ -5,7 +5,10 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Stethoscope, CheckCircle, ChevronDown, ChevronUp } from "lucide-react"
+import StethoscopeFillIcon from 'remixicon-react/StethoscopeFillIcon';
+import CheckboxCircleFillIcon from 'remixicon-react/CheckboxCircleFillIcon';
+import ArrowDownSFillIcon from 'remixicon-react/ArrowDownSFillIcon';
+import ArrowUpSFillIcon from 'remixicon-react/ArrowUpSFillIcon';
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useRef } from "react"
@@ -333,7 +336,7 @@ export default function ServicesPage() {
                 onClick={() => setExpandedSections(s => ({ ...s, [serviceCategory.category]: !s[serviceCategory.category] }))}
                 className="ml-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
               >
-                {expandedSections[serviceCategory.category] ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
+                {expandedSections[serviceCategory.category] ? <ArrowUpSFillIcon className="w-6 h-6" /> : <ArrowDownSFillIcon className="w-6 h-6" />}
               </button>
             </div>
             {/* Category description (generic, by type) */}
@@ -513,7 +516,7 @@ function ServiceCard({
             <h3 className="text-xl font-semibold mb-4">{name}</h3>
             {isMobile && (
               <button type="button" className="ml-2" onClick={onExpand} aria-label={expanded ? "Collapse" : "Expand"}>
-                {expanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                {expanded ? <ArrowUpSFillIcon className="w-5 h-5" /> : <ArrowDownSFillIcon className="w-5 h-5" />}
               </button>
             )}
           </div>
@@ -525,7 +528,7 @@ function ServiceCard({
         <div className="flex flex-col">
           <CardContent className="p-6 pt-0 flex flex-col">
             <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
-              <Stethoscope className="h-8 w-8 text-primary/60" />
+              <StethoscopeFillIcon className="h-8 w-8 text-primary/60" />
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>
             <div className="space-y-3 pt-4 border-t border-muted flex-shrink-0">
@@ -567,7 +570,7 @@ function ServiceCard({
             <h3 className="text-xl font-semibold mb-4">{name}</h3>
             {/* Image placeholder - full width */}
             <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
-              <Stethoscope className="h-8 w-8 text-primary/60" />
+              <StethoscopeFillIcon className="h-8 w-8 text-primary/60" />
             </div>
             {/* Main description */}
             <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>
@@ -611,7 +614,7 @@ function ServiceCard({
 function FeatureListItem({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex items-start gap-3">
-      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+      <CheckboxCircleFillIcon className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
       <span>{children}</span>
     </li>
   )

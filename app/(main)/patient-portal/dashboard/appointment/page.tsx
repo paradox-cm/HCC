@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Calendar } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft } from "lucide-react"
+import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
 
 const MOCK_PATIENT = {
   name: "Jane Doe",
@@ -62,7 +62,7 @@ export default function DashboardAppointmentForm() {
       <>
         <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2">
           <Button variant="outline" onClick={() => router.back()} className="mb-2">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
             Back
           </Button>
         </div>
@@ -94,7 +94,7 @@ export default function DashboardAppointmentForm() {
     <>
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2">
         <Button variant="outline" onClick={() => router.back()} className="mb-2">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>

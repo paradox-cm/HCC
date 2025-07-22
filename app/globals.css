@@ -101,35 +101,43 @@
   color: hsl(var(--foreground)) !important;
 }
 
-/* Force calendar table to use flexbox for full width */
-.calendar-full-width .rdp-table {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
+/* Utility: Instantly disable all transitions (for instant dark mode switch) */
+.instant-theme-switch, .instant-theme-switch * {
+  transition: none !important;
 }
 
-.calendar-full-width .rdp-row,
-.calendar-full-width .rdp-head_row {
-  display: flex !important;
+/* Stronger custom overrides for react-day-picker calendar (no all: unset) */
+body .calendar-override .rdp {
   width: 100% !important;
-}
-
-.calendar-full-width .rdp-cell,
-.calendar-full-width .rdp-head_cell {
-  display: flex !important;
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
   max-width: 100% !important;
-  height: auto !important;
-  aspect-ratio: unset !important;
-  justify-content: center;
-  align-items: center;
-  padding: 0 !important;
+  font-size: 1rem !important;
 }
-
-.calendar-viewport {
-  height: calc(100vh - 64px);
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+body .calendar-override .rdp-day {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  line-height: 2.5rem !important;
+  margin: 0 auto !important;
+  border-radius: 50% !important;
+  transition: background 0.2s, color 0.2s !important;
+  font-weight: 500 !important;
+  color: hsl(var(--foreground)) !important;
+}
+body .calendar-override .rdp-day_selected,
+body .calendar-override .rdp-day_today {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+body .calendar-override .rdp-day_outside {
+  color: #d1d5db !important; /* Tailwind gray-300 */
+}
+body .calendar-override .rdp-day:focus {
+  outline: 2px solid hsl(var(--primary)) !important;
+  outline-offset: 2px !important;
+}
+body .calendar-override .rdp-button[aria-label*="Previous month"],
+body .calendar-override .rdp-button[aria-label*="Next month"] {
+  color: hsl(var(--primary)) !important;
+}
+body .calendar-override .rdp-caption_label {
+  font-weight: 700 !important;
 }

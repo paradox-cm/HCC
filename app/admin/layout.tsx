@@ -3,7 +3,21 @@
 import "../globals.css";
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Calendar, Users, FileText, MessageSquare, Pill, DollarSign, HeartPulse, Settings, Home, Sun, Moon, Bell, Circle, Menu, X } from "lucide-react"
+import CalendarFillIcon from 'remixicon-react/CalendarFillIcon';
+import User3FillIcon from 'remixicon-react/User3FillIcon';
+import FileTextFillIcon from 'remixicon-react/FileTextFillIcon';
+import Message2FillIcon from 'remixicon-react/Message2FillIcon';
+import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon';
+import MoneyDollarCircleFillIcon from 'remixicon-react/MoneyDollarCircleFillIcon';
+import HeartPulseFillIcon from 'remixicon-react/HeartPulseFillIcon';
+import Settings2FillIcon from 'remixicon-react/Settings2FillIcon';
+import Home2FillIcon from 'remixicon-react/Home2FillIcon';
+import SunFillIcon from 'remixicon-react/SunFillIcon';
+import MoonFillIcon from 'remixicon-react/MoonFillIcon';
+import Notification3FillIcon from 'remixicon-react/Notification3FillIcon';
+import CheckboxCircleFillIcon from 'remixicon-react/CheckboxCircleFillIcon';
+import MenuFillIcon from 'remixicon-react/MenuFillIcon';
+import CloseFillIcon from 'remixicon-react/CloseFillIcon';
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 import Image from "next/image"
@@ -16,15 +30,15 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { Drawer, DrawerTrigger, DrawerContent, DrawerClose } from "@/components/ui/drawer"
 
 const navItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: Home },
-  { href: "/admin/patients", label: "Patients", icon: Users },
-  { href: "/admin/appointments", label: "Appointments", icon: Calendar },
-  { href: "/admin/prescriptions", label: "Prescriptions", icon: Pill },
-  { href: "/admin/messages", label: "Messages", icon: MessageSquare },
-  { href: "/admin/documents", label: "Documents", icon: FileText },
-  { href: "/admin/billing", label: "Billing & Insurance", icon: DollarSign },
-  { href: "/admin/care-plans", label: "Care Plans", icon: HeartPulse },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/dashboard", label: "Dashboard", icon: Home2FillIcon },
+  { href: "/admin/patients", label: "Patients", icon: User3FillIcon },
+  { href: "/admin/appointments", label: "Appointments", icon: CalendarFillIcon },
+  { href: "/admin/prescriptions", label: "Prescriptions", icon: CapsuleFillIcon },
+  { href: "/admin/messages", label: "Messages", icon: Message2FillIcon },
+  { href: "/admin/documents", label: "Documents", icon: FileTextFillIcon },
+  { href: "/admin/billing", label: "Billing & Insurance", icon: MoneyDollarCircleFillIcon },
+  { href: "/admin/care-plans", label: "Care Plans", icon: HeartPulseFillIcon },
+  { href: "/admin/settings", label: "Settings", icon: Settings2FillIcon },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -160,7 +174,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             aria-label="Open menu"
             type="button"
           >
-            <Menu className="h-6 w-6" />
+            <MenuFillIcon className="h-6 w-6" />
           </button>
           <Link href="/" className="flex items-center gap-3">
             <Image src="/images/hcc-logo.png" alt="HCC Logo" width={28} height={28} className="h-7 w-7" />
@@ -169,10 +183,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
           <span className="ml-2 sm:ml-6 text-sm text-muted-foreground font-medium min-w-max hidden xs:inline">{dateTime}</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 instant-theme-switch">
           {/* System Status (desktop only - above 1240px) */}
           <div className="hidden min-[1240px]:flex items-center gap-1 group relative" title="All systems operational">
-            <Circle className="h-3 w-3 text-green-500" fill="#22c55e" />
+            <CheckboxCircleFillIcon className="h-3 w-3 text-green-500" />
             <span className="text-xs text-green-600 font-medium">All systems operational</span>
             <div className="absolute left-1/2 -bottom-7 -translate-x-1/2 bg-background border rounded px-2 py-1 text-xs text-muted-foreground shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
               All systems operational
@@ -185,7 +199,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             aria-label="Toggle theme"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === "dark" ? <SunFillIcon className="h-5 w-5" /> : <MoonFillIcon className="h-5 w-5" />}
           </Button>
           {/* Notifications Bell */}
           <DropdownMenu>
@@ -195,7 +209,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 aria-label="Notifications"
                 type="button"
               >
-                <Bell className="h-5 w-5 text-muted-foreground" />
+                <Notification3FillIcon className="h-5 w-5 text-muted-foreground" />
                 {unreadCount() > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 font-bold border border-background">{unreadCount()}</span>
                 )}
@@ -274,7 +288,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 aria-label="Close menu"
                 type="button"
               >
-                <X className="h-6 w-6" />
+                <CloseFillIcon className="h-6 w-6" />
               </button>
             </div>
             {/* Drawer Top Utilities */}
@@ -283,7 +297,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <span className="text-sm text-muted-foreground font-medium min-w-max">{dateTime}</span>
                 {/* System Status */}
                 <div className="flex items-center gap-1 group relative" title="All systems operational">
-                  <Circle className="h-3 w-3 text-green-500" fill="#22c55e" />
+                  <CheckboxCircleFillIcon className="h-3 w-3 text-green-500" />
                   <span className="text-xs text-green-600 font-medium">Online</span>
                 </div>
               </div>
@@ -295,7 +309,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   aria-label="Toggle theme"
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 >
-                  {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  {theme === "dark" ? <SunFillIcon className="h-5 w-5" /> : <MoonFillIcon className="h-5 w-5" />}
                 </Button>
                 {/* Notifications Bell */}
                 <DropdownMenu>
@@ -305,7 +319,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       aria-label="Notifications"
                       type="button"
                     >
-                      <Bell className="h-5 w-5 text-muted-foreground" />
+                      <Notification3FillIcon className="h-5 w-5 text-muted-foreground" />
                       {unreadCount() > 0 && (
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 font-bold border border-background">{unreadCount()}</span>
                       )}

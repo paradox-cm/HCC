@@ -7,7 +7,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, PlusCircle, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react"
+import MailFillIcon from 'remixicon-react/MailFillIcon';
+import AddCircleFillIcon from 'remixicon-react/AddCircleFillIcon';
+import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
+import ArrowDownSFillIcon from 'remixicon-react/ArrowDownSFillIcon';
+import ArrowUpSFillIcon from 'remixicon-react/ArrowUpSFillIcon';
 import Image from "next/image"
 
 type Message = {
@@ -81,7 +85,7 @@ function MessagesContent() {
     <>
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2">
         <Button variant="outline" onClick={() => router.back()} className="mb-2">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>
@@ -89,10 +93,10 @@ function MessagesContent() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Mail className="h-5 w-5" /> Messages
+              <MailFillIcon className="h-5 w-5" /> Messages
             </CardTitle>
             <Button size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => setShowNew((v) => !v)}>
-              <PlusCircle className="mr-2 h-4 w-4" /> New Message
+              <AddCircleFillIcon className="mr-2 h-4 w-4" /> New Message
             </Button>
           </CardHeader>
           <CardContent>
@@ -139,7 +143,7 @@ function MessagesContent() {
                       <div className="flex flex-col items-end gap-1 min-w-[70px]">
                         <span className="text-xs text-muted-foreground whitespace-nowrap">{latest.time}</span>
                         {thread.unread && <span className="ml-2 inline-block bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full">New</span>}
-                        {expanded === thread.id ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                        {expanded === thread.id ? <ArrowUpSFillIcon className="h-4 w-4 text-muted-foreground" /> : <ArrowDownSFillIcon className="h-4 w-4 text-muted-foreground" />}
                       </div>
                     </button>
                     {expanded === thread.id && (

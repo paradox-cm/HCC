@@ -3,7 +3,14 @@
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { HeartPulse, Calendar, Pill, Mail, Phone, ArrowLeft, Download, Printer } from "lucide-react"
+import HeartPulseFillIcon from 'remixicon-react/HeartPulseFillIcon';
+import CalendarFillIcon from 'remixicon-react/CalendarFillIcon';
+import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon';
+import MailFillIcon from 'remixicon-react/MailFillIcon';
+import PhoneFillIcon from 'remixicon-react/PhoneFillIcon';
+import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
+import DownloadFillIcon from 'remixicon-react/DownloadFillIcon';
+import PrinterFillIcon from 'remixicon-react/PrinterFillIcon';
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -29,14 +36,14 @@ export default function CarePlanPage() {
     <>
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2 mb-8">
         <Button variant="outline" onClick={() => router.back()}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>
       <SectionWrapper className="pt-4 md:pt-0">
         <Card className="max-w-2xl mx-auto">
           <CardHeader className="flex items-center gap-2 pb-2">
-            <HeartPulse className="h-5 w-5 text-primary" />
+            <HeartPulseFillIcon className="h-5 w-5 text-primary" />
             <CardTitle className="text-lg">Your Care Plan</CardTitle>
           </CardHeader>
           <CardContent>
@@ -60,15 +67,15 @@ export default function CarePlanPage() {
               <h2 className="text-lg font-semibold mb-2">Medications</h2>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
-                  <Pill className="h-4 w-4 text-primary" />
+                  <CapsuleFillIcon className="h-4 w-4 text-primary" />
                   <span className="font-medium">Metoprolol</span> 50mg – 1 tablet daily
                 </li>
                 <li className="flex items-center gap-2">
-                  <Pill className="h-4 w-4 text-primary" />
+                  <CapsuleFillIcon className="h-4 w-4 text-primary" />
                   <span className="font-medium">Atorvastatin</span> 20mg – 1 tablet daily
                 </li>
                 <li className="flex items-center gap-2">
-                  <Pill className="h-4 w-4 text-primary" />
+                  <CapsuleFillIcon className="h-4 w-4 text-primary" />
                   <span className="font-medium">Lisinopril</span> 10mg – 1 tablet daily
                 </li>
               </ul>
@@ -77,11 +84,11 @@ export default function CarePlanPage() {
               <h2 className="text-lg font-semibold mb-2">Upcoming Appointments</h2>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
+                  <CalendarFillIcon className="h-4 w-4 text-primary" />
                   <span>Follow-up with Dr. Asif Ali – July 25, 2025 at 10:00 AM</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
+                  <CalendarFillIcon className="h-4 w-4 text-primary" />
                   <span>Lab work – July 20, 2025</span>
                 </li>
               </ul>
@@ -90,21 +97,21 @@ export default function CarePlanPage() {
               <h2 className="text-lg font-semibold mb-2">Your Care Team</h2>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-primary" />
+                  <MailFillIcon className="h-4 w-4 text-primary" />
                   <a href="mailto:info@hcc.com" className="hover:underline">info@hcc.com</a>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-primary" />
+                  <PhoneFillIcon className="h-4 w-4 text-primary" />
                   <a href="tel:713-464-4140" className="hover:underline">713-464-4140</a>
                 </li>
               </ul>
             </div>
             <div className="flex flex-col gap-3 mt-8 print:hidden">
               <Button variant="outline" onClick={handlePrint} className="w-full">
-                <Printer className="h-4 w-4 mr-2" /> Print
+                <PrinterFillIcon className="h-4 w-4 mr-2" /> Print
               </Button>
               <Button variant="outline" onClick={handleDownload} className="w-full">
-                <Download className="h-4 w-4 mr-2" /> Download
+                <DownloadFillIcon className="h-4 w-4 mr-2" /> Download
               </Button>
             </div>
           </CardContent>

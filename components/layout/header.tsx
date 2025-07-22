@@ -3,7 +3,9 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Calendar, Globe } from "lucide-react"
+import MenuFillIcon from 'remixicon-react/MenuFillIcon';
+import CalendarFillIcon from 'remixicon-react/CalendarFillIcon';
+import EarthFillIcon from 'remixicon-react/EarthFillIcon';
 import { useState } from "react"
 import Image from "next/image"
 import {
@@ -65,7 +67,7 @@ export function Header() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 h-20 bg-gradient-to-b from-white/80 via-white/60 to-transparent dark:from-[hsl(0_0%_7%)/0.8] dark:via-[hsl(0_0%_7%)/0.6] dark:to-transparent pointer-events-none z-40 backdrop-blur-sm"></div>
+      <div className="fixed top-0 left-0 right-0 h-20 bg-gradient-to-b from-white/80 via-white/60 to-transparent dark:from-[hsl(0_0%_7%)/0.8] dark:via-[hsl(0_0%_7%)/0.6] dark:to-transparent pointer-events-none z-50 backdrop-blur-sm"></div>
       <header className="fixed top-6 z-50 inset-x-0 px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8">
         <div className="flex h-16 items-center justify-between rounded-2xl border bg-background/90 backdrop-blur-sm px-4 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-2">
@@ -87,7 +89,7 @@ export function Header() {
 
         {/* Desktop language toggle and nav buttons (now nav-desktop and up) */}
         <div className="hidden nav-desktop:flex items-center gap-2">
-          <Globe className="h-5 w-5 text-muted-foreground" />
+          <EarthFillIcon className="h-5 w-5 text-muted-foreground" />
           <Select defaultValue="en" onValueChange={value => {
             if (typeof window !== 'undefined' && window.google && window.google.translate) {
               window.google.translate.translatePage('en', value);
@@ -108,7 +110,7 @@ export function Header() {
           </Button>
           <Button asChild>
             <Link href="/appointments">
-              <Calendar className="h-5 w-5 mr-2" />
+              <CalendarFillIcon className="h-5 w-5 mr-2" />
               Appointments
             </Link>
           </Button>
@@ -116,7 +118,7 @@ export function Header() {
 
         {/* Mobile/tablet language toggle and menu button grouped at end (now below nav-desktop) */}
         <div className="flex nav-desktop:hidden items-center gap-2 ml-auto">
-          <Globe className="h-5 w-5 text-muted-foreground" />
+          <EarthFillIcon className="h-5 w-5 text-muted-foreground" />
           <Select defaultValue="en" onValueChange={value => {
             if (typeof window !== 'undefined' && window.google && window.google.translate) {
               window.google.translate.translatePage('en', value);
@@ -135,7 +137,7 @@ export function Header() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="nav-desktop:hidden">
               <Button variant="outline" size="icon">
-                <Menu className="h-6 w-6" />
+                <MenuFillIcon className="h-6 w-6" />
                 <span className="sr-only">Open navigation menu</span>
               </Button>
             </SheetTrigger>
@@ -167,7 +169,7 @@ export function Header() {
                 </Button>
                 <Button asChild size="sm" className="w-full">
                   <Link href="/appointments">
-                    <Calendar className="h-4 w-4 mr-2" />
+                    <CalendarFillIcon className="h-4 w-4 mr-2" />
                     Appointments
                   </Link>
                 </Button>

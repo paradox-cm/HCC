@@ -7,11 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
-import { Sun, Moon, Laptop } from "lucide-react"
+import SunFillIcon from 'remixicon-react/SunFillIcon';
+import MoonFillIcon from 'remixicon-react/MoonFillIcon';
+import ComputerFillIcon from 'remixicon-react/ComputerFillIcon';
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import { useChat } from "@/components/chat/chat-provider"
 import Image from "next/image"
-import { MessageCircle, ArrowUp } from "lucide-react"
+import WhatsappFillIcon from 'remixicon-react/WhatsappFillIcon';
+import ArrowUpCircleFillIcon from 'remixicon-react/ArrowUpCircleFillIcon';
 
 const linkCategories = [
   {
@@ -54,9 +57,9 @@ export function Footer() {
   const { theme, setTheme, resolvedTheme } = useTheme()
   // Use only neutral grays for all icons and UI elements in dark mode (no blue hues)
   const themeOptions = [
-    { value: "light", label: "Light", icon: <Sun className="h-4 w-4 text-yellow-400" /> },
-    { value: "dark", label: "Dark", icon: <Moon className="h-4 w-4" style={{ color: '#888' }} /> }, // Neutral gray
-    { value: "system", label: "System", icon: <Laptop className="h-4 w-4 text-blue-500" /> },
+    { value: "light", label: "Light", icon: <SunFillIcon className="h-4 w-4 text-yellow-400" /> },
+    { value: "dark", label: "Dark", icon: <MoonFillIcon className="h-4 w-4" style={{ color: '#888' }} /> }, // Neutral gray
+    { value: "system", label: "System", icon: <ComputerFillIcon className="h-4 w-4 text-blue-500" /> },
   ]
   // Only render dropdown after mount to avoid hydration mismatch
   const [mounted, setMounted] = useState(false)
@@ -156,7 +159,7 @@ export function Footer() {
             aria-label="Scroll to top"
             onClick={handleScrollTop}
           >
-            <ArrowUp className="h-5 w-5" />
+            <ArrowUpCircleFillIcon className="h-5 w-5" />
           </Button>
         </div>
         <div className="mt-12 border-t pt-8 w-full">
@@ -208,7 +211,7 @@ export function Footer() {
               <Dialog open={waOpen} onOpenChange={setWaOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="w-full md:w-auto">
-                    <MessageCircle className="mr-2 h-5 w-5 text-green-600" />
+                    <WhatsappFillIcon className="mr-2 h-5 w-5 text-green-600" />
                     Message us on WhatsApp
                   </Button>
                 </DialogTrigger>

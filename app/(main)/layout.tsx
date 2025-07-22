@@ -30,7 +30,7 @@ export default function MainLayout({
       <body className={`${inter.className} bg-background text-foreground overflow-x-hidden`}>
           <ChatProvider>
             <Header />
-            <main className="flex-grow pt-28 overflow-x-hidden">{children}</main>
+            <main className="flex-grow overflow-x-hidden pt-[88px]">{children}</main>
             <ChatbotPlaceholder />
             {/* Only show ChatWidget if not on /chat (client-only check) */}
             <ClientOnlyChatWidget />

@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
-import { ArrowLeft } from "lucide-react"
+import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
 import {
   Dialog,
   DialogTrigger,
@@ -132,7 +132,7 @@ export default function DashboardSettings() {
     <>
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2">
         <Button variant="outline" onClick={() => router.back()} className="mb-2">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>

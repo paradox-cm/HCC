@@ -83,27 +83,13 @@ export function NewPatientForm() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="np-preferred-date">Preferred Appointment Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={preferredDate ? "outline" : "secondary"}
-                  className={"w-full justify-start text-left font-normal flex items-center gap-2" + (preferredDate ? "" : " text-muted-foreground")}
-                  type="button"
-                  id="np-preferred-date"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {preferredDate ? format(preferredDate, "PPP") : "Select date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 mb-4" align="start">
-                <Calendar
-                  mode="single"
-                  selected={preferredDate}
-                  onSelect={setPreferredDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <Input
+              id="np-preferred-date"
+              type="date"
+              value={preferredDate ? preferredDate.toISOString().slice(0, 10) : ''}
+              onChange={e => setPreferredDate(e.target.value ? new Date(e.target.value) : undefined)}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label>Preferred Appointment Days (Select all that apply)</Label>

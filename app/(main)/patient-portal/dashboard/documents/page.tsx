@@ -7,7 +7,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { FileText, Download, Upload, ArrowLeft, HelpCircle } from "lucide-react"
+import FileTextFillIcon from 'remixicon-react/FileTextFillIcon';
+import DownloadFillIcon from 'remixicon-react/DownloadFillIcon';
+import UploadFillIcon from 'remixicon-react/UploadFillIcon';
+import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
+import QuestionFillIcon from 'remixicon-react/QuestionFillIcon';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import Link from "next/link"
 
@@ -88,14 +92,14 @@ function DocumentsContent() {
     <>
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2">
         <Button variant="outline" onClick={() => router.back()} className="mb-2">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>
       <SectionWrapper className="pt-4 md:pt-0">
         <Card className="max-w-2xl mx-auto">
           <CardHeader className="flex items-center gap-2 pb-2">
-            <FileText className="h-5 w-5 text-primary" />
+            <FileTextFillIcon className="h-5 w-5 text-primary" />
             <CardTitle className="text-lg">Documents & Results</CardTitle>
           </CardHeader>
           <CardContent>
@@ -105,7 +109,7 @@ function DocumentsContent() {
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                      <QuestionFillIcon className="h-4 w-4 text-muted-foreground cursor-pointer" />
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-xs text-xs">
                       View, download, or upload your medical documents and test results. Use the upload button to add new files for your provider.
@@ -114,7 +118,7 @@ function DocumentsContent() {
                 </TooltipProvider>
               </span>
               <Button size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => setShowUpload(v => !v)}>
-                <Upload className="mr-2 h-4 w-4" /> Upload Document
+                <UploadFillIcon className="mr-2 h-4 w-4" /> Upload Document
               </Button>
             </div>
             {showUpload && (
@@ -183,7 +187,7 @@ function DocumentsContent() {
                 <div className="py-8 text-center text-muted-foreground">
                   <div className="mb-4">No documents found.</div>
                   <Button size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => setShowUpload(true)}>
-                    <Upload className="mr-2 h-4 w-4" /> Upload Document
+                    <UploadFillIcon className="mr-2 h-4 w-4" /> Upload Document
                   </Button>
                 </div>
               )}
@@ -197,11 +201,11 @@ function DocumentsContent() {
                   <div className="flex flex-col gap-2 min-w-[160px]">
                     <Button asChild size="sm" variant="outline" className="w-full flex items-center justify-center gap-2">
                       <Link href={`/patient-portal/dashboard/documents/${doc.id}`}>
-                        <FileText className="h-4 w-4" /> View
+                        <FileTextFillIcon className="h-4 w-4" /> View
                       </Link>
                     </Button>
                     <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2">
-                      <Download className="h-4 w-4" /> Download
+                      <DownloadFillIcon className="h-4 w-4" /> Download
                     </Button>
                   </div>
                 </div>

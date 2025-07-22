@@ -3,29 +3,27 @@ import type React from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Calendar,
-  Mail,
-  FileText,
-  Pill,
-  HeartPulse,
-  DollarSign,
-  MessageSquare,
-  ClipboardList,
-  Download,
-  Upload,
-  LogOut,
-  HelpCircle,
-  MessageCircle,
-  ChevronRight,
-  Clock,
-  User,
-  CreditCard,
-  Shield,
-  Settings,
-} from "lucide-react"
+import CalendarFillIcon from 'remixicon-react/CalendarFillIcon';
+import MailFillIcon from 'remixicon-react/MailFillIcon';
+import FileTextFillIcon from 'remixicon-react/FileTextFillIcon';
+import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon';
+import HeartPulseFillIcon from 'remixicon-react/HeartPulseFillIcon';
+import MoneyDollarCircleFillIcon from 'remixicon-react/MoneyDollarCircleFillIcon';
+import Message2FillIcon from 'remixicon-react/Message2FillIcon';
+import ClipboardFillIcon from 'remixicon-react/ClipboardFillIcon';
+import DownloadFillIcon from 'remixicon-react/DownloadFillIcon';
+import UploadFillIcon from 'remixicon-react/UploadFillIcon';
+import LogoutBoxLineIcon from 'remixicon-react/LogoutBoxLineIcon';
+import QuestionFillIcon from 'remixicon-react/QuestionFillIcon';
+import Message3FillIcon from 'remixicon-react/Message3FillIcon';
+import ArrowRightSFillIcon from 'remixicon-react/ArrowRightSFillIcon';
+import TimeFillIcon from 'remixicon-react/TimeFillIcon';
+import User3FillIcon from 'remixicon-react/User3FillIcon';
+import BankCardFillIcon from 'remixicon-react/BankCardFillIcon';
+import ShieldCheckFillIcon from 'remixicon-react/ShieldCheckFillIcon';
+import Settings3LineIcon from 'remixicon-react/Settings3LineIcon';
 import Link from "next/link"
-import { Mail as MailIcon } from "lucide-react"
+import { MailIcon } from "lucide-react"
 import { FileText as FileTextIcon } from "lucide-react"
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { useChat } from "@/components/chat/chat-provider"
@@ -96,25 +94,25 @@ function QuickActions() {
       <div className="grid grid-cols-2 gap-3 md:hidden">
         <Button asChild variant="default" className="h-16 flex-col gap-2 p-3">
           <Link href="/patient-portal/dashboard/appointment">
-            <Calendar className="h-5 w-5" />
+            <CalendarFillIcon className="h-5 w-5" />
             <span className="text-sm font-medium">Book Appointment</span>
           </Link>
         </Button>
         <Button asChild variant="outline" className="h-16 flex-col gap-2 p-3">
           <Link href="/patient-portal/dashboard/messages">
-            <MessageSquare className="h-5 w-5" />
+            <Message2FillIcon className="h-5 w-5" />
             <span className="text-sm font-medium">Message</span>
           </Link>
         </Button>
         <Button asChild variant="outline" className="h-16 flex-col gap-2 p-3">
           <Link href="/patient-portal/dashboard/prescriptions">
-            <Pill className="h-5 w-5" />
+            <CapsuleFillIcon className="h-5 w-5" />
             <span className="text-sm font-medium">Refill Rx</span>
           </Link>
         </Button>
         <Button asChild variant="outline" className="h-16 flex-col gap-2 p-3">
           <Link href="/patient-portal/dashboard/documents">
-            <FileText className="h-5 w-5" />
+            <FileTextFillIcon className="h-5 w-5" />
             <span className="text-sm font-medium">View Results</span>
           </Link>
         </Button>
@@ -123,25 +121,25 @@ function QuickActions() {
       <div className="hidden md:flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
         <Button asChild size="sm" variant="default" className="flex-shrink-0 px-4 py-2">
           <Link href="/patient-portal/dashboard/appointment">
-            <Calendar className="mr-2 h-4 w-4" />
+            <CalendarFillIcon className="mr-2 h-4 w-4" />
             Book Appointment
           </Link>
         </Button>
         <Button asChild size="sm" variant="outline" className="flex-shrink-0 px-4 py-2">
           <Link href="/patient-portal/dashboard/messages">
-            <MessageSquare className="mr-2 h-4 w-4" />
+            <Message2FillIcon className="mr-2 h-4 w-4" />
             Message
           </Link>
         </Button>
         <Button asChild size="sm" variant="outline" className="flex-shrink-0 px-4 py-2">
           <Link href="/patient-portal/dashboard/prescriptions">
-            <Pill className="mr-2 h-4 w-4" />
+            <CapsuleFillIcon className="mr-2 h-4 w-4" />
             Refill Rx
           </Link>
         </Button>
         <Button asChild size="sm" variant="outline" className="flex-shrink-0 px-4 py-2">
           <Link href="/patient-portal/dashboard/documents">
-            <FileText className="mr-2 h-4 w-4" />
+            <FileTextFillIcon className="mr-2 h-4 w-4" />
             View Results
           </Link>
         </Button>
@@ -206,7 +204,7 @@ export default function PatientPortalDashboard() {
           {/* Left: Avatar, name/date */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mt-1">
-            <User className="h-6 w-6 text-white" />
+            <User3FillIcon className="h-6 w-6 text-white" />
           </div>
             <div className="flex flex-col min-w-0">
               <h1 className="text-xl font-bold tracking-tight whitespace-nowrap">Welcome back, {patientName}</h1>
@@ -219,7 +217,7 @@ export default function PatientPortalDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button asChild size="icon" variant="outline">
-                    <Link href="/patient-portal/dashboard/settings"><Settings className="h-5 w-5" /></Link>
+                    <Link href="/patient-portal/dashboard/settings"><Settings3LineIcon className="h-5 w-5" /></Link>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Settings</TooltipContent>
@@ -227,7 +225,7 @@ export default function PatientPortalDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button asChild size="icon" variant="outline" className="border-gray-300 text-gray-600 bg-white hover:bg-gray-100 dark:bg-[hsl(0,0%,14%)] dark:text-[hsl(0,0%,80%)] dark:border-[hsl(0,0%,20%)] dark:hover:bg-[hsl(0,0%,20%)]">
-                    <Link href="/patient-portal"><LogOut className="h-5 w-5" /></Link>
+                    <Link href="/patient-portal"><LogoutBoxLineIcon className="h-5 w-5" /></Link>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Log Out</TooltipContent>
@@ -241,7 +239,7 @@ export default function PatientPortalDashboard() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button asChild size="icon" variant="ghost">
-                  <a href="/hipaa" target="_blank" rel="noopener noreferrer"><Shield className="h-5 w-5" /></a>
+                  <a href="/hipaa" target="_blank" rel="noopener noreferrer"><ShieldCheckFillIcon className="h-5 w-5" /></a>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>HIPAA Notice</TooltipContent>
@@ -249,7 +247,7 @@ export default function PatientPortalDashboard() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button asChild size="icon" variant="ghost">
-                  <a href="/patient-rights" target="_blank" rel="noopener noreferrer"><FileText className="h-5 w-5" /></a>
+                  <a href="/patient-rights" target="_blank" rel="noopener noreferrer"><FileTextFillIcon className="h-5 w-5" /></a>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Patient Rights</TooltipContent>
@@ -257,7 +255,7 @@ export default function PatientPortalDashboard() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button asChild size="icon" variant="ghost">
-                  <a href="/faq" target="_blank" rel="noopener noreferrer"><HelpCircle className="h-5 w-5" /></a>
+                  <a href="/faq" target="_blank" rel="noopener noreferrer"><QuestionFillIcon className="h-5 w-5" /></a>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Help / FAQ</TooltipContent>
@@ -275,19 +273,19 @@ export default function PatientPortalDashboard() {
           {/* Next Appointment - Prominent placement */}
           <MobileCard
             title="Next Appointment"
-            icon={<Calendar className="h-5 w-5 text-primary" />}
+            icon={<CalendarFillIcon className="h-5 w-5 text-primary" />}
             className="bg-primary/5 border-primary/20"
           >
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <Clock className="h-4 w-4 mt-1 text-muted-foreground" />
+                <TimeFillIcon className="h-4 w-4 mt-1 text-muted-foreground" />
                 <div className="flex-1">
                   <p className="font-semibold text-base">July 25, 2025 • 10:00 AM</p>
                   <p className="text-sm text-muted-foreground">Dr. Asif Ali • Heart Health Way Clinic</p>
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button asChild size="sm" variant="default" className="flex-1">
+                <Button asChild size="sm" variant="outline" className="flex-1 border-red-600 text-red-600">
                   <Link href="/patient-portal/dashboard/appointments/1/reschedule">
                     Reschedule
                   </Link>
@@ -304,7 +302,7 @@ export default function PatientPortalDashboard() {
           {/* Messages & Alerts */}
           <MobileCard
             title="Messages & Alerts"
-            icon={<Mail className="h-5 w-5 text-primary" />}
+            icon={<MailFillIcon className="h-5 w-5 text-primary" />}
             badge={MOCK_THREADS.filter(t => t.unread).length > 0 ? `${MOCK_THREADS.filter(t => t.unread).length} new` : undefined}
             href="/patient-portal/dashboard/messages"
           >
@@ -338,7 +336,7 @@ export default function PatientPortalDashboard() {
           {/* Documents & Results */}
           <MobileCard
             title="Documents & Results"
-            icon={<FileTextIcon className="h-5 w-5 text-primary" />}
+            icon={<FileTextFillIcon className="h-5 w-5 text-primary" />}
             href="/patient-portal/dashboard/documents"
           >
             <div className="space-y-2">
@@ -352,10 +350,10 @@ export default function PatientPortalDashboard() {
                   </div>
                   <div className="flex gap-1 items-center">
                     <Button asChild size="icon" variant="outline" aria-label="View Document" className="h-8 w-8 p-0 rounded-md">
-                      <Link href={`/patient-portal/dashboard/documents/${doc.id}`}><FileText className="h-4 w-4" /></Link>
+                      <Link href={`/patient-portal/dashboard/documents/${doc.id}`}><FileTextFillIcon className="h-4 w-4" /></Link>
                     </Button>
                     <Button asChild size="icon" variant="outline" aria-label="Download Document" className="h-8 w-8 p-0 rounded-md">
-                      <a href="/sample.pdf" download><Download className="h-4 w-4" /></a>
+                      <a href="/sample.pdf" download><DownloadFillIcon className="h-4 w-4" /></a>
                     </Button>
                   </div>
                 </div>
@@ -366,7 +364,7 @@ export default function PatientPortalDashboard() {
                 </Button>
               </div>
               <Button asChild size="sm" variant="outline" className="w-full mt-3">
-                <Link href="/patient-portal/dashboard/documents?upload=1"> <Upload className="mr-2 h-4 w-4" /> Upload Files</Link>
+                <Link href="/patient-portal/dashboard/documents?upload=1"> <UploadFillIcon className="mr-2 h-4 w-4" /> Upload Files</Link>
               </Button>
             </div>
           </MobileCard>
@@ -374,7 +372,7 @@ export default function PatientPortalDashboard() {
           {/* Prescriptions */}
           <MobileCard
             title="Active Prescriptions"
-            icon={<Pill className="h-5 w-5 text-primary" />}
+            icon={<CapsuleFillIcon className="h-5 w-5 text-primary" />}
             href="/patient-portal/dashboard/prescriptions"
           >
             <div className="space-y-3">
@@ -410,7 +408,7 @@ export default function PatientPortalDashboard() {
           {/* Billing & Insurance */}
           <MobileCard
             title="Billing & Insurance"
-            icon={<DollarSign className="h-5 w-5 text-primary" />}
+            icon={<MoneyDollarCircleFillIcon className="h-5 w-5 text-primary" />}
             href="/patient-portal/dashboard/billing-and-insurance"
           >
             <div className="space-y-3">
@@ -426,7 +424,7 @@ export default function PatientPortalDashboard() {
                   <p className="font-medium text-sm">Insurance</p>
                   <p className="text-xs text-muted-foreground">Aetna • Active</p>
                 </div>
-                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                <BankCardFillIcon className="h-4 w-4 text-muted-foreground" />
               </div>
             </div>
             <div className="flex gap-2 mt-3">
@@ -442,7 +440,7 @@ export default function PatientPortalDashboard() {
           {/* Care Summary */}
           <MobileCard
             title="Care Summary"
-            icon={<HeartPulse className="h-5 w-5 text-primary" />}
+            icon={<HeartPulseFillIcon className="h-5 w-5 text-primary" />}
             href="/patient-portal/dashboard/care-plan"
           >
             <div className="space-y-3">
@@ -467,7 +465,7 @@ export default function PatientPortalDashboard() {
                 </Button>
               </div>
               <Button variant="outline" size="sm" className="w-full mt-3">
-                <Download className="mr-2 h-4 w-4" />
+                <DownloadFillIcon className="mr-2 h-4 w-4" />
                 Download Visit Summary
               </Button>
             </div>
@@ -476,7 +474,7 @@ export default function PatientPortalDashboard() {
           {/* Help & Support */}
           <MobileCard
             title="Help & Support"
-            icon={<HelpCircle className="h-5 w-5 text-primary" />}
+            icon={<QuestionFillIcon className="h-5 w-5 text-primary" />}
           >
             <div className="space-y-3">
               <Button
@@ -484,7 +482,7 @@ export default function PatientPortalDashboard() {
                 className="w-full justify-start h-auto py-3"
                 onClick={() => setChatOpen(true)}
               >
-                <MessageCircle className="mr-3 h-4 w-4" />
+                <Message3FillIcon className="mr-3 h-4 w-4" />
                 <span className="text-sm">Chat Support</span>
               </Button>
               <Button
@@ -493,7 +491,7 @@ export default function PatientPortalDashboard() {
                 className="w-full justify-start h-auto py-3"
               >
                 <Link href="/patient-portal/dashboard/billing-and-insurance">
-                  <CreditCard className="mr-3 h-4 w-4" />
+                  <BankCardFillIcon className="mr-3 h-4 w-4" />
                   <span className="text-sm">Billing & Insurance</span>
                 </Link>
               </Button>
@@ -503,7 +501,7 @@ export default function PatientPortalDashboard() {
                 className="w-full justify-start h-auto py-3"
               >
                 <Link href="/faq">
-                  <HelpCircle className="mr-3 h-4 w-4" />
+                  <QuestionFillIcon className="mr-3 h-4 w-4" />
                   <span className="text-sm">Frequently Asked Questions</span>
                 </Link>
               </Button>
@@ -517,7 +515,7 @@ export default function PatientPortalDashboard() {
             <CardContent className="p-4">
               <Button variant="destructive" size="sm" className="w-full" asChild>
                 <Link href="/patient-portal">
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogoutBoxLineIcon className="mr-2 h-4 w-4" />
                   Log Out
                 </Link>
               </Button>
@@ -546,7 +544,7 @@ function MobileCard({
   href?: string
 }) {
   return (
-    <Card className={`${className}`}>
+    <Card className={`transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:-translate-y-1 focus-visible:shadow-lg ${className}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

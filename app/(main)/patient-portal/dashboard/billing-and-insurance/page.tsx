@@ -6,7 +6,8 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CreditCard, DollarSign } from "lucide-react"
+import BankCardFillIcon from 'remixicon-react/BankCardFillIcon';
+import MoneyDollarCircleFillIcon from 'remixicon-react/MoneyDollarCircleFillIcon';
 import {
   Dialog,
   DialogTrigger,
@@ -17,7 +18,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog"
-import { ArrowLeft } from "lucide-react"
+import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
 import { useRouter } from "next/navigation"
 import { useSearchParams } from "next/navigation"
 
@@ -144,7 +145,7 @@ function BillingAndInsuranceContent() {
     <>
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2">
         <Button variant="outline" onClick={() => router.back()} className="mb-2">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>
@@ -153,7 +154,7 @@ function BillingAndInsuranceContent() {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <DollarSign className="h-5 w-5 text-primary" /> Billing & Insurance
+                <MoneyDollarCircleFillIcon className="h-5 w-5 text-primary" /> Billing & Insurance
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -181,7 +182,7 @@ function BillingAndInsuranceContent() {
               </div>
               <div className="mb-6">
                 <div className="font-medium mb-2 flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-primary" /> Insurance Information
+                  <BankCardFillIcon className="h-4 w-4 text-primary" /> Insurance Information
                 </div>
                 <div className="text-sm mb-1">Provider: <span className="font-semibold">{insurance.provider}</span></div>
                 <div className="text-sm mb-1">Status: <span className="font-semibold text-green-700">{insurance.status}</span></div>

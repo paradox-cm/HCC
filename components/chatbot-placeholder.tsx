@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { MessageSquare } from "lucide-react"
+import Chat1FillIcon from 'remixicon-react/Chat1FillIcon';
 import { useChat } from "@/components/chat/chat-provider"
 
 export function ChatbotPlaceholder() {
@@ -18,7 +18,7 @@ export function ChatbotPlaceholder() {
   return (
     <div className="fixed bottom-4 right-4 z-30">
       <Button size="lg" className="rounded-full shadow-lg" onClick={handleChatOpen}>
-        <MessageSquare className="mr-2 h-5 w-5" />
+        <Chat1FillIcon className="mr-2 h-5 w-5" />
         Chat with us
       </Button>
     </div>

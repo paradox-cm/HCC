@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Send, Expand, User, RotateCcw, Square } from "lucide-react"
+import User3FillIcon from 'remixicon-react/User3FillIcon';
+import ArrowGoBackFillIcon from 'remixicon-react/ArrowGoBackFillIcon';
+import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon';
+import StopFillIcon from 'remixicon-react/StopFillIcon';
 import Link from "next/link"
 import { useChat } from "./chat-provider"
 
@@ -103,7 +106,7 @@ export function ChatInterface({ isModal = false }: ChatInterfaceProps) {
         {isModal && (
           <Button variant="ghost" size="icon" asChild>
             <Link href="/chat">
-              <Expand className="h-5 w-5" />
+              <ArrowGoBackFillIcon className="h-5 w-5" />
               <span className="sr-only">Expand Chat</span>
             </Link>
           </Button>
@@ -144,7 +147,7 @@ export function ChatInterface({ isModal = false }: ChatInterfaceProps) {
             </div>
             {message.role === "user" && (
               <Avatar className="h-8 w-8">
-                <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
+                <AvatarFallback><User3FillIcon className="w-4 h-4" /></AvatarFallback>
               </Avatar>
             )}
           </div>
@@ -167,12 +170,12 @@ export function ChatInterface({ isModal = false }: ChatInterfaceProps) {
           />
           {isAnswering ? (
             <Button type="button" size="icon" className="h-8 w-8 bg-destructive hover:bg-destructive/80" onClick={handleStop}>
-              <Square className="h-4 w-4" />
+              <StopFillIcon className="h-4 w-4" />
               <span className="sr-only">Stop</span>
             </Button>
           ) : (
             <Button type="submit" size="icon" disabled={!input.trim()}>
-              <Send className="h-4 w-4" />
+              <SendPlane2FillIcon className="h-4 w-4" />
               <span className="sr-only">Send</span>
             </Button>
           )}
@@ -183,7 +186,7 @@ export function ChatInterface({ isModal = false }: ChatInterfaceProps) {
             onClick={clearChat}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
           >
-            <RotateCcw className="w-3 h-3" />
+            <ArrowGoBackFillIcon className="w-3 h-3" />
             <span>Reset chat</span>
           </button>
         </div>

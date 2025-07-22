@@ -7,7 +7,15 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Send, Minus, Maximize2, X, User, RotateCcw, Download, Square } from "lucide-react"
+import Message3FillIcon from 'remixicon-react/Message3FillIcon';
+import MinusFillIcon from 'remixicon-react/SubtractFillIcon';
+import CloseFillIcon from 'remixicon-react/CloseFillIcon';
+import User3FillIcon from 'remixicon-react/User3FillIcon';
+import RefreshFillIcon from 'remixicon-react/RefreshFillIcon';
+import Download2FillIcon from 'remixicon-react/Download2FillIcon';
+import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon';
+import StopFillIcon from 'remixicon-react/StopFillIcon';
+import ArrowGoBackFillIcon from 'remixicon-react/ArrowGoBackFillIcon';
 import { useChat } from "./chat-provider"
 import Link from "next/link"
 
@@ -113,7 +121,7 @@ export function ChatWidget() {
                 setChatOpen(false)
               }}
             >
-              <X className="h-4 w-4" />
+              <CloseFillIcon className="h-4 w-4" />
             </Button>
           </CardHeader>
         </Card>
@@ -133,16 +141,16 @@ export function ChatWidget() {
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
                 <Link href="/chat" onClick={() => setChatOpen(false)}>
-                  <Maximize2 className="h-4 w-4" />
+                  <img src="/expand-diagonal-fill.svg" alt="Expand" className="h-4 w-4 dark:invert" />
                   <span className="sr-only">Expand to full page</span>
                 </Link>
               </Button>
               <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setChatMinimized(true)}>
-                <Minus className="h-4 w-4" />
+                <MinusFillIcon className="h-4 w-4" />
                 <span className="sr-only">Minimize</span>
               </Button>
               <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setChatOpen(false)}>
-                <X className="h-4 w-4" />
+                <CloseFillIcon className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </Button>
             </div>
@@ -183,7 +191,7 @@ export function ChatWidget() {
                 </div>
                 {message.role === "user" && (
                   <Avatar className="h-6 w-6">
-                    <AvatarFallback className="text-xs"><User className="w-4 h-4" /></AvatarFallback>
+                    <AvatarFallback className="text-xs"><User3FillIcon className="w-4 h-4" /></AvatarFallback>
                   </Avatar>
                 )}
               </div>
@@ -207,12 +215,12 @@ export function ChatWidget() {
               />
               {isAnswering ? (
                 <Button type="button" size="icon" className="h-8 w-8 bg-destructive hover:bg-destructive/80" onClick={handleStop}>
-                  <Square className="h-3 w-3" />
+                  <StopFillIcon className="h-3 w-3" />
                   <span className="sr-only">Stop</span>
                 </Button>
               ) : (
                 <Button type="submit" size="icon" className="h-8 w-8" disabled={!input.trim()}>
-                  <Send className="h-3 w-3" />
+                  <SendPlane2FillIcon className="h-3 w-3" />
                   <span className="sr-only">Send</span>
                 </Button>
               )}
@@ -223,7 +231,7 @@ export function ChatWidget() {
                 onClick={exportChat}
                 className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
               >
-                <Download className="w-3 h-3" />
+                <Download2FillIcon className="w-3 h-3" />
                 <span>Export chat</span>
               </button>
               <button
@@ -231,7 +239,7 @@ export function ChatWidget() {
                 onClick={clearChat}
                 className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
               >
-                <RotateCcw className="w-3 h-3" />
+                <ArrowGoBackFillIcon className="w-3 h-3" />
                 <span>Reset chat</span>
               </button>
             </div>

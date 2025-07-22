@@ -8,10 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
-import { Calendar as CalendarIcon, ArrowLeft, XCircle } from "lucide-react"
-import { Calendar } from "@/components/ui/calendar"
-import { format, parseISO } from "date-fns"
+import { XCircle } from "lucide-react"
+import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
 
 const MOCK_APPT = {
   id: 1,
@@ -29,7 +27,6 @@ function RescheduleContent() {
   const [showCancel, setShowCancel] = useState(() => searchParams.get("cancel") === "1")
   const [cancelNote, setCancelNote] = useState("")
   const [cancelled, setCancelled] = useState(false)
-  const [calendarOpen, setCalendarOpen] = useState(false)
 
   function handleChange(field: string, value: string) {
     setForm(prev => ({ ...prev, [field]: value }))
@@ -87,14 +84,13 @@ function RescheduleContent() {
     <>
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2">
         <Button variant="outline" onClick={() => router.back()} className="mb-2">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftFillIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>
       <SectionWrapper className="pt-4 md:pt-0">
         <Card className="max-w-lg mx-auto">
           <CardHeader className="flex items-center gap-2 pb-2">
-            <CalendarIcon className="h-5 w-5 text-primary" />
             <CardTitle className="text-lg">{showCancel ? "Cancel Appointment" : "Reschedule Appointment"}</CardTitle>
           </CardHeader>
           <CardContent>
@@ -109,31 +105,12 @@ function RescheduleContent() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">New Date</div>
-                    <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={form.date ? "outline" : "secondary"}
-                          className={"w-full justify-start text-left font-normal" + (form.date ? "" : " text-muted-foreground")}
-                          type="button"
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {form.date ? format(parseISO(form.date), "PPP") : "Select date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 mb-4" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={form.date ? parseISO(form.date) : undefined}
-                          onSelect={date => {
-                            if (date) {
-                              handleChange("date", format(date, "yyyy-MM-dd"));
-                              setCalendarOpen(false);
-                            }
-                          }}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <Input
+                      type="date"
+                      value={form.date}
+                      onChange={e => handleChange("date", e.target.value)}
+                      required
+                    />
                   </div>
                   <div className="mt-4 sm:mt-0">
                     <div className="text-xs text-muted-foreground mb-1">New Time</div>
