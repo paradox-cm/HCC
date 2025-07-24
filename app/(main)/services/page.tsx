@@ -207,26 +207,37 @@ export default function ServicesPage() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       let found = services[0].category;
+      let bestMatch = null;
+      let bestDistance = Infinity;
+      
       for (let i = 0; i < services.length; i++) {
         const s = services[i];
         const ref = sectionRefs.current[s.category];
-        if (ref) {
-          const top = ref.getBoundingClientRect().top + window.scrollY - OFFSET;
-          const nextRef = services[i + 1] ? sectionRefs.current[services[i + 1].category] : null;
-          const nextTop = nextRef
-            ? nextRef.getBoundingClientRect().top + window.scrollY - OFFSET
-            : Infinity;
-          if (scrollY >= top && scrollY < nextTop) {
-            found = s.category;
-            break;
+        if (ref && expandedSections[s.category]) {
+          const rect = ref.getBoundingClientRect();
+          const sectionTop = rect.top;
+          const sectionBottom = rect.bottom;
+          
+          // Check if section is visible and has substantial content
+          if (sectionTop <= 300 && sectionBottom > 100 && (sectionBottom - sectionTop) > 150) {
+            const distanceFromTarget = Math.abs(sectionTop - OFFSET);
+            if (distanceFromTarget < bestDistance) {
+              bestDistance = distanceFromTarget;
+              bestMatch = s.category;
+            }
           }
         }
       }
+      
+      if (bestMatch) {
+        found = bestMatch;
+      }
+      
       setActiveCategory(found);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [expandedSections]);
 
   // Show fixed subnav when original is out of view
   useEffect(() => {
