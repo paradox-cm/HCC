@@ -14,4 +14,4 @@ export const SectionWrapper = React.forwardRef<
       <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto">{children}</div>
     </section>
   )
-})
+}) 

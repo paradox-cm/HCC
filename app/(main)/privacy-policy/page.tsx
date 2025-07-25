@@ -95,7 +95,7 @@ export default function PrivacyPolicyPage() {
           <main className="lg:col-span-3 space-y-12">
             <section id="information-collect">
               <h2 className="text-3xl font-bold mb-6">1. Information We Collect</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>We may collect the following types of information:</p>
                 <ul>
                   <li>
@@ -120,7 +120,7 @@ export default function PrivacyPolicyPage() {
 
             <section id="how-we-use">
               <h2 className="text-3xl font-bold mb-6">2. How We Use Your Information</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>Your information may be used to:</p>
                 <ul>
                   <li>Schedule and manage appointments</li>
@@ -130,8 +130,8 @@ export default function PrivacyPolicyPage() {
                   <li>Improve our website and user experience</li>
                   <li>Comply with legal and regulatory obligations</li>
                 </ul>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-4">
-                  <p className="text-green-800 font-semibold mb-0">
+                <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-4 mt-4">
+                  <p className="text-green-800 dark:text-green-200 font-semibold mb-0">
                     We do <strong>not</strong> sell or rent your personal or health information to third parties.
                   </p>
                 </div>
@@ -140,7 +140,7 @@ export default function PrivacyPolicyPage() {
 
             <section id="protection">
               <h2 className="text-3xl font-bold mb-6">3. How We Protect Your Information</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <ul>
                   <li>Data is stored securely using encryption and industry-standard safeguards.</li>
                   <li>Access to sensitive data is restricted to authorized personnel only.</li>
@@ -152,7 +152,7 @@ export default function PrivacyPolicyPage() {
 
             <section id="sharing">
               <h2 className="text-3xl font-bold mb-6">4. Sharing of Information</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>We may share your information in the following circumstances:</p>
                 <ul>
                   <li>With your consent or at your direction</li>
@@ -165,7 +165,7 @@ export default function PrivacyPolicyPage() {
 
             <section id="your-rights">
               <h2 className="text-3xl font-bold mb-6">5. Your Choices and Rights</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <ul>
                   <li>You may request access to or correction of your data at any time.</li>
                   <li>You may opt out of non-essential communications (e.g., marketing emails).</li>
@@ -176,14 +176,14 @@ export default function PrivacyPolicyPage() {
 
             <section id="cookies">
               <h2 className="text-3xl font-bold mb-6">6. Cookies and Tracking Technologies</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>We use cookies and analytics tools to:</p>
                 <ul>
                   <li>Understand website traffic and usage patterns</li>
                   <li>Improve functionality and user experience</li>
                 </ul>
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
-                  <p className="text-amber-800 mb-0">
+                <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mt-4">
+                  <p className="text-amber-800 dark:text-amber-200 mb-0">
                     <strong>Note:</strong> You can adjust your browser settings to block cookies, though some features
                     may not function properly.
                   </p>
@@ -193,7 +193,7 @@ export default function PrivacyPolicyPage() {
 
             <section id="children">
               <h2 className="text-3xl font-bold mb-6">7. Children's Privacy</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   Our services are not directed to children under 13. We do not knowingly collect information from
                   minors without parental consent.
@@ -203,7 +203,7 @@ export default function PrivacyPolicyPage() {
 
             <section id="policy-changes">
               <h2 className="text-3xl font-bold mb-6">8. Changes to This Policy</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   We may update this Privacy Policy from time to time. The most current version will always be posted
                   here with the updated effective date.
@@ -213,7 +213,7 @@ export default function PrivacyPolicyPage() {
 
             <section id="contact">
               <h2 className="text-3xl font-bold mb-6">9. Contact Us</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>For privacy-related questions or requests, please contact:</p>
                 <div className="bg-muted/30 rounded-lg p-6 not-prose">
                   <h3 className="font-semibold text-lg mb-4">Privacy Officer</h3>

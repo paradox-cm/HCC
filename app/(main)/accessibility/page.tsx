@@ -107,7 +107,7 @@ export default function AccessibilityPage() {
           <main className="lg:col-span-3 space-y-12">
             <section id="our-commitment">
               <h2 className="text-3xl font-bold mb-6">Our Commitment</h2>
-              <div className="prose prose-gray max-w-none mb-8">
+              <div className="prose prose-gray dark:prose-invert max-w-none mb-8">
                 <p>
                   We are actively working to improve the usability of our website and digital tools, and to make our
                   online presence accessible to the widest possible audience.
@@ -136,9 +136,9 @@ export default function AccessibilityPage() {
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h3 className="font-semibold text-blue-900 mb-2">WCAG 2.1 Level AA Compliance</h3>
-                <p className="text-blue-800 text-sm leading-relaxed">
+              <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">WCAG 2.1 Level AA Compliance</h3>
+                <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
                   We follow established web accessibility standards to ensure our digital content is perceivable,
                   operable, understandable, and robust for all users.
                 </p>
@@ -147,7 +147,7 @@ export default function AccessibilityPage() {
 
             <section id="assistance">
               <h2 className="text-3xl font-bold mb-6">Assistance and Alternative Access</h2>
-              <div className="prose prose-gray max-w-none mb-6">
+              <div className="prose prose-gray dark:prose-invert max-w-none mb-6">
                 <p>
                   If you encounter any accessibility barriers on our website or need assistance accessing any part of
                   it, we are here to help.
@@ -194,15 +194,15 @@ export default function AccessibilityPage() {
 
             <section id="ongoing-improvements">
               <h2 className="text-3xl font-bold mb-6">Ongoing Improvements</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   We regularly evaluate our digital tools and content for accessibility improvements. We welcome
                   feedback and suggestions to make our services more accessible to all.
                 </p>
               </div>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-6">
-                <h3 className="font-semibold text-green-900 mb-2">Continuous Enhancement</h3>
-                <p className="text-green-800 text-sm leading-relaxed">
+              <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-6 mt-6">
+                <h3 className="font-semibold text-green-900 dark:text-green-100 mb-2">Continuous Enhancement</h3>
+                <p className="text-green-800 dark:text-green-200 text-sm leading-relaxed">
                   Our commitment to accessibility is ongoing. We continuously work to identify and address potential
                   barriers to ensure equal access to our digital services.
                 </p>
@@ -211,7 +211,7 @@ export default function AccessibilityPage() {
 
             <section id="feedback">
               <h2 className="text-3xl font-bold mb-6">Feedback</h2>
-              <div className="prose prose-gray max-w-none mb-6">
+              <div className="prose prose-gray dark:prose-invert max-w-none mb-6">
                 <p>
                   If you have feedback or suggestions regarding the accessibility of this website, please contact us at:
                 </p>

@@ -14,7 +14,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import { useChat } from "@/components/chat/chat-provider"
 import Image from "next/image"
 import WhatsappFillIcon from 'remixicon-react/WhatsappFillIcon';
-import ArrowUpCircleFillIcon from 'remixicon-react/ArrowUpCircleFillIcon';
+import ArrowUpLineIcon from 'remixicon-react/ArrowUpLineIcon';
 
 const linkCategories = [
   {
@@ -159,7 +159,7 @@ export function Footer() {
             aria-label="Scroll to top"
             onClick={handleScrollTop}
           >
-            <ArrowUpCircleFillIcon className="h-5 w-5" />
+            <ArrowUpLineIcon className="h-5 w-5" />
           </Button>
         </div>
         <div className="mt-12 border-t pt-8 w-full">

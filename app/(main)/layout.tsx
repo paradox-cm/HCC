@@ -26,17 +26,13 @@ export default function MainLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-background text-foreground overflow-x-hidden`}>
-          <ChatProvider>
-            <Header />
-            <main className="flex-grow overflow-x-hidden pt-[88px]">{children}</main>
-            <ChatbotPlaceholder />
-            {/* Only show ChatWidget if not on /chat (client-only check) */}
-            <ClientOnlyChatWidget />
-            <Footer />
-          </ChatProvider>
-      </body>
-    </html>
+    <ChatProvider>
+      <Header />
+      <main className="flex-grow overflow-x-hidden pt-[88px]">{children}</main>
+      <ChatbotPlaceholder />
+      {/* Only show ChatWidget if not on /chat (client-only check) */}
+      <ClientOnlyChatWidget />
+      <Footer />
+    </ChatProvider>
   )
 } 

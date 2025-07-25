@@ -95,9 +95,9 @@ export default function TermsOfUsePage() {
           <main className="lg:col-span-3 space-y-12">
             {/* Introduction */}
             <section>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h3 className="font-semibold text-blue-900 mb-2">Welcome to HCC</h3>
-                <p className="text-blue-800 text-sm leading-relaxed">
+              <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Welcome to HCC</h3>
+                <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
                   Welcome to the website of Houston Cardiology Consultants. By accessing or using this website (
                   <a href="https://www.hccheart.com" className="underline">
                     www.hccheart.com
@@ -109,7 +109,7 @@ export default function TermsOfUsePage() {
 
             <section id="website-use">
               <h2 className="text-3xl font-bold mb-6">1. Use of the Website</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   This site is intended to provide general information about our medical services, staff, and patient
                   resources. It is not a substitute for professional medical advice, diagnosis, or treatment.
@@ -127,12 +127,12 @@ export default function TermsOfUsePage() {
 
             <section id="medical-disclaimer">
               <h2 className="text-3xl font-bold mb-6">2. Medical Disclaimer</h2>
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-6">
+              <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-6 mb-6">
                 <div className="flex items-start gap-4">
-                  <AlertTriangle className="h-6 w-6 text-amber-600 flex-shrink-0 mt-1" />
+                  <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-amber-900 mb-2">Important Medical Notice</h3>
-                    <p className="text-amber-800 text-sm leading-relaxed mb-0">
+                    <h3 className="font-semibold text-amber-900 dark:text-amber-100 mb-2">Important Medical Notice</h3>
+                    <p className="text-amber-800 dark:text-amber-200 text-sm leading-relaxed mb-0">
                       Information provided on this site does not constitute medical advice and should not be used to
                       diagnose or treat any health condition. Always consult your physician or a qualified healthcare
                       provider for medical concerns.
@@ -144,7 +144,7 @@ export default function TermsOfUsePage() {
 
             <section id="patient-portal">
               <h2 className="text-3xl font-bold mb-6">3. Patient Portal and Secure Forms</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   Some features, including appointment requests and the patient portal, require you to submit personal
                   health information (PHI). By using these features, you consent to the secure transmission and storage
@@ -155,7 +155,7 @@ export default function TermsOfUsePage() {
 
             <section id="intellectual-property">
               <h2 className="text-3xl font-bold mb-6">4. Intellectual Property</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   All content on this website—including text, graphics, logos, images, and software—is the property of
                   Houston Cardiology Consultants or its content suppliers and is protected by copyright and trademark
@@ -166,7 +166,7 @@ export default function TermsOfUsePage() {
 
             <section id="third-party-links">
               <h2 className="text-3xl font-bold mb-6">5. Links to Third-Party Sites</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   Our website may contain links to third-party websites for informational purposes. We are not
                   responsible for the content, privacy practices, or accuracy of any external sites.
@@ -176,7 +176,7 @@ export default function TermsOfUsePage() {
 
             <section id="liability-limitations">
               <h2 className="text-3xl font-bold mb-6">6. Limitations of Liability</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>Houston Cardiology Consultants is not liable for any damages resulting from:</p>
                 <ul>
                   <li>Use or inability to use the website</li>
@@ -188,7 +188,7 @@ export default function TermsOfUsePage() {
 
             <section id="modifications">
               <h2 className="text-3xl font-bold mb-6">7. Modifications to Terms</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   We reserve the right to modify these Terms of Use at any time. Changes will be posted on this page
                   with the updated effective date. Continued use of the site constitutes acceptance of the updated
@@ -199,7 +199,7 @@ export default function TermsOfUsePage() {
 
             <section id="governing-law">
               <h2 className="text-3xl font-bold mb-6">8. Governing Law</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>
                   These Terms shall be governed by the laws of the State of Texas without regard to conflict of law
                   provisions.
@@ -209,7 +209,7 @@ export default function TermsOfUsePage() {
 
             <section id="contact">
               <h2 className="text-3xl font-bold mb-6">9. Contact Us</h2>
-              <div className="prose prose-gray max-w-none">
+              <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p>If you have any questions about these terms, please contact us at:</p>
                 <div className="bg-muted/30 rounded-lg p-6 not-prose">
                   <h3 className="font-semibold text-lg mb-4">Houston Cardiology Consultants</h3>
