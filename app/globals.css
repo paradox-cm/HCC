@@ -28,8 +28,8 @@
     --destructive: 0 72.2% 50.6%; /* state.error: #E53E3E */
     --destructive-foreground: 0 0% 100%; /* text.onPrimary: #FFFFFF */
 
-    --border: 215.2 20.2% 65.1%; /* border.default: #CBD5E0 */
-    --input: 215.2 20.2% 65.1%; /* border.default: #CBD5E0 */
+    --border: 220 13% 91%; /* border.default: #eaecf0 */
+    --input: 220 13% 91%; /* border.default: #eaecf0 */
     --ring: 0 72.2% 50.6%; /* primary.500: #E53E3E */
 
     --radius: 0.5rem;
@@ -60,8 +60,8 @@
     --destructive: 0 74% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 20%;                  /* Subtle neutral border */
-    --input: 0 0% 16%;                   /* Input background */
+    --border: 0 0% 11%;                  /* Subtle neutral border: #1c1c1c */
+    --input: 0 0% 11%;                   /* Input background: #1c1c1c */
     --ring: 0 74% 58%;                   /* Branded red focus ring */
   }
 }

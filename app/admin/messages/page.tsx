@@ -1,7 +1,24 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { MessageSquare, Search, Filter, Send, Reply, Archive, Trash2, Eye, Clock, AlertCircle, CheckCircle, User, Calendar, Phone, Mail } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { useSearchParams } from "next/navigation"
+import { 
+  Filter, 
+  Reply, 
+  Trash2, 
+  Eye, 
+  Clock, 
+  CheckCircle, 
+  Phone,
+  MessageSquare,
+  Search,
+  Send,
+  Archive,
+  User,
+  Calendar,
+  Mail,
+  AlertCircle
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +29,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { getPriorityColor, getMessageStatusColor, badgeColors } from "@/lib/admin-badge-utils"
+import Message2FillIcon from 'remixicon-react/Message2FillIcon'
 
 
 
@@ -36,8 +55,8 @@ const mockMessageThreads = [
     patientId: "P001",
     patientName: "Sarah Johnson",
     patientEmail: "sarah.johnson@email.com",
-    category: "",
-    priority: "",
+    category: "medication",
+    priority: "medium",
     status: "unread",
     assignedTo: "Dr. Asif Ali",
 
@@ -85,8 +104,8 @@ const mockMessageThreads = [
     patientId: "P003",
     patientName: "Emily Rodriguez",
     patientEmail: "emily.rodriguez@email.com", 
-    category: "",
-    priority: "",
+    category: "test-results",
+    priority: "low",
     status: "completed",
     assignedTo: "Dr. Abdul Ali",
 
@@ -113,7 +132,7 @@ const mockMessageThreads = [
     patientId: "P004",
     patientName: "Robert Wilson",
     patientEmail: "robert.wilson@email.com",
-    category: "",
+    category: "medication",
     priority: "high",
     status: "urgent",
     assignedTo: "Dr. Asif Ali",
@@ -149,6 +168,307 @@ const mockMessageThreads = [
       }
     ],
     lastMessageTime: "2024-01-15T08:30:00Z"
+  },
+  {
+    id: 6,
+    patientId: "P006",
+    patientName: "David Martinez",
+    patientEmail: "david.martinez@email.com",
+    category: "appointment",
+    priority: "medium",
+    status: "in-progress",
+    assignedTo: "Dr. Sajid Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "David Martinez",
+        text: "I need to schedule a follow-up appointment for my heart condition. When would be the best time to come in?",
+        timestamp: "2024-01-15T14:20:00Z"
+      },
+      {
+        id: 2,
+        from: "admin",
+        sender: "Dr. Sajid Ali",
+        text: "I can see you're due for a follow-up. Let me check our schedule for next week.",
+        timestamp: "2024-01-15T14:45:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T14:45:00Z"
+  },
+  {
+    id: 7,
+    patientId: "P007",
+    patientName: "Jennifer Lee",
+    patientEmail: "jennifer.lee@email.com",
+    category: "test-results",
+    priority: "high",
+    status: "urgent",
+    assignedTo: "Dr. Asif Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Jennifer Lee",
+        text: "I just received my blood work results and I'm very concerned about the cholesterol levels. Can someone call me immediately?",
+        timestamp: "2024-01-15T16:30:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T16:30:00Z"
+  },
+  {
+    id: 8,
+    patientId: "P008",
+    patientName: "Thomas Anderson",
+    patientEmail: "thomas.anderson@email.com",
+    category: "medication",
+    priority: "",
+    status: "unread",
+    assignedTo: "Dr. Abdul Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Thomas Anderson",
+        text: "I'm having trouble with my medication schedule. Can you help me understand when to take each pill?",
+        timestamp: "2024-01-15T12:15:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T12:15:00Z"
+  },
+  {
+    id: 9,
+    patientId: "P009",
+    patientName: "Amanda Garcia",
+    patientEmail: "amanda.garcia@email.com",
+    category: "billing",
+    priority: "medium",
+    status: "completed",
+    assignedTo: "Billing Team",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Amanda Garcia",
+        text: "I received a bill for my recent visit but I think there might be an error. Can someone review this?",
+        timestamp: "2024-01-14T10:20:00Z"
+      },
+      {
+        id: 2,
+        from: "admin",
+        sender: "Billing Team",
+        text: "I've reviewed your bill and found the error. I'll have a corrected statement sent to you.",
+        timestamp: "2024-01-14T11:00:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-14T11:00:00Z"
+  },
+  {
+    id: 10,
+    patientId: "P010",
+    patientName: "Christopher Brown",
+    patientEmail: "christopher.brown@email.com",
+    category: "appointment",
+    priority: "low",
+    status: "in-progress",
+    assignedTo: "Dr. Sajid Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Christopher Brown",
+        text: "I'd like to cancel my appointment for tomorrow. Something came up at work.",
+        timestamp: "2024-01-15T09:30:00Z"
+      },
+      {
+        id: 2,
+        from: "admin",
+        sender: "Dr. Sajid Ali",
+        text: "No problem, I've cancelled your appointment. Would you like to reschedule for next week?",
+        timestamp: "2024-01-15T09:45:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T09:45:00Z"
+  },
+  {
+    id: 11,
+    patientId: "P011",
+    patientName: "Rachel Green",
+    patientEmail: "rachel.green@email.com",
+    category: "test-results",
+    priority: "",
+    status: "unread",
+    assignedTo: "Dr. Asif Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Rachel Green",
+        text: "I'm waiting for my stress test results. Can you let me know when they're available?",
+        timestamp: "2024-01-15T15:45:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T15:45:00Z"
+  },
+  {
+    id: 12,
+    patientId: "P012",
+    patientName: "Daniel White",
+    patientEmail: "daniel.white@email.com",
+    category: "medication",
+    priority: "high",
+    status: "urgent",
+    assignedTo: "Dr. Abdul Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Daniel White",
+        text: "I'm experiencing severe chest pain and shortness of breath. Should I go to the emergency room?",
+        timestamp: "2024-01-15T17:20:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T17:20:00Z"
+  },
+  {
+    id: 13,
+    patientId: "P013",
+    patientName: "Michelle Davis",
+    patientEmail: "michelle.davis@email.com",
+    category: "appointment",
+    priority: "medium",
+    status: "completed",
+    assignedTo: "Dr. Sajid Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Michelle Davis",
+        text: "I need to reschedule my appointment from Friday to Monday. Is that possible?",
+        timestamp: "2024-01-14T13:30:00Z"
+      },
+      {
+        id: 2,
+        from: "admin",
+        sender: "Dr. Sajid Ali",
+        text: "Yes, I've moved your appointment to Monday at the same time. You'll receive a confirmation email.",
+        timestamp: "2024-01-14T14:00:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-14T14:00:00Z"
+  },
+  {
+    id: 14,
+    patientId: "P014",
+    patientName: "Kevin Johnson",
+    patientEmail: "kevin.johnson@email.com",
+    category: "billing",
+    priority: "",
+    status: "unread",
+    assignedTo: "Billing Team",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Kevin Johnson",
+        text: "I have a question about my insurance coverage for the echocardiogram. What's my copay?",
+        timestamp: "2024-01-15T11:45:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T11:45:00Z"
+  },
+  {
+    id: 15,
+    patientId: "P015",
+    patientName: "Stephanie Wilson",
+    patientEmail: "stephanie.wilson@email.com",
+    category: "medication",
+    priority: "medium",
+    status: "in-progress",
+    assignedTo: "Dr. Asif Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Stephanie Wilson",
+        text: "I'm having side effects from my new blood pressure medication. Should I stop taking it?",
+        timestamp: "2024-01-15T14:15:00Z"
+      },
+      {
+        id: 2,
+        from: "admin",
+        sender: "Dr. Asif Ali",
+        text: "Please don't stop taking it without consulting me first. What specific side effects are you experiencing?",
+        timestamp: "2024-01-15T14:30:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-15T14:30:00Z"
+  },
+  {
+    id: 16,
+    patientId: "P016",
+    patientName: "John Smith",
+    patientEmail: "john.smith@email.com",
+    category: "appointment",
+    priority: "low",
+    status: "archived",
+    assignedTo: "Dr. Sajid Ali",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "John Smith",
+        text: "I need to cancel my appointment for next week. I have a family emergency.",
+        timestamp: "2024-01-10T09:00:00Z"
+      },
+      {
+        id: 2,
+        from: "admin",
+        sender: "Dr. Sajid Ali",
+        text: "I've cancelled your appointment. Please let us know when you'd like to reschedule.",
+        timestamp: "2024-01-10T09:15:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-10T09:15:00Z"
+  },
+  {
+    id: 17,
+    patientId: "P017",
+    patientName: "Maria Garcia",
+    patientEmail: "maria.garcia@email.com",
+    category: "billing",
+    priority: "medium",
+    status: "archived",
+    assignedTo: "Billing Team",
+
+    messages: [
+      {
+        id: 1,
+        from: "patient",
+        sender: "Maria Garcia",
+        text: "I have a question about my recent bill. Can someone help me understand the charges?",
+        timestamp: "2024-01-08T14:30:00Z"
+      },
+      {
+        id: 2,
+        from: "admin",
+        sender: "Billing Team",
+        text: "I've reviewed your bill. The charges are correct for the services provided. Let me know if you need any clarification.",
+        timestamp: "2024-01-08T15:00:00Z"
+      }
+    ],
+    lastMessageTime: "2024-01-08T15:00:00Z"
   }
 ]
 
@@ -180,12 +500,14 @@ const statuses = [
 
 
 export default function AdminMessagesPage() {
+  const searchParams = useSearchParams()
   const [messageThreads, setMessageThreads] = useState(mockMessageThreads)
   const [selectedThread, setSelectedThread] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedPriority, setSelectedPriority] = useState("all")
   const [selectedStatus, setSelectedStatus] = useState("all")
+  const [showArchived, setShowArchived] = useState(false)
 
   const [replyText, setReplyText] = useState("")
   const [isNewMessageDialogOpen, setIsNewMessageDialogOpen] = useState(false)
@@ -200,6 +522,7 @@ export default function AdminMessagesPage() {
   })
   const [patientSearchTerm, setPatientSearchTerm] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const chatContainerRef = useRef<HTMLDivElement>(null)
 
   const filteredThreads = messageThreads.filter(thread => {
     const matchesSearch = thread.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -207,12 +530,23 @@ export default function AdminMessagesPage() {
     const matchesCategory = selectedCategory === "all" || thread.category === selectedCategory
     const matchesPriority = selectedPriority === "all" || thread.priority === selectedPriority
     const matchesStatus = selectedStatus === "all" || thread.status === selectedStatus
+    const matchesArchive = showArchived ? thread.status === "archived" : thread.status !== "archived"
     
-    return matchesSearch && matchesCategory && matchesPriority && matchesStatus
+    return matchesSearch && matchesCategory && matchesPriority && matchesStatus && matchesArchive
   })
 
   const unreadCount = messageThreads.filter(t => t.status === "unread").length
   const urgentCount = messageThreads.filter(t => t.status === "urgent").length
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      setTimeout(() => {
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+        }
+      }, 100)
+    }
+  }
 
   const sendReply = () => {
     if (!selectedThread || !replyText.trim()) return
@@ -235,7 +569,19 @@ export default function AdminMessagesPage() {
           }
         : thread
     ))
+
+    // Update the selectedThread to include the new message immediately
+    setSelectedThread(prev => prev ? {
+      ...prev,
+      messages: [...prev.messages, newMessage],
+      lastMessageTime: newMessage.timestamp,
+      status: prev.status === "unread" ? "in-progress" : prev.status
+    } : null)
+
     setReplyText("")
+    
+    // Auto-scroll to bottom after sending message
+    setTimeout(scrollToBottom, 100)
   }
 
   const createNewMessage = () => {
@@ -285,6 +631,13 @@ export default function AdminMessagesPage() {
     patient.email.toLowerCase().includes(patientSearchTerm.toLowerCase())
   )
 
+  // Check for URL parameter to open new message modal
+  useEffect(() => {
+    if (searchParams?.get("new") === "1") {
+      setIsNewMessageDialogOpen(true)
+    }
+  }, [searchParams])
+
   const markAsRead = (threadId: number) => {
     setMessageThreads(prev => prev.map(thread => 
       thread.id === threadId 
@@ -293,25 +646,33 @@ export default function AdminMessagesPage() {
     ))
   }
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "urgent": return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800"
-      case "high": return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400 dark:border-orange-800"
-      case "medium": return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800"
-      case "low": return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
-      default: return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
+  const archiveThread = (threadId: number) => {
+    setMessageThreads(prev => prev.map(thread => 
+      thread.id === threadId 
+        ? { ...thread, status: "archived" }
+        : thread
+    ))
+    if (selectedThread?.id === threadId) {
+      setSelectedThread(null)
     }
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "urgent": return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800"
-      case "unread": return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
-      case "in-progress": return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800"
-      case "completed": return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
-      default: return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
+  const deleteThread = (threadId: number) => {
+    setMessageThreads(prev => prev.filter(thread => thread.id !== threadId))
+    if (selectedThread?.id === threadId) {
+      setSelectedThread(null)
     }
   }
+
+  const restoreThread = (threadId: number) => {
+    setMessageThreads(prev => prev.map(thread => 
+      thread.id === threadId 
+        ? { ...thread, status: "completed" }
+        : thread
+    ))
+  }
+
+
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp)
@@ -324,37 +685,48 @@ export default function AdminMessagesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto h-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-        <MessageSquare className="h-6 w-6 text-primary" />
+        <Message2FillIcon className="h-6 w-6 text-foreground" />
         <h1 className="text-2xl font-bold">Messages</h1>
           <div className="flex gap-2 ml-4">
-            {unreadCount > 0 && (
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800">
-                {unreadCount} unread
-              </Badge>
-            )}
-            {urgentCount > 0 && (
-              <Badge variant="secondary" className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800">
-                {urgentCount} urgent
-              </Badge>
-            )}
+                    {unreadCount > 0 && (
+          <Badge variant="secondary" className={badgeColors.blue}>
+            {unreadCount} unread
+          </Badge>
+        )}
+        {urgentCount > 0 && (
+          <Badge variant="secondary" className={badgeColors.red}>
+            {urgentCount} urgent
+          </Badge>
+        )}
           </div>
         </div>
-                 <Button 
-           className="flex items-center gap-2"
-           onClick={() => setIsNewMessageDialogOpen(true)}
-         >
-           <Send className="h-4 w-4" />
-           New Message
-         </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant={showArchived ? "default" : "outline"} 
+            size="sm"
+            onClick={() => setShowArchived(!showArchived)}
+          >
+                          <Archive className="h-4 w-4 mr-2" />
+            {showArchived ? "Active Messages" : "Archived Messages"}
+          </Button>
+          <Button 
+            className="flex items-center gap-2"
+            size="sm"
+            onClick={() => setIsNewMessageDialogOpen(true)}
+          >
+                            <Send className="h-4 w-4" />
+            New Message
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="pt-6">
+      <Card className="mb-4">
+        <CardContent className="pt-4">
                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -407,18 +779,18 @@ export default function AdminMessagesPage() {
       </Card>
 
       {/* Messages List */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
         {/* Messages List */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
+        <div className="lg:col-span-1 h-full">
+          <Card className="h-full flex flex-col">
+            <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center justify-between">
                 Messages
                                  <span className="text-sm text-muted-foreground">{filteredThreads.length} conversations</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0">
-                             <div className="max-h-[600px] overflow-y-auto">
+            <CardContent className="p-0 flex-1 min-h-0 overflow-hidden">
+                             <div className="overflow-y-auto" style={{ height: 'calc(100vh - 260px)' }}>
                  {filteredThreads.length === 0 ? (
                    <div className="p-6 text-center text-muted-foreground">
                      No conversations found
@@ -435,6 +807,8 @@ export default function AdminMessagesPage() {
                          onClick={() => {
                            setSelectedThread(thread)
                            markAsRead(thread.id)
+                           // Auto-scroll to bottom when selecting a thread
+                           setTimeout(scrollToBottom, 200)
                          }}
                        >
                          <div className="flex items-start justify-between mb-2">
@@ -448,14 +822,16 @@ export default function AdminMessagesPage() {
                              </div>
                            </div>
                            <div className="flex gap-1">
+                             {thread.category && (
+                               <Badge variant="secondary" className="text-xs">
+                                 {thread.category}
+                               </Badge>
+                             )}
                              {thread.priority && (
                                <Badge className={`text-xs ${getPriorityColor(thread.priority)}`}>
                                  {thread.priority}
                                </Badge>
                              )}
-                             <Badge className={`text-xs ${getStatusColor(thread.status)}`}>
-                               {thread.status}
-                             </Badge>
                            </div>
                          </div>
                          <div className="text-xs text-muted-foreground line-clamp-2">
@@ -466,6 +842,9 @@ export default function AdminMessagesPage() {
                            <span>{thread.messages.length} message{thread.messages.length !== 1 ? 's' : ''}</span>
                            <span>•</span>
                            <span>Assigned to {thread.assignedTo}</span>
+                           {thread.status === "archived" && (
+                             <span className="text-orange-600 font-medium">• Archived</span>
+                           )}
                          </div>
 
                        </div>
@@ -478,10 +857,10 @@ export default function AdminMessagesPage() {
         </div>
 
                  {/* Message Detail */}
-         <div className="lg:col-span-2">
+         <div className="lg:col-span-2 h-full">
            {selectedThread ? (
              <Card className="h-full flex flex-col">
-               <CardHeader>
+               <CardHeader className="flex-shrink-0">
                  <div className="flex items-center justify-between">
                    <div>
                      <CardTitle className="flex items-center gap-2">
@@ -505,11 +884,13 @@ export default function AdminMessagesPage() {
                          <Select 
                            value={selectedThread.category || "none"} 
                            onValueChange={(value) => {
+                             const newCategory = value === "none" ? "" : value
                              setMessageThreads(prev => prev.map(t => 
                                t.id === selectedThread.id 
-                                 ? { ...t, category: value === "none" ? "" : value }
+                                 ? { ...t, category: newCategory }
                                  : t
                              ))
+                             setSelectedThread(prev => prev ? { ...prev, category: newCategory } : null)
                            }}
                          >
                            <SelectTrigger className="w-32 h-8">
@@ -530,11 +911,13 @@ export default function AdminMessagesPage() {
                          <Select 
                            value={selectedThread.priority || "none"} 
                            onValueChange={(value) => {
+                             const newPriority = value === "none" ? "" : value
                              setMessageThreads(prev => prev.map(t => 
                                t.id === selectedThread.id 
-                                 ? { ...t, priority: value === "none" ? "" : value }
+                                 ? { ...t, priority: newPriority }
                                  : t
                              ))
+                             setSelectedThread(prev => prev ? { ...prev, priority: newPriority } : null)
                            }}
                          >
                            <SelectTrigger className="w-32 h-8">
@@ -553,23 +936,44 @@ export default function AdminMessagesPage() {
                      </div>
                    </div>
                    <div className="flex gap-2">
-                     <Button variant="outline" size="sm">
-                       <Archive className="h-4 w-4" />
+                     {selectedThread.status === "archived" ? (
+                       <Button 
+                         variant="outline" 
+                         size="sm"
+                         onClick={() => restoreThread(selectedThread.id)}
+                       >
+                         Restore
+                       </Button>
+                     ) : (
+                       <Button 
+                         variant="outline" 
+                         size="sm"
+                         onClick={() => archiveThread(selectedThread.id)}
+                       >
+                         <Archive className="h-4 w-4" />
+                       </Button>
+                     )}
+                     <Button 
+                       variant="outline" 
+                       size="sm"
+                       onClick={() => deleteThread(selectedThread.id)}
+                     >
+                       <Trash2 className="h-4 w-4" />
                      </Button>
                    </div>
                  </div>
                </CardHeader>
-               <CardContent className="flex-1 flex flex-col">
+               <CardContent className="flex-1 flex flex-col min-h-0 p-0">
                                    {/* Patient Info */}
-                  <div className="bg-muted/30 rounded-lg p-4 mb-4">
+                  <div className="bg-muted/30 rounded-lg p-4 mb-4 flex-shrink-0 mx-4 mt-4">
                     <h3 className="font-semibold mb-2">Patient Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
+                                                   <User className="h-4 w-4 text-muted-foreground" />
                         <span>Patient ID: {selectedThread.patientId}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
+                                                 <Mail className="h-4 w-4 text-muted-foreground" />
                         <span>{selectedThread.patientEmail}</span>
                       </div>
                     </div>
@@ -577,7 +981,7 @@ export default function AdminMessagesPage() {
                   </div>
 
                  {/* Chat Messages */}
-                 <div className="flex-1 bg-muted/20 rounded-lg p-4 mb-4 overflow-y-auto max-h-96">
+                 <div ref={chatContainerRef} className="h-80 bg-muted/20 rounded-lg p-4 overflow-y-auto mx-4">
                    <div className="space-y-4">
                      {selectedThread.messages.map((message, index) => (
                        <div key={message.id} className={`flex items-end gap-2 ${message.from === "admin" ? "justify-end" : "justify-start"}`}>
@@ -601,7 +1005,8 @@ export default function AdminMessagesPage() {
                          {message.from === "admin" && (
                            <div className="flex-shrink-0">
                              <Avatar className="h-8 w-8">
-                               <AvatarFallback>AD</AvatarFallback>
+                               <AvatarImage src="/images/hcc-logo.png" alt="HCC" className="scale-50" />
+                               <AvatarFallback>HCC</AvatarFallback>
                              </Avatar>
                            </div>
                          )}
@@ -611,7 +1016,7 @@ export default function AdminMessagesPage() {
                  </div>
 
                  {/* Reply Input */}
-                 <div className="flex gap-2">
+                 <div className="flex gap-2 flex-shrink-0 mx-4 mb-1 mt-4">
                    <Textarea
                      value={replyText}
                      onChange={(e) => setReplyText(e.target.value)}
@@ -624,8 +1029,8 @@ export default function AdminMessagesPage() {
                      disabled={!replyText.trim()}
                      className="self-end"
                    >
-                     <Send className="h-4 w-4 mr-2" />
-                     Send
+                                        <Send className="h-4 w-4 mr-2" />
+                   Send
                    </Button>
                  </div>
                </CardContent>
@@ -633,7 +1038,7 @@ export default function AdminMessagesPage() {
            ) : (
              <Card>
                <CardContent className="p-8 text-center text-muted-foreground">
-                 <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                                      <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                  <p>Select a conversation to view details</p>
                </CardContent>
              </Card>
@@ -645,7 +1050,7 @@ export default function AdminMessagesPage() {
 
        {/* New Message Dialog */}
        <Dialog open={isNewMessageDialogOpen} onOpenChange={setIsNewMessageDialogOpen}>
-         <DialogContent className="max-w-2xl">
+         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
            <DialogHeader>
              <DialogTitle>Create New Message</DialogTitle>
            </DialogHeader>
@@ -653,7 +1058,7 @@ export default function AdminMessagesPage() {
              <div>
                <label className="text-sm font-medium">Select Patient *</label>
                <div className="relative mt-1">
-                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                  <Input
                    placeholder="Search patients by name or email..."
                    value={patientSearchTerm}
@@ -662,7 +1067,7 @@ export default function AdminMessagesPage() {
                  />
                </div>
                {patientSearchTerm && (
-                 <div className="mt-2 max-h-48 overflow-y-auto border rounded-md">
+                 <div className="mt-2 max-h-24 overflow-y-auto border rounded-md">
                    {filteredPatients.length === 0 ? (
                      <div className="p-3 text-sm text-muted-foreground text-center">
                        No patients found
@@ -756,7 +1161,7 @@ export default function AdminMessagesPage() {
                  value={newMessage.message}
                  onChange={(e) => setNewMessage(prev => ({ ...prev, message: e.target.value }))}
                  placeholder="Enter the message content..."
-                 rows={6}
+                 rows={3}
                  className="mt-1"
                />
              </div>
@@ -783,7 +1188,7 @@ export default function AdminMessagesPage() {
                    onClick={createNewMessage} 
                    disabled={!newMessage.patientId || !newMessage.message.trim()}
                  >
-                 <Send className="h-4 w-4 mr-2" />
+                                      <Send className="h-4 w-4 mr-2" />
                  Create Message
                </Button>
              </div>

@@ -38,7 +38,11 @@ import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Calendar, User, UserCheck, UserX, Edit, Eye, Plus, CheckCircle, XCircle, RefreshCw, Trash2, ChevronLeft, ChevronRight, FileDown, Printer } from "lucide-react"
+import { Edit, Eye, Plus, CheckCircle, XCircle, RefreshCw, Trash2, ChevronLeft, ChevronRight, FileDown, Printer } from "lucide-react"
+import CalendarFillIcon from 'remixicon-react/CalendarFillIcon'
+import User3FillIcon from 'remixicon-react/User3FillIcon'
+import UserAddFillIcon from 'remixicon-react/UserAddFillIcon'
+import CloseCircleFillIcon from 'remixicon-react/CloseCircleFillIcon'
 import { format, isWithinInterval, parseISO, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, addDays, format as formatDate, getYear, getMonth } from 'date-fns';
 import { Card, CardContent } from "@/components/ui/card"
 import { DialogHeader } from "@/components/ui/dialog"
@@ -78,10 +82,10 @@ const mockDoctors = [
   { id: 3, name: "Dr. Sajid Ali" },
 ]
 const statusOptions = [
-  { value: "scheduled", label: "Scheduled", icon: <Calendar className="h-4 w-4 mr-1" /> },
+  { value: "scheduled", label: "Scheduled", icon: <CalendarFillIcon className="h-4 w-4 mr-1" /> },
   { value: "completed", label: "Completed", icon: <CheckCircle className="h-4 w-4 mr-1 text-green-600" /> },
   { value: "cancelled", label: "Cancelled", icon: <XCircle className="h-4 w-4 mr-1 text-red-600" /> },
-  { value: "no-show", label: "No-show", icon: <UserX className="h-4 w-4 mr-1 text-yellow-600" /> },
+  { value: "no-show", label: "No-show", icon: <CloseCircleFillIcon className="h-4 w-4 mr-1 text-yellow-600" /> },
   { value: "rescheduled", label: "Rescheduled", icon: <RefreshCw className="h-4 w-4 mr-1 text-blue-600" /> },
 ]
 const initialAppointments = [
@@ -422,7 +426,7 @@ export default function AdminAppointmentsPage() {
     <div className="h-full min-h-screen flex flex-col">
       <style>{calendarStyles}</style>
       <div className="mb-2">
-        <h1 className="text-2xl font-bold flex items-center gap-2 mb-2"><Calendar className="h-6 w-6" /> Appointments</h1>
+        <h1 className="text-2xl font-bold flex items-center gap-2 mb-2"><CalendarFillIcon className="h-6 w-6" /> Appointments</h1>
         <div className="flex flex-row items-center justify-between w-full mb-4">
           <Tabs value={view} onValueChange={setView} className="">
             <TabsList className="justify-start">
@@ -556,7 +560,7 @@ export default function AdminAppointmentsPage() {
                           <Button size="sm" variant="outline" onClick={() => handleOpenForm(appt)}><Edit className="h-4 w-4" /></Button>
                           <Button size="sm" variant="outline" onClick={() => handleOpenReschedule(appt)}><RefreshCw className="h-4 w-4 mr-1" /> Reschedule</Button>
                           <Button size="sm" variant="destructive" onClick={() => setRemoveAppt(appt)}><Trash2 className="h-4 w-4" /></Button>
-                          <Button size="sm" variant="outline" onClick={() => handleSendReminder(appt.id)}><UserCheck className="h-4 w-4 mr-1" /> Send Reminder</Button>
+                          <Button size="sm" variant="outline" onClick={() => handleSendReminder(appt.id)}><UserAddFillIcon className="h-4 w-4 mr-1" /> Send Reminder</Button>
                         </td>
                       </tr>
                     ))}
@@ -596,15 +600,15 @@ export default function AdminAppointmentsPage() {
                 {filtered.map(appt => (
                   <div key={appt.id} className="rounded-lg border bg-card p-4 shadow flex flex-col gap-2">
                     <div className="flex items-center gap-2">
-                      <User className="h-5 w-5 text-primary" />
+                      <User3FillIcon className="h-5 w-5 text-primary" />
                       <span className="font-semibold">{mockPatients.find(p => p.id === appt.patientId)?.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <UserCheck className="h-5 w-5 text-muted-foreground" />
+                      <UserAddFillIcon className="h-5 w-5 text-muted-foreground" />
                       <span>{mockDoctors.find(d => d.id === appt.doctorId)?.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-muted-foreground" />
+                      <CalendarFillIcon className="h-5 w-5 text-muted-foreground" />
                       <span>{format(appt.date, "yyyy-MM-dd HH:mm")}</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -779,7 +783,7 @@ export default function AdminAppointmentsPage() {
                     <Button size="sm" variant="outline" onClick={() => { handleOpenForm(appt); setCalendarDayAppts(null); }}><Edit className="h-4 w-4" /></Button>
                     <Button size="sm" variant="outline" onClick={() => { handleOpenReschedule(appt); setCalendarDayAppts(null); }}><RefreshCw className="h-4 w-4 mr-1" /> Reschedule</Button>
                     <Button size="sm" variant="destructive" onClick={() => { setRemoveAppt(appt); setCalendarDayAppts(null); }}><Trash2 className="h-4 w-4" /></Button>
-                    <Button size="sm" variant="outline" onClick={() => { handleSendReminder(appt.id); setCalendarDayAppts(null); }}><UserCheck className="h-4 w-4 mr-1" /> Send Reminder</Button>
+                    <Button size="sm" variant="outline" onClick={() => { handleSendReminder(appt.id); setCalendarDayAppts(null); }}><UserAddFillIcon className="h-4 w-4 mr-1" /> Send Reminder</Button>
                   </div>
                 </div>
               ))}

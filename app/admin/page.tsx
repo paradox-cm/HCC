@@ -15,6 +15,11 @@ export default function AdminRedirect() {
     if (isAuthed) {
       router.replace("/admin/dashboard")
     } else {
+      // For development/testing, allow direct access to billing
+      if (typeof window !== "undefined" && window.location.pathname === "/admin/billing") {
+        // Don't redirect if directly accessing billing page
+        return
+      }
       router.replace("/admin-login")
     }
   }, [router])

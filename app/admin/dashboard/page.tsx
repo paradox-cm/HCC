@@ -11,6 +11,8 @@ import FileTextFillIcon from 'remixicon-react/FileTextFillIcon';
 import Message2FillIcon from 'remixicon-react/Message2FillIcon';
 import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon';
 import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const quickLinks = [
   { href: "/admin/patients", label: "Manage Patients", icon: User3FillIcon },
@@ -20,6 +22,82 @@ const quickLinks = [
   { href: "/admin/documents", label: "Documents", icon: FileTextFillIcon },
   { href: "/admin/billing", label: "Billing & Insurance", icon: BarChart2FillIcon },
   { href: "/admin/care-plans", label: "Care Plans", icon: CapsuleFillIcon },
+]
+
+// Mock activity data
+const recentActivity = [
+  {
+    id: 1,
+    type: "registration",
+    title: "New Patient Registration",
+    description: "John Doe registered for the patient portal",
+    time: "10:15 AM",
+    user: "John Doe",
+    avatar: "/placeholder-user.jpg",
+    status: "completed",
+    icon: UserAddFillIcon,
+    color: "bg-green-100 text-green-700 border-green-200"
+  },
+  {
+    id: 2,
+    type: "appointment",
+    title: "Appointment Booked",
+    description: "Jane Smith scheduled a cardiology consultation",
+    time: "10:30 AM",
+    user: "Jane Smith",
+    avatar: "/placeholder-user.jpg",
+    status: "pending",
+    icon: Calendar2FillIcon,
+    color: "bg-blue-100 text-blue-700 border-blue-200"
+  },
+  {
+    id: 3,
+    type: "prescription",
+    title: "Prescription Request",
+    description: "Alex Lee requested a prescription renewal",
+    time: "11:00 AM",
+    user: "Alex Lee",
+    avatar: "/placeholder-user.jpg",
+    status: "pending",
+    icon: CapsuleFillIcon,
+    color: "bg-purple-100 text-purple-700 border-purple-200"
+  },
+  {
+    id: 4,
+    type: "message",
+    title: "New Message",
+    description: "Dr. Patel sent a message to patient",
+    time: "11:15 AM",
+    user: "Dr. Patel",
+    avatar: "/dr-sajid-ali.png",
+    status: "completed",
+    icon: Message2FillIcon,
+    color: "bg-orange-100 text-orange-700 border-orange-200"
+  },
+  {
+    id: 5,
+    type: "document",
+    title: "Document Uploaded",
+    description: "Maria Garcia uploaded medical records",
+    time: "11:45 AM",
+    user: "Maria Garcia",
+    avatar: "/placeholder-user.jpg",
+    status: "completed",
+    icon: FileTextFillIcon,
+    color: "bg-indigo-100 text-indigo-700 border-indigo-200"
+  },
+  {
+    id: 6,
+    type: "care-plan",
+    title: "Care Plan Created",
+    description: "New care plan created for Sarah Johnson",
+    time: "12:00 PM",
+    user: "Dr. Asif Ali",
+    avatar: "/dr-asif-ali.png",
+    status: "completed",
+    icon: CapsuleFillIcon,
+    color: "bg-teal-100 text-teal-700 border-teal-200"
+  }
 ]
 
 export default function AdminDashboardPage() {
@@ -89,7 +167,7 @@ export default function AdminDashboardPage() {
             <CapsuleFillIcon className="h-5 w-5" /> Add Prescription
           </Button>
         </Link>
-        <Link href="/admin/messages">
+        <Link href="/admin/messages?new=1">
           <Button className="w-full sm:min-w-[160px] shadow font-semibold flex items-center gap-2">
             <Message2FillIcon className="h-5 w-5" /> Send Message
           </Button>
@@ -100,40 +178,69 @@ export default function AdminDashboardPage() {
           </Button>
         </Link>
       </div>
-      {/* 3rd Row: Recent Activity Table/List */}
-      <div className="bg-card rounded-lg shadow p-6 border">
-        <h2 className="text-lg font-bold mb-4">Recent Activity</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="text-left text-muted-foreground border-b">
-                <th className="py-2 px-2">Time</th>
-                <th className="py-2 px-2">Event</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b hover:bg-muted/50 transition">
-                <td className="py-2 px-2 whitespace-nowrap font-mono text-xs">10:15 AM</td>
-                <td className="py-2 px-2">John Doe registered for the portal</td>
-              </tr>
-              <tr className="border-b hover:bg-muted/50 transition">
-                <td className="py-2 px-2 whitespace-nowrap font-mono text-xs">10:30 AM</td>
-                <td className="py-2 px-2">Jane Smith booked an appointment</td>
-              </tr>
-              <tr className="border-b hover:bg-muted/50 transition">
-                <td className="py-2 px-2 whitespace-nowrap font-mono text-xs">11:00 AM</td>
-                <td className="py-2 px-2">Prescription request received from Alex Lee</td>
-              </tr>
-              <tr className="border-b hover:bg-muted/50 transition">
-                <td className="py-2 px-2 whitespace-nowrap font-mono text-xs">11:15 AM</td>
-                <td className="py-2 px-2">New message from Dr. Patel</td>
-              </tr>
-              <tr className="hover:bg-muted/50 transition">
-                <td className="py-2 px-2 whitespace-nowrap font-mono text-xs">11:45 AM</td>
-                <td className="py-2 px-2">Document uploaded by Maria Garcia</td>
-              </tr>
-            </tbody>
-          </table>
+      {/* 3rd Row: Recent Activity Feed */}
+      <div className="bg-card rounded-lg shadow border">
+        <div className="p-6 border-b">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold">Recent Activity</h2>
+            <Badge variant="secondary" className="text-xs">
+              Last 24 hours
+            </Badge>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="space-y-4">
+            {recentActivity.map((activity, index) => {
+              const Icon = activity.icon
+              return (
+                <div key={activity.id} className="flex items-start gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors">
+                  {/* Activity Icon */}
+                  <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border ${activity.color}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  
+                  {/* Activity Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-sm">{activity.title}</h3>
+                          <Badge 
+                            variant={activity.status === "completed" ? "default" : "secondary"}
+                            className="text-xs"
+                          >
+                            {activity.status === "completed" ? "Completed" : "Pending"}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">{activity.description}</p>
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src={activity.avatar} alt={activity.user} />
+                              <AvatarFallback className="text-xs">
+                                {activity.user.split(' ').map(n => n[0]).join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs text-muted-foreground">{activity.user}</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground font-mono">{activity.time}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          
+          {/* View All Activity Button */}
+          <div className="mt-6 pt-4 border-t">
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/admin/activity">
+                View All Activity
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

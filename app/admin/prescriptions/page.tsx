@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Pill, Eye, Edit, Trash2, Plus, CheckCircle } from "lucide-react"
+import { Edit, Trash2, Plus, CheckCircle } from "lucide-react"
+import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon'
+import EyeFillIcon from 'remixicon-react/EyeFillIcon'
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -53,7 +55,9 @@ export default function AdminPrescriptionsPage() {
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [showModal, setShowModal] = useState(false)
+  const [showViewModal, setShowViewModal] = useState(false)
   const [editRx, setEditRx] = useState<any>(null)
+  const [viewRx, setViewRx] = useState<any>(null)
   type RxForm = {
     id?: number;
     patientName: string;
@@ -87,6 +91,11 @@ export default function AdminPrescriptionsPage() {
       setEditRx(null)
     }
     setShowModal(true)
+  }
+
+  function handleViewModal(rx: any) {
+    setViewRx(rx)
+    setShowViewModal(true)
   }
 
   function handleSave(e: React.FormEvent) {
@@ -148,7 +157,7 @@ export default function AdminPrescriptionsPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
         <div className="flex items-center gap-2">
-          <Pill className="h-6 w-6 text-primary" />
+          <CapsuleFillIcon className="h-6 w-6 text-foreground" />
           <h1 className="text-2xl font-bold">Prescriptions</h1>
         </div>
         <Button variant="default" onClick={() => handleOpenModal()} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-2" /> Add Prescription</Button>
@@ -205,7 +214,7 @@ export default function AdminPrescriptionsPage() {
                     </td>
                     <td className="py-2 px-3">{rx.lastUpdated}</td>
                     <td className="py-2 px-3 flex gap-2 flex-wrap">
-                      <Button size="sm" variant="outline" onClick={() => handleOpenModal(rx)}><Eye className="h-4 w-4 mr-1" /> View</Button>
+                      <Button size="sm" variant="outline" onClick={() => handleViewModal(rx)}><EyeFillIcon className="h-4 w-4 mr-1" /> View</Button>
                       <Button size="sm" variant="outline" onClick={() => handleOpenModal(rx)}><Edit className="h-4 w-4" /></Button>
                       {rx.status === "Filled" ? (
                         <Button size="sm" variant="secondary" onClick={() => handleMarkFilled(rx.id, true)}><CheckCircle className="h-4 w-4 mr-1" /> Unmark as Filled</Button>
@@ -229,7 +238,7 @@ export default function AdminPrescriptionsPage() {
         {filtered.map(rx => (
           <Card key={rx.id} className="border bg-card p-4 shadow flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Pill className="h-5 w-5 text-primary" />
+                              <CapsuleFillIcon className="h-5 w-5 text-primary" />
               <span className="font-semibold">{rx.medication}</span>
               <span className="text-xs text-muted-foreground">{rx.dosage}</span>
             </div>
@@ -241,8 +250,8 @@ export default function AdminPrescriptionsPage() {
               "text-muted-foreground font-semibold"
             }>{rx.status}</span></div>
             <div className="text-xs text-muted-foreground">Last Updated: {rx.lastUpdated}</div>
-            <div className="flex gap-2 mt-2">
-              <Button size="sm" variant="outline" onClick={() => handleOpenModal(rx)}><Eye className="h-4 w-4 mr-1" /> View</Button>
+                        <div className="flex gap-2 mt-2">
+              <Button size="sm" variant="outline" onClick={() => handleViewModal(rx)}><EyeFillIcon className="h-4 w-4 mr-1" /> View</Button>
               <Button size="sm" variant="outline" onClick={() => handleOpenModal(rx)}><Edit className="h-4 w-4" /></Button>
               <Button size="sm" variant="outline" onClick={() => handleMarkFilled(rx.id, false)}><CheckCircle className="h-4 w-4 mr-1" /> Mark as Filled</Button>
               <Button size="sm" variant="destructive" onClick={() => handleDelete(rx.id)}><Trash2 className="h-4 w-4" /></Button>
@@ -288,6 +297,52 @@ export default function AdminPrescriptionsPage() {
               <Button type="submit" className="w-full">{form.id ? "Save Changes" : "Add Prescription"}</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Modal */}
+      <Dialog open={showViewModal} onOpenChange={setShowViewModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Prescription Details</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium mb-1 text-muted-foreground">Patient Name</label>
+              <p className="text-sm font-medium">{viewRx?.patientName}</p>
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1 text-muted-foreground">Medication</label>
+              <p className="text-sm font-medium">{viewRx?.medication}</p>
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1 text-muted-foreground">Dosage</label>
+              <p className="text-sm font-medium">{viewRx?.dosage}</p>
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1 text-muted-foreground">Instructions</label>
+              <p className="text-sm">{viewRx?.instructions}</p>
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1 text-muted-foreground">Status</label>
+              <p className={`text-sm font-medium ${
+                viewRx?.status === "Active" ? "text-blue-600" :
+                viewRx?.status === "Filled" ? "text-green-600" :
+                "text-muted-foreground"
+              }`}>{viewRx?.status}</p>
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1 text-muted-foreground">Last Updated</label>
+              <p className="text-sm">{viewRx?.lastUpdated}</p>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowViewModal(false)}>Close</Button>
+              <Button onClick={() => {
+                setShowViewModal(false)
+                handleOpenModal(viewRx)
+              }}>Edit Prescription</Button>
+            </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

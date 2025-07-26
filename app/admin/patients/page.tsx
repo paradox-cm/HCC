@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import Link from "next/link"
-import { Users, Plus, Trash2, Edit, ArrowRight } from "lucide-react"
+import { Trash2, Edit, ArrowRight } from "lucide-react"
+import GroupFillIcon from 'remixicon-react/GroupFillIcon'
+import AddCircleFillIcon from 'remixicon-react/AddCircleFillIcon'
 
 const MOCK_PATIENTS = [
   { id: 1, name: "Jane Doe", dob: "1985-04-12", email: "jane@email.com", phone: "555-123-4567", lastVisit: "2024-06-01", status: "Active" },
@@ -72,8 +74,8 @@ export default function AdminPatientsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold flex items-center gap-2"><Users className="h-6 w-6" /> Patients</h1>
-        <Button variant="default" onClick={() => router.push("/admin/patients?add=1") }><Plus className="h-4 w-4 mr-2" /> Add Patient</Button>
+        <h1 className="text-2xl font-bold flex items-center gap-2"><GroupFillIcon className="h-6 w-6" /> Patients</h1>
+        <Button variant="default" onClick={() => router.push("/admin/patients?add=1") }><AddCircleFillIcon className="h-4 w-4 mr-2" /> Add Patient</Button>
       </div>
       <div className="mb-4 flex gap-2">
         <Input

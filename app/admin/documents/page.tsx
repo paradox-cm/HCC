@@ -9,21 +9,22 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
-  FileText, 
-  Search, 
   Filter, 
-  Upload, 
-  Download, 
   Eye, 
-  User,
-  Calendar,
-  FileText as FileTextIcon,
-  Users,
   Tag,
   ArrowRight,
   Folder
 } from "lucide-react"
+import FileTextFillIcon from 'remixicon-react/FileTextFillIcon'
+import SearchFillIcon from 'remixicon-react/SearchFillIcon'
+import UploadFillIcon from 'remixicon-react/UploadFillIcon'
+import DownloadFillIcon from 'remixicon-react/DownloadFillIcon'
+import User3FillIcon from 'remixicon-react/User3FillIcon'
+import CalendarFillIcon from 'remixicon-react/CalendarFillIcon'
+import GroupFillIcon from 'remixicon-react/GroupFillIcon'
+import TimeFillIcon from 'remixicon-react/TimeFillIcon'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { getStatusColor } from "@/lib/admin-badge-utils"
 
 // Mock data for patients with their document summaries
 const mockPatients = [
@@ -213,14 +214,7 @@ export default function AdminDocumentsPage() {
   const totalDocuments = mockPatients.reduce((sum, patient) => sum + patient.documentCount, 0)
   const totalPending = mockPatients.reduce((sum, patient) => sum + patient.pendingCount, 0)
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "available": return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
-      case "pending": return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800"
-      case "reviewed": return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
-      default: return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
-    }
-  }
+
 
   const handlePatientClick = (patientId: string) => {
     // Navigate to the patient's document profile page
@@ -230,23 +224,55 @@ export default function AdminDocumentsPage() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Users className="h-6 w-6 text-primary" />
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-4">
+                      <FileTextFillIcon className="h-6 w-6 text-foreground" />
           <h1 className="text-2xl font-bold">Patient Documents</h1>
-          <div className="flex gap-2 ml-4">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800">
-              {totalPatients} patients
-            </Badge>
-            <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">
-              {totalDocuments} documents
-            </Badge>
-            {totalPending > 0 && (
-              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800">
-                {totalPending} pending
-              </Badge>
-            )}
-          </div>
+        </div>
+        
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <GroupFillIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Total Patients</p>
+                  <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{totalPatients}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <FileTextFillIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-green-600 dark:text-green-400 font-medium">Total Documents</p>
+                  <p className="text-2xl font-bold text-green-700 dark:text-green-300">{totalDocuments}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                  <TimeFillIcon className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">Pending Review</p>
+                  <p className="text-2xl font-bold text-yellow-700 dark:text-yellow-300">{totalPending}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -255,7 +281,7 @@ export default function AdminDocumentsPage() {
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <SearchFillIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search patients..."
                 value={searchTerm}
@@ -298,7 +324,7 @@ export default function AdminDocumentsPage() {
           <div className="col-span-full">
             <Card>
               <CardContent className="py-12 text-center text-muted-foreground">
-                <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <GroupFillIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg font-medium mb-2">No patients found</p>
                 <p className="text-sm">Try adjusting your search or filters</p>
               </CardContent>
@@ -308,17 +334,17 @@ export default function AdminDocumentsPage() {
           sortedPatients.map(patient => (
             <Card 
               key={patient.id} 
-              className="hover:shadow-md transition-shadow cursor-pointer"
+              className="hover:shadow-md hover:border-red-500 transition-all duration-200 cursor-pointer"
               onClick={() => handlePatientClick(patient.id)}
             >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-12 w-12">
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        {patient.name.split(" ").map(n => n[0]).join("")}
-                      </AvatarFallback>
-                    </Avatar>
+                                         <Avatar className="h-12 w-12">
+                       <AvatarFallback>
+                         {patient.name.split(" ").map(n => n[0]).join("")}
+                       </AvatarFallback>
+                     </Avatar>
                     <div>
                       <h3 className="font-semibold text-lg">{patient.name}</h3>
                       <p className="text-sm text-muted-foreground">{patient.email}</p>
@@ -357,7 +383,7 @@ export default function AdminDocumentsPage() {
                     {patient.recentDocuments.slice(0, 2).map((doc, index) => (
                       <div key={index} className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <FileText className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                          <FileTextFillIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                           <span className="truncate">{doc.name}</span>
                         </div>
                         <Badge className={`text-xs ${getStatusColor(doc.status)}`}>

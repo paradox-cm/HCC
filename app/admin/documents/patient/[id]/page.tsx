@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Checkbox } from "@/components/ui/checkbox"
 import { 
   FileText, 
   Search, 
@@ -26,9 +27,13 @@ import {
   Tag,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Edit3,
+  Save,
+  X
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { getStatusColor, badgeColors } from "@/lib/admin-badge-utils"
 
 // Mock patient data
 const mockPatient = {
@@ -137,16 +142,16 @@ const mockPatientDocuments = [
 ]
 
 const documentTypes = [
-  { value: "all", label: "All Types" },
   { value: "test", label: "Test Result" },
   { value: "lab", label: "Lab Result" },
   { value: "imaging", label: "Imaging" },
   { value: "report", label: "Report" },
+  { value: "prescription", label: "Prescription" },
+  { value: "consent", label: "Consent Form" },
   { value: "other", label: "Other" }
 ]
 
 const documentStatuses = [
-  { value: "all", label: "All Status" },
   { value: "available", label: "Available" },
   { value: "pending", label: "Pending Review" },
   { value: "reviewed", label: "Reviewed" },
@@ -170,6 +175,13 @@ export default function PatientDocumentProfile() {
   const [selectedStatus, setSelectedStatus] = useState("all")
   const [selectedDocuments, setSelectedDocuments] = useState<number[]>([])
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false)
+  const [editingDocument, setEditingDocument] = useState<number | null>(null)
+  const [editData, setEditData] = useState({
+    type: "",
+    status: "",
+    assignedTo: "",
+    notes: ""
+  })
   const [uploadData, setUploadData] = useState({
     file: null as File | null,
     type: "test",
@@ -177,6 +189,8 @@ export default function PatientDocumentProfile() {
     notes: ""
   })
   const [uploadError, setUploadError] = useState("")
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  const [selectedDocument, setSelectedDocument] = useState<any>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Filter documents based on search and filters
@@ -242,14 +256,51 @@ export default function PatientDocumentProfile() {
     )
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "available": return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
-      case "pending": return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800"
-      case "reviewed": return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
-      case "archived": return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
-      default: return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
-    }
+  const startEditing = (doc: any) => {
+    setEditingDocument(doc.id)
+    setEditData({
+      type: documentTypes.find(t => t.label === doc.type)?.value || "other",
+      status: doc.status,
+      assignedTo: doc.assignedTo,
+      notes: doc.notes || ""
+    })
+  }
+
+  const saveEdit = () => {
+    if (!editingDocument) return
+
+    setDocuments(prev => prev.map(doc => {
+      if (doc.id === editingDocument) {
+        return {
+          ...doc,
+          type: documentTypes.find(t => t.value === editData.type)?.label || "Other",
+          status: editData.status,
+          assignedTo: editData.assignedTo,
+          notes: editData.notes
+        }
+      }
+      return doc
+    }))
+    setEditingDocument(null)
+    setEditData({ type: "", status: "", assignedTo: "", notes: "" })
+  }
+
+  const cancelEdit = () => {
+    setEditingDocument(null)
+    setEditData({ type: "", status: "", assignedTo: "", notes: "" })
+  }
+
+
+
+  const handleViewDocument = (doc: any) => {
+    setSelectedDocument(doc)
+    setIsViewModalOpen(true)
+  }
+
+  const handleDownloadDocument = (doc: any) => {
+    // In a real application, this would trigger a download
+    // For now, we'll show an alert with download info
+    alert(`Downloading document: ${doc.name}\nSize: ${doc.fileSize}`)
   }
 
   return (
@@ -262,7 +313,7 @@ export default function PatientDocumentProfile() {
         </Button>
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12">
-            <AvatarFallback className="bg-primary/10 text-primary">
+            <AvatarFallback>
               {mockPatient.name.split(" ").map(n => n[0]).join("")}
             </AvatarFallback>
           </Avatar>
@@ -295,14 +346,14 @@ export default function PatientDocumentProfile() {
             </div>
           </div>
           <div className="flex gap-4 mt-4">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800">
+            <Badge variant="secondary" className={badgeColors.blue}>
               {mockPatient.documentCount} total documents
             </Badge>
-            <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">
+            <Badge variant="secondary" className={badgeColors.green}>
               {mockPatient.availableCount} available
             </Badge>
             {mockPatient.pendingCount > 0 && (
-              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800">
+              <Badge variant="secondary" className={badgeColors.yellow}>
                 {mockPatient.pendingCount} pending
               </Badge>
             )}
@@ -355,7 +406,7 @@ export default function PatientDocumentProfile() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {documentTypes.filter(t => t.value !== "all").map(type => (
+                      {documentTypes.map(type => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.label}
                         </SelectItem>
@@ -401,54 +452,66 @@ export default function PatientDocumentProfile() {
       {/* Filters */}
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search documents..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+          <div className="space-y-4">
+            {/* Search and Filters Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search documents..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  {documentTypes.map(type => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  {documentStatuses.map(status => (
+                    <SelectItem key={status.value} value={status.value}>
+                      {status.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Select value={selectedType} onValueChange={setSelectedType}>
-              <SelectTrigger>
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                {documentTypes.map(type => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                {documentStatuses.map(status => (
-                  <SelectItem key={status.value} value={status.value}>
-                    {status.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            
+            {/* Bulk Actions Row */}
             {selectedDocuments.length > 0 && (
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("mark-reviewed")}>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Mark Reviewed
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("archive")}>
-                  <Archive className="h-4 w-4 mr-2" />
-                  Archive
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("delete")}>
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
-                </Button>
+              <div className="flex flex-wrap gap-2 pt-2 border-t">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>{selectedDocuments.length} document{selectedDocuments.length !== 1 ? 's' : ''} selected</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" variant="outline" onClick={() => handleBulkAction("mark-reviewed")}>
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Mark Reviewed
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => handleBulkAction("archive")}>
+                    <Archive className="h-4 w-4 mr-2" />
+                    Archive
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => handleBulkAction("delete")}>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
               </div>
             )}
           </div>
@@ -467,48 +530,128 @@ export default function PatientDocumentProfile() {
           </Card>
         ) : (
           filteredDocuments.map(doc => (
-            <Card key={doc.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
+            <Card key={doc.id} className="hover:shadow-md hover:border-red-500 transition-all duration-200">
+              <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-4 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
+                    <div className="flex items-center gap-2 pt-1">
+                      <Checkbox
                         checked={selectedDocuments.includes(doc.id)}
-                        onChange={() => toggleDocumentSelection(doc.id)}
-                        className="rounded border-gray-300"
+                        onCheckedChange={() => toggleDocumentSelection(doc.id)}
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-3 mb-3">
                         <FileText className="h-5 w-5 text-primary" />
                         <h3 className="font-semibold text-lg truncate">{doc.name}</h3>
                         <Badge className={`text-xs ${getStatusColor(doc.status)}`}>
                           {doc.status}
                         </Badge>
+                        {editingDocument === doc.id && (
+                          <div className="flex items-center gap-2">
+                            <Button size="sm" onClick={saveEdit} className="h-6 px-2">
+                              <Save className="h-3 w-3 mr-1" />
+                              Save
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={cancelEdit} className="h-6 px-2">
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        )}
+                        {editingDocument !== doc.id && (
+                          <Button size="sm" variant="ghost" onClick={() => startEditing(doc)} className="h-6 px-2">
+                            <Edit3 className="h-3 w-3" />
+                          </Button>
+                        )}
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <Tag className="h-4 w-4" />
-                          <span>{doc.type}</span>
+                      
+                      {editingDocument === doc.id ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                          <div>
+                            <label className="block text-xs font-medium mb-1">Type</label>
+                            <Select value={editData.type} onValueChange={(value) => setEditData(u => ({ ...u, type: value }))}>
+                              <SelectTrigger className="h-8">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {documentTypes.map(type => (
+                                  <SelectItem key={type.value} value={type.value}>
+                                    {type.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium mb-1">Status</label>
+                            <Select value={editData.status} onValueChange={(value) => setEditData(u => ({ ...u, status: value }))}>
+                              <SelectTrigger className="h-8">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {documentStatuses.map(status => (
+                                  <SelectItem key={status.value} value={status.value}>
+                                    {status.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium mb-1">Assigned To</label>
+                            <Select value={editData.assignedTo} onValueChange={(value) => setEditData(u => ({ ...u, assignedTo: value }))}>
+                              <SelectTrigger className="h-8">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {assignedDoctors.map(doctor => (
+                                  <SelectItem key={doctor.value} value={doctor.value}>
+                                    {doctor.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          <span>{doc.date}</span>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-2">
+                            <Tag className="h-4 w-4" />
+                            <span>{doc.type}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            <span>{doc.date}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4" />
+                            <span>{doc.assignedTo}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          <span>{doc.assignedTo}</span>
-                        </div>
-                      </div>
-                      <div className="mt-2 text-xs text-muted-foreground">
+                      )}
+                      
+                      <div className="text-xs text-muted-foreground mb-2">
                         <span className="mr-4">Size: {doc.fileSize}</span>
                         <span className="mr-4">Uploaded by: {doc.uploadedBy}</span>
                       </div>
-                      {doc.notes && (
-                        <div className="mt-2 text-xs text-muted-foreground italic">
-                          Notes: {doc.notes}
+                      
+                      {editingDocument === doc.id ? (
+                        <div className="mb-3">
+                          <label className="block text-xs font-medium mb-1">Notes</label>
+                          <Textarea
+                            value={editData.notes}
+                            onChange={(e) => setEditData(u => ({ ...u, notes: e.target.value }))}
+                            placeholder="Add notes about this document..."
+                            className="text-xs"
+                            rows={2}
+                          />
                         </div>
+                      ) : (
+                        doc.notes && (
+                          <div className="text-xs text-muted-foreground italic mb-3">
+                            Notes: {doc.notes}
+                          </div>
+                        )
                       )}
                     </div>
                   </div>
@@ -516,7 +659,11 @@ export default function PatientDocumentProfile() {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleViewDocument(doc)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                         </TooltipTrigger>
@@ -526,7 +673,11 @@ export default function PatientDocumentProfile() {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleDownloadDocument(doc)}
+                          >
                             <Download className="h-4 w-4" />
                           </Button>
                         </TooltipTrigger>
@@ -540,6 +691,69 @@ export default function PatientDocumentProfile() {
           ))
         )}
       </div>
+
+      {/* Document Viewer Modal */}
+      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              {selectedDocument?.name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Document Info */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <span className="text-muted-foreground">Type:</span>
+                <p className="font-medium">{selectedDocument?.type}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Status:</span>
+                <p className="font-medium">{selectedDocument?.status}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Size:</span>
+                <p className="font-medium">{selectedDocument?.fileSize}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Date:</span>
+                <p className="font-medium">{selectedDocument?.date}</p>
+              </div>
+            </div>
+            
+            {/* Document Viewer */}
+            <div className="border rounded-lg bg-muted/20 h-96 flex items-center justify-center">
+              <div className="text-center text-muted-foreground">
+                <FileText className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium mb-2">Document Preview</p>
+                <p className="text-sm">In a real application, this would display the actual document content</p>
+                <p className="text-sm mt-2">File: {selectedDocument?.name}</p>
+                <p className="text-sm">Size: {selectedDocument?.fileSize}</p>
+              </div>
+            </div>
+            
+            {/* Document Notes */}
+            {selectedDocument?.notes && (
+              <div className="border rounded-lg p-4 bg-muted/10">
+                <h4 className="font-medium mb-2">Notes</h4>
+                <p className="text-sm text-muted-foreground">{selectedDocument.notes}</p>
+              </div>
+            )}
+            
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => handleDownloadDocument(selectedDocument)}>
+                <Download className="h-4 w-4 mr-2" />
+                Download
+              </Button>
+              <Button onClick={() => setIsViewModalOpen(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 } 

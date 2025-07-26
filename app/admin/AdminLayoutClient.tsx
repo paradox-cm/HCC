@@ -26,7 +26,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useRef } from "react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { Drawer, DrawerTrigger, DrawerContent, DrawerClose } from "@/components/ui/drawer"
+import { Drawer, DrawerTrigger, DrawerContent, DrawerClose, DrawerTitle } from "@/components/ui/drawer"
+import { SystemStatusModal } from "@/components/SystemStatusModal"
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: Home2FillIcon },
@@ -78,6 +79,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   ])
   const notifBellRef = useRef<HTMLButtonElement>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [systemStatusModal, setSystemStatusModal] = useState(false)
 
   function handleSupportSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -184,13 +186,13 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         </div>
         <div className="flex items-center gap-4 instant-theme-switch">
           {/* System Status (desktop only - above 1240px) */}
-          <div className="hidden min-[1240px]:flex items-center gap-1 group relative" title="All systems operational">
+          <button 
+            className="hidden min-[1240px]:flex items-center gap-1 group relative hover:bg-accent rounded px-2 py-1 transition-colors" 
+            onClick={() => setSystemStatusModal(true)}
+          >
             <CheckboxCircleFillIcon className="h-3 w-3 text-green-500" />
             <span className="text-xs text-green-600 font-medium">All systems operational</span>
-            <div className="absolute left-1/2 -bottom-7 -translate-x-1/2 bg-background border rounded px-2 py-1 text-xs text-muted-foreground shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
-              All systems operational
-            </div>
-          </div>
+          </button>
           {/* Theme Toggle */}
           <Button
             variant="ghost"
@@ -273,6 +275,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       {/* Sidebar as Drawer for mobile/tablet (below 1240px) */}
       <Drawer open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <DrawerContent className="max-[1240px]:block hidden">
+          <DrawerTitle className="sr-only">Admin Navigation</DrawerTitle>
           <aside className="w-full bg-background border-r flex flex-col justify-between py-6 px-4 min-h-screen">
             {/* Drawer Logo */}
             <div className="flex items-center justify-between mb-6 w-full">
@@ -295,10 +298,13 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
               <div className="flex items-center gap-2 justify-between">
                 <span className="text-sm text-muted-foreground font-medium min-w-max">{dateTime}</span>
                 {/* System Status */}
-                <div className="flex items-center gap-1 group relative" title="All systems operational">
+                <button 
+                  className="flex items-center gap-1 group relative hover:bg-accent rounded px-2 py-1 transition-colors" 
+                  onClick={() => setSystemStatusModal(true)}
+                >
                   <CheckboxCircleFillIcon className="h-3 w-3 text-green-500" />
                   <span className="text-xs text-green-600 font-medium">Online</span>
-                </div>
+                </button>
               </div>
               <div className="flex items-center gap-4 justify-between">
                 {/* Theme Toggle */}
@@ -395,53 +401,54 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                 </button>
               </div>
             </div>
-            {/* Support Modal */}
-            <Dialog open={supportOpen} onOpenChange={setSupportOpen}>
-              <DialogContent>
-                <DialogTitle className="text-lg font-bold mb-2">Send a message to support</DialogTitle>
-                {supportSent ? (
-                  <div className="text-green-600 text-sm">Your message has been sent! Support will contact you soon.</div>
-                ) : (
-                  <form onSubmit={handleSupportSubmit} className="flex flex-col gap-3">
-                    <Input
-                      type="email"
-                      placeholder="Your email"
-                      value={supportEmail}
-                      onChange={e => setSupportEmail(e.target.value)}
-                      required
-                    />
-                    <Textarea
-                      placeholder="Describe your issue or question..."
-                      value={supportMsg}
-                      onChange={e => setSupportMsg(e.target.value)}
-                      required
-                      rows={4}
-                    />
-                    <div className="flex gap-2 justify-end">
-                      <DialogClose asChild>
-                        <button
-                          type="button"
-                          className="px-3 py-1 rounded bg-muted text-xs hover:bg-accent border"
-                          disabled={supportLoading}
-                        >
-                          Cancel
-                        </button>
-                      </DialogClose>
-                      <button
-                        type="submit"
-                        className="px-3 py-1 rounded bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition disabled:opacity-60"
-                        disabled={supportLoading}
-                      >
-                        {supportLoading ? "Sending..." : "Send"}
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </DialogContent>
-            </Dialog>
           </aside>
         </DrawerContent>
       </Drawer>
+
+      {/* Support Modal */}
+      <Dialog open={supportOpen} onOpenChange={setSupportOpen}>
+        <DialogContent>
+          <DialogTitle className="text-lg font-bold mb-2">Send a message to support</DialogTitle>
+          {supportSent ? (
+            <div className="text-green-600 text-sm">Your message has been sent! Support will contact you soon.</div>
+          ) : (
+            <form onSubmit={handleSupportSubmit} className="flex flex-col gap-3">
+              <Input
+                type="email"
+                placeholder="Your email"
+                value={supportEmail}
+                onChange={e => setSupportEmail(e.target.value)}
+                required
+              />
+              <Textarea
+                placeholder="Describe your issue or question..."
+                value={supportMsg}
+                onChange={e => setSupportMsg(e.target.value)}
+                required
+                rows={4}
+              />
+              <div className="flex gap-2 justify-end">
+                <DialogClose asChild>
+                  <button
+                    type="button"
+                    className="px-3 py-1 rounded bg-muted text-xs hover:bg-accent border"
+                    disabled={supportLoading}
+                  >
+                    Cancel
+                  </button>
+                </DialogClose>
+                <button
+                  type="submit"
+                  className="px-3 py-1 rounded bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition disabled:opacity-60"
+                  disabled={supportLoading}
+                >
+                  {supportLoading ? "Sending..." : "Send"}
+                </button>
+              </div>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
       {/* Desktop Sidebar + Main Content */}
       <div className="flex flex-1 min-h-0 pt-16">
         {/* Sidebar for desktop only (above 1240px) */}
@@ -478,6 +485,12 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
           {children}
         </main>
       </div>
+
+      {/* System Status Modal */}
+      <SystemStatusModal 
+        open={systemStatusModal} 
+        onOpenChange={setSystemStatusModal} 
+      />
     </div>
   )
 } 

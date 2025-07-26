@@ -365,7 +365,7 @@ export default function PatientPortalDashboardClient() {
                 </Button>
               </div>
               <Button asChild size="sm" variant="outline" className="w-full mt-3">
-                <Link href="/patient-portal/dashboard/documents?upload=1"> <UploadFillIcon className="mr-2 h-4 w-4" /> Upload Files</Link>
+                <Link href="/patient-portal/dashboard/care-plan?create=1"> <HeartPulseFillIcon className="mr-2 h-4 w-4" /> Create Care Plan</Link>
               </Button>
             </div>
           </MobileCard>
