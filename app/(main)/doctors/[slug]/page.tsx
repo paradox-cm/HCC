@@ -88,7 +88,7 @@ export default function DoctorProfilePage({ params }: { params: { slug: string }
 
   return (
     <>
-      <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-2 md:pt-0">
+      <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-6 md:pt-8">
         <Button variant="outline" onClick={() => router.back()} className="mb-2">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back

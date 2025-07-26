@@ -72,12 +72,7 @@ const testimonials = {
         review: "I had a great experience at Dr Ali's office. Parking was easy and the office very easy to find. The office staff was helpful and kind. Dr. Ali was professional...",
         link: ""
       },
-      {
-        reviewer: "Sylvia Tsang",
-        date: "a year ago",
-        review: "UPDATE Dr. Ali and his team had apologized to me. There was some miscommunications but now it is all good...",
-        link: ""
-      },
+
       {
         reviewer: "Nessie Edwards",
         date: "a year ago",
