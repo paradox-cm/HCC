@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
 export const metadata: Metadata = {
   title: "Care Plan | Patient Portal | Houston Cardiology Consultants",
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 import CarePlanPageClient from "./CarePlanPageClient"
 
 export default function CarePlanPage() {
-  return <CarePlanPageClient />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CarePlanPageClient />
+    </Suspense>
+  )
 } 
