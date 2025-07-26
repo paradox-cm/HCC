@@ -15,8 +15,8 @@ import PhoneFillIcon from 'remixicon-react/PhoneFillIcon';
 import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
 import DownloadFillIcon from 'remixicon-react/DownloadFillIcon';
 import PrinterFillIcon from 'remixicon-react/PrinterFillIcon';
-import PlusFillIcon from 'remixicon-react/PlusFillIcon';
-import Trash2FillIcon from 'remixicon-react/Trash2FillIcon';
+import AddCircleFillIcon from 'remixicon-react/AddCircleFillIcon';
+import DeleteBinFillIcon from 'remixicon-react/DeleteBinFillIcon';
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
@@ -192,7 +192,7 @@ export default function CarePlanPageClient() {
                 <DownloadFillIcon className="h-4 w-4 mr-2" /> Download
               </Button>
               <Button variant="default" onClick={() => setCreateModalOpen(true)} className="w-full">
-                <PlusFillIcon className="h-4 w-4 mr-2" /> Create New Care Plan
+                <AddCircleFillIcon className="h-4 w-4 mr-2" /> Create New Care Plan
               </Button>
             </div>
           </CardContent>
@@ -220,7 +220,7 @@ export default function CarePlanPageClient() {
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium">Goals</label>
                 <Button type="button" variant="outline" size="sm" onClick={addGoal}>
-                  <PlusFillIcon className="h-4 w-4 mr-1" /> Add Goal
+                  <AddCircleFillIcon className="h-4 w-4 mr-1" /> Add Goal
                 </Button>
               </div>
               <div className="space-y-2">
@@ -233,7 +233,7 @@ export default function CarePlanPageClient() {
                     />
                     {newCarePlan.goals.length > 1 && (
                       <Button type="button" variant="outline" size="sm" onClick={() => removeGoal(index)}>
-                        <Trash2FillIcon className="h-4 w-4" />
+                        <DeleteBinFillIcon className="h-4 w-4" />
                       </Button>
                     )}
                   </div>
@@ -245,7 +245,7 @@ export default function CarePlanPageClient() {
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium">Medications</label>
                 <Button type="button" variant="outline" size="sm" onClick={addMedication}>
-                  <PlusFillIcon className="h-4 w-4 mr-1" /> Add Medication
+                  <AddCircleFillIcon className="h-4 w-4 mr-1" /> Add Medication
                 </Button>
               </div>
               <div className="space-y-2">
@@ -268,7 +268,7 @@ export default function CarePlanPageClient() {
                         placeholder="Frequency"
                       />
                       <Button type="button" variant="outline" size="sm" onClick={() => removeMedication(index)}>
-                        <Trash2FillIcon className="h-4 w-4" />
+                        <DeleteBinFillIcon className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
@@ -280,7 +280,7 @@ export default function CarePlanPageClient() {
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium">Appointments</label>
                 <Button type="button" variant="outline" size="sm" onClick={addAppointment}>
-                  <PlusFillIcon className="h-4 w-4 mr-1" /> Add Appointment
+                  <AddCircleFillIcon className="h-4 w-4 mr-1" /> Add Appointment
                 </Button>
               </div>
               <div className="space-y-2">
@@ -308,7 +308,7 @@ export default function CarePlanPageClient() {
                         onChange={e => updateAppointment(index, "time", e.target.value)}
                       />
                       <Button type="button" variant="outline" size="sm" onClick={() => removeAppointment(index)}>
-                        <Trash2FillIcon className="h-4 w-4" />
+                        <DeleteBinFillIcon className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
