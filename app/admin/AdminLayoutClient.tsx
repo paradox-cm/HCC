@@ -489,7 +489,8 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       {/* System Status Modal */}
       <SystemStatusModal 
         open={systemStatusModal} 
-        onOpenChange={setSystemStatusModal} 
+        onOpenChange={setSystemStatusModal}
+        onSupportClick={() => { setSupportOpen(true); setSupportSent(false); }}
       />
     </div>
   )

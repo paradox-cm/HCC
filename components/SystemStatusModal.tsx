@@ -21,16 +21,17 @@ const MOCK_SYSTEM_STATUS = {
   notifications: "Operational",
   lastBackup: "2024-01-15 02:00 AM",
   uptime: "99.9%",
-  activeUsers: 127,
+  activeUsers: 11,
   totalPatients: 1234,
 }
 
 interface SystemStatusModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onSupportClick?: () => void
 }
 
-export function SystemStatusModal({ open, onOpenChange }: SystemStatusModalProps) {
+export function SystemStatusModal({ open, onOpenChange, onSupportClick }: SystemStatusModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
@@ -127,17 +128,30 @@ export function SystemStatusModal({ open, onOpenChange }: SystemStatusModalProps
             </AlertDescription>
           </Alert>
         </div>
-        <DialogFooter>
-          <Button onClick={() => {
-            // Simulate refresh
-            console.log("Refreshing system status...")
-          }}>
-            <RefreshFillIcon className="h-4 w-4 mr-2" />
-            Refresh Status
-          </Button>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
-          </Button>
+        <DialogFooter className="flex items-center justify-between">
+          <div className="flex-1">
+            {onSupportClick && (
+              <button
+                type="button"
+                className="text-primary underline hover:no-underline focus:outline-none text-sm"
+                onClick={onSupportClick}
+              >
+                Support
+              </button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={() => {
+              // Simulate refresh
+              console.log("Refreshing system status...")
+            }}>
+              <RefreshFillIcon className="h-4 w-4 mr-2" />
+              Refresh Status
+            </Button>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Close
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
