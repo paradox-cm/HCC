@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { User } from "lucide-react"
 
 const MOCK_PRESCRIPTIONS = [
   {
@@ -231,30 +232,64 @@ export default function AdminPrescriptionsPage() {
         </CardContent>
       </Card>
       {/* Card list for mobile */}
-      <div className="sm:hidden flex flex-col gap-4 p-2">
+      <div className="sm:hidden flex flex-col gap-3 p-2">
         {filtered.length === 0 && (
           <div className="text-center py-8 text-muted-foreground">No prescriptions found.</div>
         )}
         {filtered.map(rx => (
-          <Card key={rx.id} className="border bg-card p-4 shadow flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-                              <CapsuleFillIcon className="h-5 w-5 text-primary" />
-              <span className="font-semibold">{rx.medication}</span>
-              <span className="text-xs text-muted-foreground">{rx.dosage}</span>
+          <Card key={rx.id} className="border bg-card p-4 shadow-sm">
+            {/* Header with medication and status */}
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <CapsuleFillIcon className="h-5 w-5 text-primary" />
+                <div>
+                  <span className="font-semibold text-base">{rx.medication}</span>
+                  <div className="text-sm text-muted-foreground">{rx.dosage}</div>
+                </div>
+              </div>
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                rx.status === "Active" ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" :
+                rx.status === "Filled" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" :
+                "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+              }`}>
+                {rx.status}
+              </span>
             </div>
-            <div className="text-xs text-muted-foreground">Patient: {rx.patientName}</div>
-            <div className="text-xs text-muted-foreground">{rx.instructions}</div>
-            <div className="text-xs">Status: <span className={
-              rx.status === "Active" ? "text-blue-600 font-semibold" :
-              rx.status === "Filled" ? "text-green-600 font-semibold" :
-              "text-muted-foreground font-semibold"
-            }>{rx.status}</span></div>
-            <div className="text-xs text-muted-foreground">Last Updated: {rx.lastUpdated}</div>
-                        <div className="flex gap-2 mt-2">
-              <Button size="sm" variant="outline" onClick={() => handleViewModal(rx)}><EyeFillIcon className="h-4 w-4 mr-1" /> View</Button>
-              <Button size="sm" variant="outline" onClick={() => handleOpenModal(rx)}><Edit className="h-4 w-4" /></Button>
-              <Button size="sm" variant="outline" onClick={() => handleMarkFilled(rx.id, false)}><CheckCircle className="h-4 w-4 mr-1" /> Mark as Filled</Button>
-              <Button size="sm" variant="destructive" onClick={() => handleDelete(rx.id)}><Trash2 className="h-4 w-4" /></Button>
+            
+            {/* Prescription details */}
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">{rx.patientName}</span>
+              </div>
+              <div className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">
+                <span className="font-medium">Instructions:</span> {rx.instructions}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Last Updated: {rx.lastUpdated}
+              </div>
+            </div>
+            
+            {/* Action buttons - optimized for mobile */}
+            <div className="grid grid-cols-2 gap-2">
+              <Button size="sm" variant="outline" onClick={() => handleViewModal(rx)} className="w-full">
+                <EyeFillIcon className="h-4 w-4 mr-1" /> View
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => handleOpenModal(rx)} className="w-full">
+                <Edit className="h-4 w-4 mr-1" /> Edit
+              </Button>
+              {rx.status === "Filled" ? (
+                <Button size="sm" variant="secondary" onClick={() => handleMarkFilled(rx.id, true)} className="w-full">
+                  <CheckCircle className="h-4 w-4 mr-1" /> Unmark Filled
+                </Button>
+              ) : (
+                <Button size="sm" variant="outline" onClick={() => handleMarkFilled(rx.id, false)} className="w-full">
+                  <CheckCircle className="h-4 w-4 mr-1" /> Mark Filled
+                </Button>
+              )}
+              <Button size="sm" variant="destructive" onClick={() => handleDelete(rx.id)} className="w-full">
+                <Trash2 className="h-4 w-4 mr-1" /> Delete
+              </Button>
             </div>
           </Card>
         ))}

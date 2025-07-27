@@ -38,7 +38,7 @@ import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Edit, Eye, Plus, CheckCircle, XCircle, RefreshCw, Trash2, ChevronLeft, ChevronRight, FileDown, Printer } from "lucide-react"
+import { Edit, Eye, Plus, CheckCircle, XCircle, RefreshCw, Trash2, ChevronLeft, ChevronRight, FileDown, Printer, Clock } from "lucide-react"
 import CalendarFillIcon from 'remixicon-react/CalendarFillIcon'
 import User3FillIcon from 'remixicon-react/User3FillIcon'
 import UserAddFillIcon from 'remixicon-react/UserAddFillIcon'
@@ -593,28 +593,25 @@ export default function AdminAppointmentsPage() {
             )}
             {/* Mobile Card List (only in table view) */}
             {view === 'table' && (
-              <div className="sm:hidden flex flex-col gap-4 p-4">
+              <div className="sm:hidden flex flex-col gap-3 p-4">
                 {filtered.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">No appointments found.</div>
                 )}
                 {filtered.map(appt => (
-                  <div key={appt.id} className="rounded-lg border bg-card p-4 shadow flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <User3FillIcon className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">{mockPatients.find(p => p.id === appt.patientId)?.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <UserAddFillIcon className="h-5 w-5 text-muted-foreground" />
-                      <span>{mockDoctors.find(d => d.id === appt.doctorId)?.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CalendarFillIcon className="h-5 w-5 text-muted-foreground" />
-                      <span>{format(appt.date, "yyyy-MM-dd HH:mm")}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">Status:</span>
+                  <div key={appt.id} className="rounded-lg border bg-card p-4 shadow-sm">
+                    {/* Header with patient and status */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <User3FillIcon className="h-5 w-5 text-primary" />
+                        <div>
+                          <span className="font-semibold text-base">{mockPatients.find(p => p.id === appt.patientId)?.name}</span>
+                          <div className="text-sm text-muted-foreground">{mockDoctors.find(d => d.id === appt.doctorId)?.name}</div>
+                        </div>
+                      </div>
                       <Select value={appt.status} onValueChange={v => handleStatusChange(appt.id, v)}>
-                        <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+                        <SelectTrigger className="w-24 h-8 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
                           {statusOptions.map(opt => (
                             <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
@@ -622,12 +619,49 @@ export default function AdminAppointmentsPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="flex gap-2 mt-2">
-                      <Button size="sm" variant="outline" onClick={() => handleOpenDetails(appt)}><Eye className="h-4 w-4 mr-1" /> View</Button>
-                      <Button size="sm" variant="outline" onClick={() => handleOpenForm(appt)}><Edit className="h-4 w-4" /></Button>
-                      <Button size="sm" variant="outline" onClick={() => handleOpenReschedule(appt)}><RefreshCw className="h-4 w-4 mr-1" /> Reschedule</Button>
-                      <Button size="sm" variant="destructive" onClick={() => setRemoveAppt(appt)}><Trash2 className="h-4 w-4" /></Button>
+                    
+                    {/* Appointment details */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2">
+                        <CalendarFillIcon className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">{format(appt.date, "MMM dd, yyyy")}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">{format(appt.date, "h:mm a")}</span>
+                      </div>
+                      {appt.notes && (
+                        <div className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">
+                          <span className="font-medium">Notes:</span> {appt.notes}
+                        </div>
+                      )}
                     </div>
+                    
+                    {/* Action buttons - optimized for mobile */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button size="sm" variant="outline" onClick={() => handleOpenDetails(appt)} className="w-full">
+                        <Eye className="h-4 w-4 mr-1" /> View
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleOpenForm(appt)} className="w-full">
+                        <Edit className="h-4 w-4 mr-1" /> Edit
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleOpenReschedule(appt)} className="w-full">
+                        <RefreshCw className="h-4 w-4 mr-1" /> Reschedule
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleSendReminder(appt.id)} className="w-full">
+                        <UserAddFillIcon className="h-4 w-4 mr-1" /> Remind
+                      </Button>
+                    </div>
+                    
+                    {/* Delete button - separate row for safety */}
+                    <Button 
+                      size="sm" 
+                      variant="destructive" 
+                      onClick={() => setRemoveAppt(appt)}
+                      className="w-full mt-2"
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" /> Delete
+                    </Button>
                   </div>
                 ))}
               </div>

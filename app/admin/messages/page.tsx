@@ -727,7 +727,7 @@ export default function AdminMessagesPage() {
       {/* Filters */}
       <Card className="mb-4">
         <CardContent className="pt-4">
-                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -761,19 +761,18 @@ export default function AdminMessagesPage() {
                 ))}
               </SelectContent>
             </Select>
-                         <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-               <SelectTrigger>
-                 <SelectValue placeholder="Status" />
-               </SelectTrigger>
-               <SelectContent>
-                 {statuses.map(status => (
-                   <SelectItem key={status.value} value={status.value}>
-                     {status.label}
-                   </SelectItem>
-                 ))}
-               </SelectContent>
-             </Select>
-
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger>
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                {statuses.map(status => (
+                  <SelectItem key={status.value} value={status.value}>
+                    {status.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
@@ -786,264 +785,243 @@ export default function AdminMessagesPage() {
             <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center justify-between">
                 Messages
-                                 <span className="text-sm text-muted-foreground">{filteredThreads.length} conversations</span>
+                <span className="text-sm text-muted-foreground">{filteredThreads.length} conversations</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 flex-1 min-h-0 overflow-hidden">
-                             <div className="overflow-y-auto" style={{ height: 'calc(100vh - 260px)' }}>
-                 {filteredThreads.length === 0 ? (
-                   <div className="p-6 text-center text-muted-foreground">
-                     No conversations found
-                   </div>
-                 ) : (
-                   filteredThreads.map((thread) => {
-                     const latestMessage = thread.messages[thread.messages.length - 1]
-                     return (
-                       <div
-                         key={thread.id}
-                         className={`p-4 border-b cursor-pointer hover:bg-muted/50 transition-colors ${
-                           selectedThread?.id === thread.id ? "bg-muted" : ""
-                         } ${thread.status === "unread" ? "border-l-4 border-l-blue-500" : ""}`}
-                         onClick={() => {
-                           setSelectedThread(thread)
-                           markAsRead(thread.id)
-                           // Auto-scroll to bottom when selecting a thread
-                           setTimeout(scrollToBottom, 200)
-                         }}
-                       >
-                         <div className="flex items-start justify-between mb-2">
-                           <div className="flex items-center gap-2">
-                             <Avatar className="h-8 w-8">
-                               <AvatarFallback>{thread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                             </Avatar>
-                             <div>
-                               <div className="font-medium text-sm">{thread.patientName}</div>
-                               <div className="text-xs text-muted-foreground">{formatTimestamp(thread.lastMessageTime)}</div>
-                             </div>
-                           </div>
-                           <div className="flex gap-1">
-                             {thread.category && (
-                               <Badge variant="secondary" className="text-xs">
-                                 {thread.category}
-                               </Badge>
-                             )}
-                             {thread.priority && (
-                               <Badge className={`text-xs ${getPriorityColor(thread.priority)}`}>
-                                 {thread.priority}
-                               </Badge>
-                             )}
-                           </div>
-                         </div>
-                         <div className="text-xs text-muted-foreground line-clamp-2">
-                           {latestMessage.from === "patient" ? `${thread.patientName}: ` : `${latestMessage.sender}: `}
-                           {latestMessage.text}
-                         </div>
-                         <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                           <span>{thread.messages.length} message{thread.messages.length !== 1 ? 's' : ''}</span>
-                           <span>•</span>
-                           <span>Assigned to {thread.assignedTo}</span>
-                           {thread.status === "archived" && (
-                             <span className="text-orange-600 font-medium">• Archived</span>
-                           )}
-                         </div>
-
-                       </div>
-                     )
-                   })
-                 )}
-               </div>
+              <div className="overflow-y-auto" style={{ height: 'calc(100vh - 260px)' }}>
+                {filteredThreads.length === 0 ? (
+                  <div className="p-6 text-center text-muted-foreground">
+                    No conversations found
+                  </div>
+                ) : (
+                  filteredThreads.map((thread) => {
+                    const latestMessage = thread.messages[thread.messages.length - 1]
+                    return (
+                      <div
+                        key={thread.id}
+                        className={`p-4 border-b cursor-pointer hover:bg-muted/50 transition-colors ${
+                          selectedThread?.id === thread.id ? "bg-muted" : ""
+                        } ${thread.status === "unread" ? "border-l-4 border-l-blue-500" : ""}`}
+                        onClick={() => {
+                          setSelectedThread(thread)
+                          markAsRead(thread.id)
+                          // Auto-scroll to bottom when selecting a thread
+                          setTimeout(scrollToBottom, 200)
+                        }}
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback>{thread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium text-sm">{thread.patientName}</div>
+                              <div className="text-xs text-muted-foreground">{formatTimestamp(thread.lastMessageTime)}</div>
+                            </div>
+                          </div>
+                          <div className="flex gap-1">
+                            {thread.category && (
+                              <Badge variant="secondary" className="text-xs">
+                                {thread.category}
+                              </Badge>
+                            )}
+                            {thread.priority && (
+                              <Badge className={`text-xs ${getPriorityColor(thread.priority)}`}>
+                                {thread.priority}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <div className="text-xs text-muted-foreground line-clamp-2">
+                          {latestMessage.from === "patient" ? `${thread.patientName}: ` : `${latestMessage.sender}: `}
+                          {latestMessage.text}
+                        </div>
+                        <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                          <span>{thread.messages.length} message{thread.messages.length !== 1 ? 's' : ''}</span>
+                          <span>•</span>
+                          <span>Assigned to {thread.assignedTo}</span>
+                          {thread.status === "archived" && (
+                            <span className="text-orange-600 font-medium">• Archived</span>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
 
-                 {/* Message Detail */}
-         <div className="lg:col-span-2 h-full">
-           {selectedThread ? (
-             <Card className="h-full flex flex-col">
-               <CardHeader className="flex-shrink-0">
-                 <div className="flex items-center justify-between">
-                   <div>
-                     <CardTitle className="flex items-center gap-2">
-                       {selectedThread.patientName}
-                       {selectedThread.status === "urgent" && (
-                         <AlertCircle className="h-5 w-5 text-red-500" />
-                       )}
-                     </CardTitle>
-                     <div className="flex items-center gap-4 mt-2">
-                       <div className="flex items-center gap-2">
-                         <Calendar className="h-4 w-4 text-muted-foreground" />
-                         <span className="text-sm">{formatTimestamp(selectedThread.lastMessageTime)}</span>
-                       </div>
-                       <div className="flex items-center gap-2">
-                         <span className="text-sm">Assigned to: {selectedThread.assignedTo}</span>
-                       </div>
-                     </div>
-                     <div className="flex items-center gap-4 mt-3">
-                       <div className="flex items-center gap-2">
-                         <span className="text-sm font-medium">Type:</span>
-                         <Select 
-                           value={selectedThread.category || "none"} 
-                           onValueChange={(value) => {
-                             const newCategory = value === "none" ? "" : value
-                             setMessageThreads(prev => prev.map(t => 
-                               t.id === selectedThread.id 
-                                 ? { ...t, category: newCategory }
-                                 : t
-                             ))
-                             setSelectedThread(prev => prev ? { ...prev, category: newCategory } : null)
-                           }}
-                         >
-                           <SelectTrigger className="w-32 h-8">
-                             <SelectValue placeholder="None" />
-                           </SelectTrigger>
-                           <SelectContent>
-                             <SelectItem value="none">None</SelectItem>
-                             {categories.filter(cat => cat.value !== "all").map(category => (
-                               <SelectItem key={category.value} value={category.value}>
-                                 {category.label}
-                               </SelectItem>
-                             ))}
-                           </SelectContent>
-                         </Select>
-                       </div>
-                       <div className="flex items-center gap-2">
-                         <span className="text-sm font-medium">Priority:</span>
-                         <Select 
-                           value={selectedThread.priority || "none"} 
-                           onValueChange={(value) => {
-                             const newPriority = value === "none" ? "" : value
-                             setMessageThreads(prev => prev.map(t => 
-                               t.id === selectedThread.id 
-                                 ? { ...t, priority: newPriority }
-                                 : t
-                             ))
-                             setSelectedThread(prev => prev ? { ...prev, priority: newPriority } : null)
-                           }}
-                         >
-                           <SelectTrigger className="w-32 h-8">
-                             <SelectValue placeholder="None" />
-                           </SelectTrigger>
-                           <SelectContent>
-                             <SelectItem value="none">None</SelectItem>
-                             {priorities.filter(pri => pri.value !== "all").map(priority => (
-                               <SelectItem key={priority.value} value={priority.value}>
-                                 {priority.label}
-                               </SelectItem>
-                             ))}
-                           </SelectContent>
-                         </Select>
-                       </div>
-                     </div>
-                   </div>
-                   <div className="flex gap-2">
-                     {selectedThread.status === "archived" ? (
-                       <Button 
-                         variant="outline" 
-                         size="sm"
-                         onClick={() => restoreThread(selectedThread.id)}
-                       >
-                         Restore
-                       </Button>
-                     ) : (
-                       <Button 
-                         variant="outline" 
-                         size="sm"
-                         onClick={() => archiveThread(selectedThread.id)}
-                       >
-                         <Archive className="h-4 w-4" />
-                       </Button>
-                     )}
-                     <Button 
-                       variant="outline" 
-                       size="sm"
-                       onClick={() => deleteThread(selectedThread.id)}
-                     >
-                       <Trash2 className="h-4 w-4" />
-                     </Button>
-                   </div>
-                 </div>
-               </CardHeader>
-               <CardContent className="flex-1 flex flex-col min-h-0 p-0">
-                                   {/* Patient Info */}
-                  <div className="bg-muted/30 rounded-lg p-4 mb-4 flex-shrink-0 mx-4 mt-4">
-                    <h3 className="font-semibold mb-2">Patient Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+        {/* Message Detail - Mobile optimized */}
+        <div className="lg:col-span-2 h-full">
+          {selectedThread ? (
+            <Card className="h-full flex flex-col">
+              <CardHeader className="flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="flex items-center gap-2 text-base lg:text-lg">
+                      {selectedThread.patientName}
+                      {selectedThread.status === "urgent" && (
+                        <AlertCircle className="h-5 w-5 text-red-500" />
+                      )}
+                    </CardTitle>
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 mt-2">
                       <div className="flex items-center gap-2">
-                                                   <User className="h-4 w-4 text-muted-foreground" />
-                        <span>Patient ID: {selectedThread.patientId}</span>
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">{formatTimestamp(selectedThread.lastMessageTime)}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                                                 <Mail className="h-4 w-4 text-muted-foreground" />
-                        <span>{selectedThread.patientEmail}</span>
+                        <span className="text-sm">Assigned to: {selectedThread.assignedTo}</span>
                       </div>
                     </div>
-                    
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Type:</span>
+                        <Select 
+                          value={selectedThread.category || "none"} 
+                          onValueChange={(value) => {
+                            const newCategory = value === "none" ? "" : value
+                            setMessageThreads(prev => prev.map(t => 
+                              t.id === selectedThread.id 
+                                ? { ...t, category: newCategory }
+                                : t
+                            ))
+                            setSelectedThread(prev => prev ? { ...prev, category: newCategory } : null)
+                          }}
+                        >
+                          <SelectTrigger className="w-24 h-7 text-xs">
+                            <SelectValue placeholder="None" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {categories.filter(cat => cat.value !== "all").map(category => (
+                              <SelectItem key={category.value} value={category.value}>
+                                {category.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Priority:</span>
+                        <Select 
+                          value={selectedThread.priority || "none"} 
+                          onValueChange={(value) => {
+                            const newPriority = value === "none" ? "" : value
+                            setMessageThreads(prev => prev.map(t => 
+                              t.id === selectedThread.id 
+                                ? { ...t, priority: newPriority }
+                                : t
+                            ))
+                            setSelectedThread(prev => prev ? { ...prev, priority: newPriority } : null)
+                          }}
+                        >
+                          <SelectTrigger className="w-20 h-7 text-xs">
+                            <SelectValue placeholder="None" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {priorities.filter(pri => pri.value !== "all").map(priority => (
+                              <SelectItem key={priority.value} value={priority.value}>
+                                {priority.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
+                  <div className="flex gap-1 lg:gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => archiveThread(selectedThread.id)}
+                      className="h-8 w-8 p-0 lg:h-9 lg:w-auto lg:px-3"
+                    >
+                      <Archive className="h-4 w-4 lg:mr-2" />
+                      <span className="hidden lg:inline">Archive</span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => deleteThread(selectedThread.id)}
+                      className="h-8 w-8 p-0 lg:h-9 lg:w-auto lg:px-3"
+                    >
+                      <Trash2 className="h-4 w-4 lg:mr-2" />
+                      <span className="hidden lg:inline">Delete</span>
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 min-h-0 flex flex-col p-0">
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {selectedThread.messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex gap-3 ${
+                        message.from === "admin" ? "flex-row-reverse" : "flex-row"
+                      }`}
+                    >
+                      {message.from === "patient" && (
+                        <div className="flex-shrink-0">
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback>{selectedThread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                          </Avatar>
+                        </div>
+                      )}
+                      <div className={`flex-1 max-w-[80%] lg:max-w-[70%] ${
+                        message.from === "admin" 
+                          ? "bg-primary text-primary-foreground rounded-lg p-3" 
+                          : "bg-muted rounded-lg p-3"
+                      }`}>
+                        <div className="font-medium mb-1 text-sm">{message.sender}</div>
+                        <div className="text-sm">{message.text}</div>
+                        <div className="text-xs opacity-70 mt-1 text-right">{formatTimestamp(message.timestamp)}</div>
+                      </div>
+                      {message.from === "admin" && (
+                        <div className="flex-shrink-0">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src="/images/hcc-logo.png" alt="HCC" className="scale-50" />
+                            <AvatarFallback>HCC</AvatarFallback>
+                          </Avatar>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
 
-                 {/* Chat Messages */}
-                 <div ref={chatContainerRef} className="h-80 bg-muted/20 rounded-lg p-4 overflow-y-auto mx-4">
-                   <div className="space-y-4">
-                     {selectedThread.messages.map((message, index) => (
-                       <div key={message.id} className={`flex items-end gap-2 ${message.from === "admin" ? "justify-end" : "justify-start"}`}>
-                         {message.from === "patient" && (
-                           <div className="flex-shrink-0">
-                             <Avatar className="h-8 w-8">
-                               <AvatarFallback>{selectedThread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                             </Avatar>
-                           </div>
-                         )}
-                         <div className={`max-w-[80%] px-3 py-2 rounded-lg text-sm
-                           ${message.from === "admin"
-                             ? "bg-primary text-primary-foreground"
-                             : "bg-background border"
-                           }
-                         `}>
-                           <div className="font-medium mb-1">{message.sender}</div>
-                           <div>{message.text}</div>
-                           <div className="text-xs opacity-70 mt-1 text-right">{formatTimestamp(message.timestamp)}</div>
-                         </div>
-                         {message.from === "admin" && (
-                           <div className="flex-shrink-0">
-                             <Avatar className="h-8 w-8">
-                               <AvatarImage src="/images/hcc-logo.png" alt="HCC" className="scale-50" />
-                               <AvatarFallback>HCC</AvatarFallback>
-                             </Avatar>
-                           </div>
-                         )}
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-
-                 {/* Reply Input */}
-                 <div className="flex gap-2 flex-shrink-0 mx-4 mb-1 mt-4">
-                   <Textarea
-                     value={replyText}
-                     onChange={(e) => setReplyText(e.target.value)}
-                     placeholder="Type your reply..."
-                     className="flex-1"
-                     rows={3}
-                   />
-                   <Button 
-                     onClick={sendReply} 
-                     disabled={!replyText.trim()}
-                     className="self-end"
-                   >
-                                        <Send className="h-4 w-4 mr-2" />
-                   Send
-                   </Button>
-                 </div>
-               </CardContent>
-             </Card>
-           ) : (
-             <Card>
-               <CardContent className="p-8 text-center text-muted-foreground">
-                                      <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                 <p>Select a conversation to view details</p>
-               </CardContent>
-             </Card>
-           )}
-         </div>
+                {/* Reply Input - Mobile optimized */}
+                <div className="flex gap-2 flex-shrink-0 mx-4 mb-4 mt-4">
+                  <Textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Type your reply..."
+                    className="flex-1 min-h-[60px] max-h-[120px] resize-none"
+                    rows={2}
+                  />
+                  <Button 
+                    onClick={sendReply} 
+                    disabled={!replyText.trim()}
+                    className="self-end h-[60px] px-3 lg:px-4"
+                  >
+                    <Send className="h-4 w-4 lg:mr-2" />
+                    <span className="hidden lg:inline">Send</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="p-8 text-center text-muted-foreground">
+                <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <p>Select a conversation to view details</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
 
       
