@@ -4,12 +4,19 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { DoctorProfileCard } from "@/components/doctor-profile-card"
+import { HeaderAnimation } from "@/components/HeaderAnimation"
 
 export default function AboutUsPageClient() {
   return (
     <>
-      <SectionWrapper className="bg-muted/20">
-        <div className="text-center">
+      <SectionWrapper className="bg-muted/20 relative overflow-hidden">
+        <HeaderAnimation 
+          type="floating-geometric" 
+          intensity="medium" 
+          colorScheme="red" 
+          responsive={true}
+        />
+        <div className="text-center relative z-10">
           <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">About Us</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Our commitment to compassionate, state-of-the-art cardiac care.

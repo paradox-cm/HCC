@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
+import { HeaderAnimation } from "@/components/HeaderAnimation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import CalendarFillIcon from 'remixicon-react/CalendarFillIcon';
@@ -200,8 +201,14 @@ export default function PatientPortalDashboardClient() {
   return (
     <>
       {/* Mobile-optimized header */}
-      <SectionWrapper className="bg-muted/20 pt-6 pb-4">
-        <div className="flex items-start justify-between mb-1 gap-3 flex-wrap">
+      <SectionWrapper className="bg-muted/20 pt-6 pb-4 relative overflow-hidden">
+        <HeaderAnimation 
+          type="vanishing-point" 
+          intensity="medium" 
+          colorScheme="gray" 
+          responsive={true}
+        />
+        <div className="flex items-start justify-between mb-1 gap-3 flex-wrap relative z-10">
           {/* Left: Avatar, name/date */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mt-1">
@@ -235,7 +242,8 @@ export default function PatientPortalDashboardClient() {
           </TooltipProvider>
         </div>
         {/* Info tools row, left-justified to container, below avatar/name/login row */}
-        <TooltipProvider delayDuration={0}>
+        <div className="relative z-10">
+          <TooltipProvider delayDuration={0}>
           <div className="flex items-center gap-2 mt-4 mb-2">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -263,6 +271,7 @@ export default function PatientPortalDashboardClient() {
             </Tooltip>
           </div>
         </TooltipProvider>
+        </div>
       </SectionWrapper>
 
       <SectionWrapper className="pt-0">

@@ -23,7 +23,7 @@ export default function HomePageClient() {
         <HeaderAnimation 
           type="pulse-wave" 
           intensity="medium" 
-          colorScheme="blue" 
+          colorScheme="red" 
           responsive={true}
         />
         <div className="flex flex-col items-center gap-8 text-center relative z-10">
@@ -42,7 +42,7 @@ export default function HomePageClient() {
               </Button>
             </div>
           </div>
-          <div className="h-64 w-full rounded-lg bg-muted lg:h-96">
+          <div className="h-64 w-full rounded-lg bg-muted lg:h-96 relative z-20">
             {/* Placeholder for an engaging image or video */}
           </div>
         </div>

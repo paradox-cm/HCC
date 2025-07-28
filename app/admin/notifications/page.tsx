@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { LoadingAnimation } from "@/components/LoadingAnimation"
 
 interface Notification {
   id: number
@@ -103,7 +104,9 @@ export default function AdminNotificationsPage() {
           </li>
         ))}
         {loading && (
-          <li className="p-4 text-center text-muted-foreground">Loading...</li>
+          <li className="p-4 text-center">
+            <LoadingAnimation size="sm" color="secondary" />
+          </li>
         )}
         <div ref={loader} />
         {!hasMore && !loading && notifications.length === 0 && (

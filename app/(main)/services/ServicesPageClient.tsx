@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
+import { HeaderAnimation } from "@/components/HeaderAnimation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -367,8 +368,14 @@ export default function ServicesPageClient() {
           )}
         </div>
       )}
-      <SectionWrapper className="bg-muted/20">
-        <div className="text-center">
+      <SectionWrapper className="bg-muted/20 relative overflow-hidden">
+        <HeaderAnimation 
+          type="ripple-heartbeat" 
+          intensity="medium" 
+          colorScheme="blue" 
+          responsive={true}
+        />
+        <div className="text-center relative z-10">
           <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">Our Services</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             We offer a full spectrum of cardiology services, diagnostics, and therapies tailored to your specific needs.

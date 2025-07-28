@@ -1,12 +1,18 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
+import AboutUsPageClient from "./AboutUsPageClient"
+import { HeaderAnimation } from "@/components/HeaderAnimation"
+import { LoadingAnimation } from "@/components/LoadingAnimation"
 
 export const metadata: Metadata = {
-  title: "About Us | Houston Cardiology Consultants",
-  description: "Learn about our mission, philosophy, and the expert team at Houston Cardiology Consultants. Serving Houston with compassionate, state-of-the-art cardiac care since 1979.",
+  title: "About Us | HCC Heart & Vascular",
+  description: "Learn about our team of experienced cardiologists and our commitment to providing exceptional cardiovascular care.",
 }
 
-import AboutUsPageClient from "./AboutUsPageClient"
-
 export default function AboutUsPage() {
-  return <AboutUsPageClient />
+  return (
+    <Suspense fallback={<LoadingAnimation size="lg" className="min-h-screen" />}>
+      <AboutUsPageClient />
+    </Suspense>
+  )
 }

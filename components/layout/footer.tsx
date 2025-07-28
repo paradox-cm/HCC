@@ -165,43 +165,36 @@ export function Footer() {
         <div className="mt-12 border-t pt-8 w-full">
           {/* Mobile: Chat buttons above, then theme/copyright below. Desktop: side by side. */}
           <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between w-full gap-6 md:gap-0">
-            {/* Left: Theme and copyright (bottom on mobile) */}
-            <div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-2 w-full min-w-0 mt-0 md:mt-0">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="text-xs text-muted-foreground font-medium">Theme:</span>
-                {mounted && (
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild>
-                      <button
-                        aria-label="Select theme"
-                        className="flex items-center gap-2 rounded-full px-3 py-2 border bg-background hover:bg-muted transition-colors text-sm font-medium"
-                        type="button"
+            {/* Left: Theme dropdown */}
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-xs text-muted-foreground font-medium">Theme:</span>
+              {mounted && (
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger asChild>
+                    <button
+                      aria-label="Select theme"
+                      className="flex items-center gap-2 rounded-full px-3 py-2 border bg-background hover:bg-muted transition-colors text-sm font-medium"
+                      type="button"
+                    >
+                      {current.icon}
+                      <span>{current.label} Mode</span>
+                    </button>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content sideOffset={8} className="min-w-[140px] rounded-md border bg-background p-1 shadow-lg z-50">
+                    {themeOptions.map(opt => (
+                      <DropdownMenu.Item
+                        key={opt.value}
+                        onSelect={() => setTheme(opt.value)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer text-sm transition-colors ${theme === opt.value ? 'bg-muted font-semibold' : 'hover:bg-muted'}`}
+                        aria-selected={theme === opt.value}
                       >
-                        {current.icon}
-                        <span>{current.label} Mode</span>
-                      </button>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content sideOffset={8} className="min-w-[140px] rounded-md border bg-background p-1 shadow-lg z-50">
-                      {themeOptions.map(opt => (
-                        <DropdownMenu.Item
-                          key={opt.value}
-                          onSelect={() => setTheme(opt.value)}
-                          className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer text-sm transition-colors ${theme === opt.value ? 'bg-muted font-semibold' : 'hover:bg-muted'}`}
-                          aria-selected={theme === opt.value}
-                        >
-                          {opt.icon}
-                          <span>{opt.label} Mode</span>
-                        </DropdownMenu.Item>
-                      ))}
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Root>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground break-words min-w-0">
-                © {new Date().getFullYear()} Houston Cardiology Consultants. All Rights Reserved.
-                <span className="mx-2">&middot;</span>
-                <Link href="/admin" className="underline hover:text-primary transition-colors">Admin</Link>
-              </p>
+                        {opt.icon}
+                        <span>{opt.label} Mode</span>
+                      </DropdownMenu.Item>
+                    ))}
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
+              )}
             </div>
             {/* Right: Chat buttons (top on mobile) */}
             <div className="flex flex-col gap-2 w-full md:mt-0 md:flex-row md:gap-2 md:w-auto md:justify-end mb-0 md:mb-0">
@@ -235,6 +228,15 @@ export function Footer() {
                 </DialogContent>
               </Dialog>
             </div>
+          </div>
+          
+          {/* Copyright text on its own line */}
+          <div className="w-full text-left mt-6">
+            <p className="text-sm text-muted-foreground break-words min-w-0">
+              © {new Date().getFullYear()} Houston Cardiology Consultants. All Rights Reserved.
+              <span className="mx-2">&middot;</span>
+              <Link href="/admin" className="underline hover:text-primary transition-colors">Admin</Link>
+            </p>
           </div>
         </div>
       </div>

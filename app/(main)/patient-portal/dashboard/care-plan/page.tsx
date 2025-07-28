@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
+import { LoadingAnimation } from "@/components/LoadingAnimation"
 
 export const metadata: Metadata = {
   title: "Care Plan | Patient Portal | Houston Cardiology Consultants",
@@ -10,7 +11,7 @@ import CarePlanPageClient from "./CarePlanPageClient"
 
 export default function CarePlanPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingAnimation size="lg" className="min-h-screen" />}>
       <CarePlanPageClient />
     </Suspense>
   )

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
+import { HeaderAnimation } from "@/components/HeaderAnimation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { NewPatientForm } from "@/components/forms/new-patient-form"
@@ -36,8 +37,14 @@ export default function AppointmentsPageClient() {
 
   return (
     <>
-      <SectionWrapper className="bg-muted/20 pt-12 pb-12">
-        <div className="text-center">
+      <SectionWrapper className="bg-muted/20 pt-12 pb-12 relative overflow-hidden">
+        <HeaderAnimation 
+          type="gradient-flow" 
+          intensity="medium" 
+          colorScheme="blue" 
+          responsive={true}
+        />
+        <div className="text-center relative z-10">
           <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Appointments & Requests</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Select the appropriate form for your needs. Our team will respond within 1 business day.
