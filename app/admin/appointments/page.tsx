@@ -156,14 +156,21 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
       formattedDate = formatDate(day, 'd');
       const dayAppointments = appointments.filter(a => isSameDay(a.date, day));
       days.push(
-        <div
+        <button
           key={day.toISOString()}
           className={
-            'border border-muted-foreground/10 flex flex-col items-start justify-start p-1 min-h-[80px] h-full w-full flex-1' +
+            'border border-muted-foreground/10 flex flex-col items-start justify-start p-1 min-h-[100px] h-full w-full flex-1 cursor-pointer hover:bg-accent/20 transition-colors relative text-left' +
             (isSameMonth(day, monthStart) ? '' : ' opacity-40') +
             (isSameDay(day, new Date()) ? ' bg-accent/30' : '')
           }
-          onClick={() => onDayClick && onDayClick(day)}
+          onClick={((currentDay) => (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Calendar day clicked:', formatDate(currentDay, 'yyyy-MM-dd'));
+            if (onDayClick) {
+              onDayClick(currentDay);
+            }
+          })(day)}
         >
           <span className="text-xs font-semibold mb-1 text-left w-full">{formattedDate}</span>
           <div className="flex flex-col gap-1 w-full items-start">
@@ -177,7 +184,7 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
               </span>
             ))}
           </div>
-        </div>
+        </button>
       );
       day = addDays(day, 1);
     }
