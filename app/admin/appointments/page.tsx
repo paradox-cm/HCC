@@ -132,8 +132,17 @@ type AppointmentForm = {
   notes: string;
 };
 
-function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDate, statusColors, mockPatients }) {
-  const [viewDate, setViewDate] = useState(new Date());
+function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDate, statusColors, mockPatients, mockDoctors }) {
+  const [viewDate, setViewDate] = useState(selectedDate || new Date(2025, 6, 1)); // July 2025
+  
+  // Sync viewDate with selectedDate prop - this is the key fix
+  useEffect(() => {
+    if (selectedDate) {
+      console.log('CustomCalendar: selectedDate changed to:', selectedDate);
+      setViewDate(selectedDate);
+    }
+  }, [selectedDate]);
+  
   const year = getYear(viewDate);
   const month = getMonth(viewDate);
 
@@ -195,7 +204,13 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
     <div className="flex flex-col h-full w-full">
       <div className="flex items-center justify-between mb-2 px-4 pt-4">
         <button
-          onClick={() => canPrev && setViewDate(subMonths(viewDate, 1))}
+          onClick={() => {
+            if (canPrev) {
+              const newDate = subMonths(viewDate, 1);
+              setViewDate(newDate);
+              if (setSelectedDate) setSelectedDate(newDate);
+            }
+          }}
           disabled={!canPrev}
           aria-label="Previous Month"
           className={buttonVariants({ variant: 'outline', size: 'icon' }) + " mr-2"}
@@ -204,7 +219,13 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
         </button>
         <span className="font-semibold text-lg">{monthName} {year}</span>
         <button
-          onClick={() => canNext && setViewDate(addMonths(viewDate, 1))}
+          onClick={() => {
+            if (canNext) {
+              const newDate = addMonths(viewDate, 1);
+              setViewDate(newDate);
+              if (setSelectedDate) setSelectedDate(newDate);
+            }
+          }}
           disabled={!canNext}
           aria-label="Next Month"
           className={buttonVariants({ variant: 'outline', size: 'icon' }) + " ml-2"}
@@ -587,6 +608,7 @@ export default function AdminAppointmentsPage() {
                     setSelectedDate={setCalendarDate}
                     statusColors={statusColors}
                     mockPatients={mockPatients}
+                    mockDoctors={mockDoctors}
                   />
                 </div>
               </div>
