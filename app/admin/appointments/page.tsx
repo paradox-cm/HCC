@@ -406,8 +406,10 @@ export default function AdminAppointmentsPage() {
   }
 
   function handleCalendarDayClick(date: Date) {
-    const appts = filtered.filter(a => format(a.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd'))
-    setCalendarDayAppts(appts.length > 0 ? appts : null)
+    console.log(`Clicked on ${format(date, 'yyyy-MM-dd')}`);
+    const appts = appointments.filter(a => format(a.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd'));
+    console.log(`Found ${appts.length} appointments for ${format(date, 'yyyy-MM-dd')}`);
+    setCalendarDayAppts(appts);
   }
   function handleCalendarToday() {
     setCalendarDate(new Date())
