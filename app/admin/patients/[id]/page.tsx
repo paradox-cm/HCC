@@ -295,9 +295,23 @@ export default function AdminPatientDetailPage() {
         <Button variant="ghost" size="icon" onClick={() => router.push("/admin/patients")}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <span className="text-sm text-muted-foreground">Patients</span>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-auto p-0 text-sm text-muted-foreground hover:text-foreground hover:underline"
+          onClick={() => router.push("/admin/patients")}
+        >
+          Patients
+        </Button>
         <span className="mx-2 text-sm text-muted-foreground">/</span>
-        <span className="font-semibold text-sm">{patient.name}</span>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-auto p-0 font-semibold text-sm hover:underline"
+          onClick={() => router.push(`/admin/patients/${patient.id}`)}
+        >
+          {patient.name}
+        </Button>
       </div>
 
       {/* Patient Header */}
@@ -338,11 +352,12 @@ export default function AdminPatientDetailPage() {
                   </div>
                 </div>
                 
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={() => setIsAppointmentModalOpen(true)}
+                    className="w-full sm:w-auto"
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Schedule Appointment
@@ -351,6 +366,7 @@ export default function AdminPatientDetailPage() {
                     variant="outline" 
                     size="sm"
                     onClick={() => setIsMessageModalOpen(true)}
+                    className="w-full sm:w-auto"
                   >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Send Message
@@ -663,11 +679,11 @@ export default function AdminPatientDetailPage() {
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAppointmentModalOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsAppointmentModalOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleScheduleAppointment}>
+            <Button onClick={handleScheduleAppointment} className="w-full sm:w-auto">
               Schedule Appointment
             </Button>
           </DialogFooter>
@@ -751,13 +767,14 @@ export default function AdminPatientDetailPage() {
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsMessageModalOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsMessageModalOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
             <Button 
               onClick={handleSendMessage}
               disabled={!messageData.subject.trim() || !messageData.message.trim()}
+              className="w-full sm:w-auto"
             >
               <Send className="h-4 w-4 mr-2" />
               Send Message
@@ -821,11 +838,11 @@ export default function AdminPatientDetailPage() {
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsPrescriptionModalOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsPrescriptionModalOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleCreatePrescription}>
+            <Button onClick={handleCreatePrescription} className="w-full sm:w-auto">
               Create Prescription
             </Button>
           </DialogFooter>
@@ -922,11 +939,11 @@ export default function AdminPatientDetailPage() {
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsContactEditModalOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsContactEditModalOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleUpdateContact}>
+            <Button onClick={handleUpdateContact} className="w-full sm:w-auto">
               Update Contact
             </Button>
           </DialogFooter>
@@ -985,11 +1002,11 @@ export default function AdminPatientDetailPage() {
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsInsuranceEditModalOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsInsuranceEditModalOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleUpdateInsurance}>
+            <Button onClick={handleUpdateInsurance} className="w-full sm:w-auto">
               Update Insurance
             </Button>
           </DialogFooter>
@@ -1120,11 +1137,11 @@ export default function AdminPatientDetailPage() {
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsMedicalEditModalOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsMedicalEditModalOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleUpdateMedical}>
+            <Button onClick={handleUpdateMedical} className="w-full sm:w-auto">
               Update Medical Info
             </Button>
           </DialogFooter>

@@ -505,7 +505,7 @@ export default function ServicesPageClient() {
               <h2 className="text-4xl font-bold tracking-tight mb-4">Specialized Care for POTS & Dysautonomia</h2>
               <div className="flex items-center justify-center lg:justify-start gap-2 mb-6">
                 <div className="w-16 h-px bg-muted-foreground/30"></div>
-                <span className="text-primary font-semibold">Led by Dr. Asif Ali</span>
+                <span className="text-primary font-semibold">Led by Dr. Asif Ali, Preventive Cardiologist</span>
                 <div className="w-16 h-px bg-muted-foreground/30"></div>
               </div>
               <p className="text-lg text-muted-foreground max-w-3xl lg:max-w-none mx-auto lg:mx-0 leading-relaxed">

@@ -6,13 +6,13 @@ const DOCTORS = [
   {
     slug: "dr-asif-ali",
     name: "Dr. Asif Ali, MD",
-    title: "Cardiologist | Clinical Assistant Professor | Dysautonomia & POTS Specialist",
-    bio: "Dr. Asif Ali is a highly regarded cardiovascular specialist and a key leader at Houston Cardiology Consultants. Known for his clinical expertise, academic involvement, and entrepreneurial innovation, Dr. Ali has been instrumental in the practice's growth into the Memorial and Spring Branch communities of Houston.",
+    title: "Preventive Cardiologist | Clinical Assistant Professor | Dysautonomia & POTS Specialist",
+    bio: "Dr. Asif Ali is a highly regarded preventive cardiologist and a key leader at Houston Cardiology Consultants. Known for his clinical expertise, academic involvement, and entrepreneurial innovation, Dr. Ali has been instrumental in the practice's growth into the Memorial and Spring Branch communities of Houston.",
   },
   {
     slug: "dr-abdul-ali",
     name: "Dr. Abdul Ali, MD, FACC",
-    title: "Founder | Senior Cardiologist | Mentor in Cardiovascular Excellence",
+    title: "Founder | Interventional Cardiologist | Mentor in Cardiovascular Excellence",
     bio: "Dr. Abdul Ali is the visionary founder of Houston Cardiology Consultants and a cornerstone of cardiovascular care in Houston since 1979. With nearly five decades of clinical experience, he has earned a reputation for delivering compassionate, deeply personalized heart care to thousands of patients across generations.",
   },
   {
@@ -24,8 +24,9 @@ const DOCTORS = [
 ]
 
 // Generate metadata for each doctor
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const doctor = DOCTORS.find(d => d.slug === params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const resolvedParams = await params
+  const doctor = DOCTORS.find(d => d.slug === resolvedParams.slug)
   
   if (!doctor) {
     return {
@@ -45,6 +46,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default function DoctorProfilePage({ params }: { params: { slug: string } }) {
-  return <DoctorProfilePageClient params={params} />
+export default async function DoctorProfilePage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params
+  return <DoctorProfilePageClient params={resolvedParams} />
 } 

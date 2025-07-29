@@ -1149,18 +1149,18 @@ export default function AdminAppointmentsPage() {
                         </div>
                         
                         {/* Action buttons row - optimized for mobile */}
-                        <div className="flex gap-1.5 mt-2">
+                        <div className="flex gap-1.5 mt-2 appointment-actions-mobile">
                           <Button size="sm" variant="outline" onClick={() => { handleOpenForm(appt); setCalendarDayAppts(null); }} className="flex-1 h-9 text-xs">
                             <Edit className="h-3.5 w-3.5 mr-1" /> Edit
                           </Button>
-                          <Button size="sm" variant="outline" onClick={() => { handleOpenReschedule(appt); setCalendarDayAppts(null); }} className="flex-1 h-9 text-xs">
-                            <RefreshCw className="h-3.5 w-3.5 mr-1" /> Reschedule
+                          <Button size="sm" variant="outline" onClick={() => { handleOpenReschedule(appt); setCalendarDayAppts(null); }} className="h-9 w-9 p-0" title="Reschedule">
+                            <RefreshCw className="h-3.5 w-3.5" />
                           </Button>
                           <Button size="sm" variant="outline" onClick={() => { handleSendReminder(appt); setCalendarDayAppts(null); }} className="flex-1 h-9 text-xs">
                             <UserAddFillIcon className="h-3.5 w-3.5 mr-1" /> Remind
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => { setRemoveAppt(appt); setCalendarDayAppts(null); }} className="flex-1 h-9 text-xs">
-                            <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
+                          <Button size="sm" variant="destructive" onClick={() => { setRemoveAppt(appt); setCalendarDayAppts(null); }} className="h-9 w-9 p-0" title="Delete">
+                            <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </div>

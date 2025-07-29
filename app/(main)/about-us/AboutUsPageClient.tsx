@@ -76,9 +76,9 @@ export default function AboutUsPageClient() {
       <SectionWrapper className="bg-muted/20">
         <h2 className="text-3xl font-bold text-center">Meet Our Team</h2>
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          <DoctorProfileCard name="Dr. Abdul" title="Cardiologist" photo="/dr-abdul-ali.png" />
-          <DoctorProfileCard name="Dr. Asif" title="Cardiologist" photo="/dr-asif-ali.png" />
-          <DoctorProfileCard name="Dr. Sajid" title="Interventional Cardiologist" photo="/dr-sajid-ali.png" />
+                      <DoctorProfileCard name="Dr. Abdul" title="Interventional Cardiologist" photo="/dr-abdul-ali.png" />
+            <DoctorProfileCard name="Dr. Asif" title="Preventive Cardiologist" photo="/dr-asif-ali.png" />
+            <DoctorProfileCard name="Dr. Sajid" title="Interventional Cardiologist" photo="/dr-sajid-ali.png" />
         </div>
         {/* Testimonials Section */}
         <div className="mt-16">

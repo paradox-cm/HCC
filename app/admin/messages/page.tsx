@@ -17,7 +17,8 @@ import {
   User,
   Calendar,
   Mail,
-  AlertCircle
+  AlertCircle,
+  ArrowLeft
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -662,30 +663,34 @@ export default function AdminMessagesPage() {
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
-              <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-        <Message2FillIcon className="h-6 w-6 text-foreground" />
-        <h1 className="text-2xl font-bold">Messages</h1>
-          <div className="flex gap-2 ml-4">
-                    {unreadCount > 0 && (
-          <Badge variant="secondary" className={badgeColors.blue}>
-            {unreadCount} unread
-          </Badge>
-        )}
-        {urgentCount > 0 && (
-          <Badge variant="secondary" className={badgeColors.red}>
-            {urgentCount} urgent
-          </Badge>
-        )}
-          </div>
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Message2FillIcon className="h-6 w-6 text-foreground" />
+          <h1 className="text-2xl font-bold">Messages</h1>
         </div>
-        <div className="flex gap-2">
+        
+        {/* Badges row - moved below title for mobile */}
+        <div className="flex flex-wrap gap-2 mb-3">
+          {unreadCount > 0 && (
+            <Badge variant="secondary" className={badgeColors.blue}>
+              {unreadCount} unread
+            </Badge>
+          )}
+          {urgentCount > 0 && (
+            <Badge variant="secondary" className={badgeColors.red}>
+              {urgentCount} urgent
+            </Badge>
+          )}
+        </div>
+        
+        {/* Action buttons */}
+        <div className="flex flex-wrap gap-2">
           <Button 
             variant={showArchived ? "default" : "outline"} 
             size="sm"
             onClick={() => setShowArchived(!showArchived)}
           >
-                          <Archive className="h-4 w-4 mr-2" />
+            <Archive className="h-4 w-4 mr-2" />
             {showArchived ? "Active Messages" : "Archived Messages"}
           </Button>
           <Button 
@@ -693,7 +698,7 @@ export default function AdminMessagesPage() {
             size="sm"
             onClick={() => setIsNewMessageDialogOpen(true)}
           >
-                            <Send className="h-4 w-4" />
+            <Send className="h-4 w-4" />
             New Message
           </Button>
         </div>
@@ -702,8 +707,8 @@ export default function AdminMessagesPage() {
       {/* Filters */}
       <Card className="mb-4">
         <CardContent className="pt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-            <div className="relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+            <div className="relative sm:col-span-2 lg:col-span-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search messages..."
@@ -755,7 +760,7 @@ export default function AdminMessagesPage() {
       {/* Messages List */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
         {/* Messages List */}
-        <div className="lg:col-span-1 h-full">
+        <div className={`${selectedThread ? 'hidden lg:block' : 'block'} lg:col-span-1 h-full`}>
           <Card className="h-full flex flex-col">
             <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center justify-between">
@@ -787,9 +792,9 @@ export default function AdminMessagesPage() {
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
-                                                      <Avatar className="w-7 h-7">
-                            <AvatarFallback className="text-xs font-bold">{thread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                          </Avatar>
+                            <Avatar className="w-7 h-7">
+                              <AvatarFallback className="text-xs font-bold">{thread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                            </Avatar>
                             <div>
                               <div className="font-medium text-sm">{thread.patientName}</div>
                               <div className="text-xs font-medium text-primary">{thread.subject}</div>
@@ -831,12 +836,24 @@ export default function AdminMessagesPage() {
         </div>
 
         {/* Message Detail - Mobile optimized */}
-        <div className="lg:col-span-2 h-full">
+        <div className={`${selectedThread ? 'block' : 'hidden lg:block'} lg:col-span-2 h-full`}>
           {selectedThread ? (
             <Card className="h-full flex flex-col">
               <CardHeader className="flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
+                    {/* Mobile back button */}
+                    <div className="flex items-center gap-2 mb-2 lg:hidden">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedThread(null)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                      </Button>
+                      <span className="text-sm text-muted-foreground">Back to messages</span>
+                    </div>
                     <CardTitle className="flex items-center gap-2 text-base lg:text-lg">
                       {selectedThread.patientName}
                       {selectedThread.status === "urgent" && (
@@ -916,8 +933,12 @@ export default function AdminMessagesPage() {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => archiveThread(selectedThread.id)}
+                      onClick={() => {
+                        archiveThread(selectedThread.id)
+                        setSelectedThread(null)
+                      }}
                       className="h-8 w-8 p-0 lg:h-9 lg:w-auto lg:px-3"
+                      title="Archive"
                     >
                       <Archive className="h-4 w-4 lg:mr-2" />
                       <span className="hidden lg:inline">Archive</span>
@@ -925,8 +946,12 @@ export default function AdminMessagesPage() {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => deleteThread(selectedThread.id)}
+                      onClick={() => {
+                        deleteThread(selectedThread.id)
+                        setSelectedThread(null)
+                      }}
                       className="h-8 w-8 p-0 lg:h-9 lg:w-auto lg:px-3"
+                      title="Delete"
                     >
                       <Trash2 className="h-4 w-4 lg:mr-2" />
                       <span className="hidden lg:inline">Delete</span>

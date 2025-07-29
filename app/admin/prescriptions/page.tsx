@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Edit, Trash2, Plus, CheckCircle } from "lucide-react"
+import { Edit, Trash2, Plus, CheckCircle, ChevronDown } from "lucide-react"
 import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon'
 import EyeFillIcon from 'remixicon-react/EyeFillIcon'
 import { Card, CardContent } from "@/components/ui/card"
@@ -406,7 +406,7 @@ export default function AdminPrescriptionsPage() {
                       <tr key={patient.patientId} className="border-b hover:bg-accent/50 transition-colors cursor-pointer" onClick={() => togglePatientExpansion(patient.patientId)}>
                         <td className="py-2 px-3 font-medium">
                           <div className="flex items-center gap-2">
-                            <span className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}>▶</span>
+                            <ChevronDown className={`h-4 w-4 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                             <div>
                               <div className="font-semibold">{patient.patientName}</div>
                               <div className="text-xs text-muted-foreground">ID: {patient.patientId}</div>
@@ -527,7 +527,7 @@ export default function AdminPrescriptionsPage() {
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}>▶</span>
+                      <ChevronDown className={`h-4 w-4 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                       <h3 className="font-semibold text-base">{patient.patientName}</h3>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">ID: {patient.patientId}</p>

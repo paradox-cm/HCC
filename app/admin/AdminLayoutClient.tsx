@@ -178,11 +178,15 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
           >
             <MenuFillIcon className="h-6 w-6" />
           </button>
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/images/hcc-logo.png" alt="HCC Logo" width={28} height={28} className="h-7 w-7" />
-            <span className="font-bold text-lg tracking-tight">HCC</span>
-            <span className="font-bold text-lg tracking-tight ml-2">Admin Portal</span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
+              <Image src="/images/hcc-logo.png" alt="HCC Logo" width={28} height={28} className="h-7 w-7" />
+              <span className="font-bold text-lg tracking-tight">HCC</span>
+            </Link>
+            <Link href="/admin/dashboard" className="font-bold text-lg tracking-tight ml-2 hover:underline">
+              Admin Portal
+            </Link>
+          </div>
           <span className="ml-2 sm:ml-6 text-sm text-muted-foreground font-medium min-w-max hidden xs:inline">{dateTime}</span>
         </div>
         <div className="flex items-center gap-4 instant-theme-switch">
@@ -277,14 +281,18 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       <Drawer open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <DrawerContent className="max-[1240px]:block hidden">
           <DrawerTitle className="sr-only">Admin Navigation</DrawerTitle>
-          <aside className="w-full bg-background border-r flex flex-col justify-between py-6 px-4 min-h-screen instant-theme-switch">
+          <aside className="w-full bg-background border-r flex flex-col justify-between py-6 px-4 h-[calc(100vh-6rem)] max-h-[calc(100vh-6rem)] overflow-hidden instant-theme-switch safe-area-inset-bottom">
             {/* Drawer Logo */}
             <div className="flex items-center justify-between mb-6 w-full">
-              <Link href="/" className="flex items-center gap-2">
-                <Image src="/images/hcc-logo.png" alt="HCC Logo" width={28} height={28} className="h-7 w-7" />
-                <span className="font-bold text-lg tracking-tight">HCC</span>
-                <span className="font-bold text-lg tracking-tight ml-2">Admin Portal</span>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/" className="flex items-center gap-2">
+                  <Image src="/images/hcc-logo.png" alt="HCC Logo" width={28} height={28} className="h-7 w-7" />
+                  <span className="font-bold text-lg tracking-tight">HCC</span>
+                </Link>
+                <Link href="/admin/dashboard" className="font-bold text-lg tracking-tight ml-2 hover:underline">
+                  Admin Portal
+                </Link>
+              </div>
               <button
                 className="p-2 rounded-full hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary ml-2"
                 onClick={() => setSidebarOpen(false)}
@@ -373,16 +381,16 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
               </div>
             </div>
             {/* Sidebar Links */}
-            <div>
+            <div className="flex-1 overflow-y-auto">
               <nav className="flex flex-col gap-2">
                 {navItems.map(({ href, label, icon: Icon }) => (
                   <Link
                     key={href}
                     href={href}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${pathname.startsWith(href) ? "bg-primary text-primary-foreground" : "hover:bg-accent text-foreground"}`}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors text-sm min-h-[44px] ${pathname.startsWith(href) ? "bg-primary text-primary-foreground" : "hover:bg-accent text-foreground"}`}
                     onClick={() => setSidebarOpen(false)}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-5 w-5 flex-shrink-0" />
                     {label}
                   </Link>
                 ))}
@@ -401,6 +409,21 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                   Support
                 </button>
               </div>
+              {/* Mobile Logout Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    localStorage.removeItem("hcc_admin_auth");
+                    sessionStorage.removeItem("hcc_admin_auth");
+                  }
+                  router.replace("/admin-login");
+                }}
+                className="mt-2"
+              >
+                Logout
+              </Button>
             </div>
           </aside>
         </DrawerContent>

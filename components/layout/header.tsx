@@ -165,10 +165,10 @@ export function Header() {
                   ))}
                 </div>
                 <Button asChild variant="outline" size="sm" className="w-full">
-                  <Link href="/patient-portal">Patient Portal</Link>
+                  <Link href="/patient-portal" onClick={() => setIsOpen(false)}>Patient Portal</Link>
                 </Button>
                 <Button asChild size="sm" className="w-full">
-                  <Link href="/appointments">
+                  <Link href="/appointments" onClick={() => setIsOpen(false)}>
                     <CalendarFillIcon className="h-4 w-4 mr-2" />
                     Appointments
                   </Link>

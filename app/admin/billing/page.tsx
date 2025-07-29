@@ -299,12 +299,12 @@ export default function AdminBillingPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
           <MoneyDollarCircleFillIcon className="h-6 w-6 text-foreground" />
           <h1 className="text-2xl font-bold">Billing & Insurance</h1>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm">
             <DownloadFillIcon className="h-4 w-4 mr-2" />
             Export Report
@@ -317,7 +317,7 @@ export default function AdminBillingPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -378,7 +378,7 @@ export default function AdminBillingPage() {
           {/* Filters */}
           <Card>
             <CardContent className="p-4">
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 relative">
                   <SearchFillIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -389,7 +389,7 @@ export default function AdminBillingPage() {
                   />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-full sm:w-40">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -420,30 +420,36 @@ export default function AdminBillingPage() {
                   filteredPatients.map((patient) => (
                   <div
                     key={patient.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                    className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
                     onClick={() => handlePatientClick(patient)}
                   >
-                    <div className="flex items-center gap-4">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback>{patient.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{patient.name}</div>
-                        <div className="text-sm text-muted-foreground">{patient.email}</div>
-                        <div className="text-xs text-muted-foreground">Patient ID: {patient.id}</div>
+                    {/* Mobile-optimized layout */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      {/* Patient Info */}
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10 flex-shrink-0">
+                          <AvatarFallback>{patient.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium truncate">{patient.name}</div>
+                          <div className="text-sm text-muted-foreground truncate">{patient.email}</div>
+                          <div className="text-xs text-muted-foreground">Patient ID: {patient.id}</div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <div className="font-medium">${patient.balance.toFixed(2)}</div>
-                        <div className="text-sm text-muted-foreground">Balance</div>
-                      </div>
-                      <Badge className={getStatusColor(patient.status)}>
-                        {patient.status}
-                      </Badge>
-                      <div className="text-right">
-                        <div className="text-sm font-medium">{patient.insurance.provider}</div>
-                        <div className="text-xs text-muted-foreground">Insurance</div>
+                      
+                      {/* Billing and Insurance Info */}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                        <div className="text-right sm:text-left">
+                          <div className="font-medium text-lg sm:text-base">${patient.balance.toFixed(2)}</div>
+                          <div className="text-sm text-muted-foreground">Balance</div>
+                        </div>
+                        <Badge className={`w-fit ${getStatusColor(patient.status)}`}>
+                          {patient.status}
+                        </Badge>
+                        <div className="text-right sm:text-left">
+                          <div className="text-sm font-medium truncate">{patient.insurance.provider}</div>
+                          <div className="text-xs text-muted-foreground">Insurance</div>
+                        </div>
                       </div>
                     </div>
                   </div>

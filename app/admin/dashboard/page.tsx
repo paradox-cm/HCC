@@ -291,7 +291,7 @@ export default function AdminDashboardPage() {
       </div>
       {/* 3rd Row: Recent Activity Feed */}
       <div className="bg-card rounded-lg shadow border">
-        <div className="p-6 border-b">
+        <div className="p-4 sm:p-6 border-b">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold">Recent Activity</h2>
             <Badge variant="secondary" className="text-xs">
@@ -299,15 +299,15 @@ export default function AdminDashboardPage() {
             </Badge>
           </div>
         </div>
-        <div className="p-6">
-          <div className="space-y-4">
+        <div className="p-4 sm:p-6">
+          <div className="space-y-3 sm:space-y-4">
             {recentActivity.map((activity, index) => {
               const Icon = activity.icon
               return (
-                <div key={activity.id} className="flex items-start gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors">
+                <div key={activity.id} className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg hover:bg-muted/50 transition-colors">
                   {/* Activity Icon */}
-                  <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border ${activity.color}`}>
-                    <Icon className="h-5 w-5" />
+                  <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border ${activity.color}`}>
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   
                   {/* Activity Content */}
@@ -324,9 +324,9 @@ export default function AdminDashboardPage() {
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">{activity.description}</p>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
                           <div className="flex items-center gap-2">
-                            <Avatar className="h-6 w-6">
+                            <Avatar className="h-5 w-5 sm:h-6 sm:w-6">
                               <AvatarImage src={activity.avatar} alt={activity.user} />
                               <AvatarFallback className="text-xs bg-muted text-muted-foreground">
                                 {activity.user.split(' ').map(n => n[0]).join('')}
@@ -345,7 +345,7 @@ export default function AdminDashboardPage() {
           </div>
           
           {/* View All Activity Button */}
-          <div className="mt-6 pt-4 border-t">
+          <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t">
             <Button variant="outline" className="w-full" asChild>
               <Link href="/admin/activity">
                 View All Activity

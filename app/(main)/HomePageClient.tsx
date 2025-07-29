@@ -72,9 +72,9 @@ export default function HomePageClient() {
           </p>
         </div>
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          <DoctorProfileCard name="Dr. Abdul" title="Cardiologist" photo="/dr-abdul-ali.png" />
-          <DoctorProfileCard name="Dr. Asif" title="Interventional Cardiologist" photo="/dr-asif-ali.png" />
-          <DoctorProfileCard name="Dr. Sajid" title="Electrophysiologist" photo="/dr-sajid-ali.png" />
+                      <DoctorProfileCard name="Dr. Abdul" title="Interventional Cardiologist" photo="/dr-abdul-ali.png" />
+            <DoctorProfileCard name="Dr. Asif" title="Preventive Cardiologist" photo="/dr-asif-ali.png" />
+            <DoctorProfileCard name="Dr. Sajid" title="Interventional Cardiologist" photo="/dr-sajid-ali.png" />
         </div>
         <div className="mt-8 text-center">
           <Button variant="link" asChild>

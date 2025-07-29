@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from 'react'
+import { useTheme } from 'next-themes'
 
 interface HeaderAnimationProps {
   type: 'pulse-wave' | 'floating-geometric' | 'particle-flow' | 'gradient-flow' | 'ripple-heartbeat' | 'breathing-data' | 'vanishing-point'
@@ -16,6 +17,7 @@ export function HeaderAnimation({
   responsive = true 
 }: HeaderAnimationProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { resolvedTheme } = useTheme()
 
   useEffect(() => {
     if (type === 'pulse-wave') {
@@ -40,12 +42,16 @@ export function HeaderAnimation({
       let animationId: number
       let time = 0
 
+      // Theme-aware colors for pulse-wave
+      const isDark = resolvedTheme === 'dark'
+      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      
       // Wave configuration - four lines
       const waves = [
         { frequency: 0.2, amplitude: 0.3, phase: 0, color: '#dc2626', opacity: 0.9 },      // Bright red
         { frequency: 0.2, amplitude: 0.5, phase: Math.PI / 8, color: '#991b1b', opacity: 0.7 }, // Dark red
-        { frequency: 0.2, amplitude: 0.7, phase: Math.PI / 2, color: '#d1d5db', opacity: 0.3 }, // Grey (thinner)
-        { frequency: 0.2, amplitude: 0.6, phase: Math.PI * 3 / 4, color: '#d1d5db', opacity: 0.2 }     // Additional grey
+        { frequency: 0.2, amplitude: 0.7, phase: Math.PI / 2, color: grayColor, opacity: 0.3 }, // Theme-aware gray (thinner)
+        { frequency: 0.2, amplitude: 0.6, phase: Math.PI * 3 / 4, color: grayColor, opacity: 0.2 }     // Additional theme-aware gray
       ]
 
       const animate = () => {
@@ -126,18 +132,22 @@ export function HeaderAnimation({
       resizeCanvas()
       window.addEventListener('resize', resizeCanvas)
 
+      // Theme-aware colors for floating-geometric
+      const isDark = resolvedTheme === 'dark'
+      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      
       // Rectangle configuration - aligned to proper grid
       const gridSize = 120 // Base grid unit
               const rectangles = [
           { baseSize: 80, gridX: 4, gridY: 2, growthRate: 1.0, opacity: 0.9, color: '#dc2626' },
           { baseSize: 80, gridX: 8, gridY: 2, growthRate: 1.3, opacity: 0.7, color: '#b91c1c' },
           { baseSize: 80, gridX: 6, gridY: 4, growthRate: 1.6, opacity: 0.5, color: '#991b1b' },
-          { baseSize: 80, gridX: 10, gridY: 4, growthRate: 2.0, opacity: 0.3, color: '#6b7280' },
+          { baseSize: 80, gridX: 10, gridY: 4, growthRate: 2.0, opacity: 0.3, color: grayColor },
           // Additional smaller rectangles on the left side
           { baseSize: 40, gridX: 1, gridY: 1, growthRate: 1.2, opacity: 0.15, color: '#dc2626' },
           { baseSize: 50, gridX: 2, gridY: 1, growthRate: 1.1, opacity: 0.12, color: '#b91c1c' },
           { baseSize: 35, gridX: 1, gridY: 3, growthRate: 1.3, opacity: 0.1, color: '#991b1b' },
-          { baseSize: 45, gridX: 2, gridY: 3, growthRate: 1.0, opacity: 0.08, color: '#6b7280' },
+          { baseSize: 45, gridX: 2, gridY: 3, growthRate: 1.0, opacity: 0.08, color: grayColor },
           { baseSize: 30, gridX: 0, gridY: 2, growthRate: 1.4, opacity: 0.06, color: '#dc2626' },
           { baseSize: 55, gridX: 3, gridY: 0, growthRate: 1.2, opacity: 0.14, color: '#b91c1c' }
         ]
@@ -215,6 +225,10 @@ export function HeaderAnimation({
       window.addEventListener('resize', resizeCanvas)
 
       // Simplified stroke configuration - just two layers
+      // Theme-aware colors for gradient-flow
+      const isDark = resolvedTheme === 'dark'
+      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      
       const strokes = [
         { 
           color: '#dc2626', // Crimson red
@@ -225,7 +239,7 @@ export function HeaderAnimation({
           lineWidth: 2
         },
         { 
-          color: document.documentElement.classList.contains('dark') ? '#374151' : '#d1d5db', // Dark gray in dark mode, light gray in light mode
+          color: grayColor, // Theme-aware gray
           angle: 90, 
           opacity: 0.3, 
           scale: 1.1,
@@ -609,7 +623,11 @@ export function HeaderAnimation({
       const numLines = 8
       const vanishingPointX = 0.8 // Right side of screen (80%)
       const vanishingPointY = 0.3 // Above center for perspective
-      const colors = ['#dc2626', '#b91c1c', '#991b1b', '#d1d5db'] // Crimson, red, dark red, light gray
+      
+      // Theme-aware colors for gray scheme
+      const isDark = resolvedTheme === 'dark'
+      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      const colors = ['#dc2626', '#b91c1c', '#991b1b', grayColor] // Crimson, red, dark red, theme-aware gray
       
       for (let i = 0; i < numLines; i++) {
         const angle = (i * Math.PI * 2) / numLines
@@ -689,7 +707,7 @@ export function HeaderAnimation({
         cancelAnimationFrame(animationId)
       }
     }
-  }, [type, intensity, colorScheme, responsive])
+  }, [type, intensity, colorScheme, responsive, resolvedTheme])
 
   return (
     <canvas
