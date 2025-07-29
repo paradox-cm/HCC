@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { HeaderAnimation } from "@/components/HeaderAnimation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,7 +16,12 @@ import ScanFillIcon from 'remixicon-react/ScanFillIcon';
 import PulseFillIcon from 'remixicon-react/PulseFillIcon';
 import HeartFillIcon from 'remixicon-react/HeartFillIcon';
 import ShieldCheckFillIcon from 'remixicon-react/ShieldCheckFillIcon';
+import EmpathizeFillIcon from 'remixicon-react/EmpathizeFillIcon';
+import UserHeartFillIcon from 'remixicon-react/UserHeartFillIcon';
+import HeartsFillIcon from 'remixicon-react/HeartsFillIcon';
+import HandHeartFillIcon from 'remixicon-react/HandHeartFillIcon';
 import Link from "next/link"
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { useRef } from "react"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
@@ -494,21 +499,38 @@ export default function ServicesPageClient() {
       <SectionWrapper ref={potsSectionWrapperRef} className="bg-gradient-to-br from-muted/30 to-muted/10 border-t-2 border-b-2 border-muted/50 py-16 mb-0 mt-0">
         <div className="w-full" ref={potsSectionRef}>
           {/* Header Section */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold tracking-tight mb-4">Specialized Care for POTS & Dysautonomia</h2>
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <div className="w-16 h-px bg-muted-foreground/30"></div>
-              <span className="text-primary font-semibold">Led by Dr. Asif Ali</span>
-              <div className="w-16 h-px bg-muted-foreground/30"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16">
+            {/* Left Column - Text Content */}
+            <div className="text-center lg:text-left">
+              <h2 className="text-4xl font-bold tracking-tight mb-4">Specialized Care for POTS & Dysautonomia</h2>
+              <div className="flex items-center justify-center lg:justify-start gap-2 mb-6">
+                <div className="w-16 h-px bg-muted-foreground/30"></div>
+                <span className="text-primary font-semibold">Led by Dr. Asif Ali</span>
+                <div className="w-16 h-px bg-muted-foreground/30"></div>
+              </div>
+              <p className="text-lg text-muted-foreground max-w-3xl lg:max-w-none mx-auto lg:mx-0 leading-relaxed">
+                Board-Certified Expert in Autonomic Disorders
+              </p>
+              <p className="mt-6 max-w-4xl lg:max-w-none mx-auto lg:mx-0 text-muted-foreground leading-relaxed">
+                Our program offers a center of excellence for diagnosing and treating complex autonomic disorders like POTS. 
+                We combine cutting-edge diagnostics with personalized, compassionate care to help patients regain control 
+                and improve their quality of life.
+              </p>
             </div>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Board-Certified Expert in Autonomic Disorders
-            </p>
-            <p className="mt-6 max-w-4xl mx-auto text-muted-foreground leading-relaxed">
-              Our program offers a center of excellence for diagnosing and treating complex autonomic disorders like POTS. 
-              We combine cutting-edge diagnostics with personalized, compassionate care to help patients regain control 
-              and improve their quality of life.
-            </p>
+            
+            {/* Right Column - Image */}
+            <div className="flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-md">
+                <Image
+                  src="/images/Patient.png"
+                  alt="Patient receiving specialized care"
+                  width={400}
+                  height={400}
+                  className="w-full h-auto rounded-lg"
+                  priority
+                />
+              </div>
+            </div>
           </div>
 
           {/* Tabs Section */}
@@ -618,7 +640,7 @@ export default function ServicesPageClient() {
           </p>
         </div>
 
-        <TooltipProvider delayDuration={0} skipDelayDuration={0}>
+        <TooltipProvider delayDuration={isMobile ? 0 : 0} skipDelayDuration={isMobile ? 300 : 0}>
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
               {[
@@ -710,18 +732,33 @@ export default function ServicesPageClient() {
                         {category.services.map((service, index) => (
                           <li key={index} className="flex items-start gap-3 group">
                             <CheckLineIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span 
-                                  className="text-sm leading-relaxed group-hover:text-primary transition-colors"
-                                >
-                                  {service.name}
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent side="top" className="max-w-xs z-50 bg-popover text-popover-foreground border shadow-lg">
-                                <p className="text-sm">{service.tooltip}</p>
-                              </TooltipContent>
-                            </Tooltip>
+                            {isMobile ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span 
+                                    className="text-sm leading-relaxed group-hover:text-primary transition-colors cursor-pointer touch-manipulation"
+                                  >
+                                    {service.name}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="max-w-xs z-50 bg-popover text-popover-foreground border shadow-lg">
+                                  <p className="text-sm">{service.tooltip}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span 
+                                    className="text-sm leading-relaxed group-hover:text-primary transition-colors"
+                                  >
+                                    {service.name}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="max-w-xs z-50 bg-popover text-popover-foreground border shadow-lg">
+                                  <p className="text-sm">{service.tooltip}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -782,6 +819,40 @@ function ServiceCard({
   onExpand?: () => void
   isMobile?: boolean
 }) {
+  // Get the appropriate icon for each service
+  const getServiceIcon = (serviceName: string) => {
+    switch (serviceName) {
+      // Diagnostics
+      case "EKG / ECG":
+      case "Nuclear Stress Test":
+      case "Pacemaker Services":
+        return <HeartPulseFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "Echocardiogram":
+      case "Doppler Ultrasound":
+      case "Cardiac CT":
+      case "Cardiac PET/CT":
+      case "AAA Screening":
+      case "Telemedicine":
+        return <ScanFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "ABI (Ankle-Brachial Index)":
+        return <StethoscopeFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "Vein Ablation":
+        return <PulseFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "EECP Therapy":
+        return <HeartsFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "Intensive Cardiac Rehab":
+        return <EmpathizeFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "Preventive Heart Evaluations":
+        return <UserHeartFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "Lifestyle & Risk Assessments":
+      case "Preoperative Clearances":
+        return <ShieldCheckFillIcon className="h-6 w-6 text-muted-foreground" />
+      case "Concierge Cardiology":
+        return <HandHeartFillIcon className="h-6 w-6 text-muted-foreground" />
+      default:
+        return <StethoscopeFillIcon className="h-6 w-6 text-muted-foreground" />
+    }
+  }
   // Parse the detailed description to extract key information for hover state
   const parseServiceInfo = (desc: string) => {
     const durationMatch = desc.match(
@@ -816,7 +887,7 @@ function ServiceCard({
         style={isMobile ? { minHeight: 0, height: 'auto' } : {}}
         onClick={isMobile ? onExpand : undefined}
       >
-        <CardContent className="p-6 flex flex-col h-full">
+        <CardContent className="p-6 flex flex-col h-full relative">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold mb-4">{name}</h3>
             {isMobile && (
@@ -826,6 +897,11 @@ function ServiceCard({
             )}
           </div>
           <p className="text-muted-foreground leading-relaxed flex-grow">{defaultDescription}</p>
+          
+          {/* Service Icon - Bottom Left */}
+          <div className="absolute bottom-4 left-4">
+            {getServiceIcon(name)}
+          </div>
         </CardContent>
       </div>
       {/* Mobile: Expanded details */}
@@ -833,7 +909,9 @@ function ServiceCard({
         <div className="flex flex-col">
           <CardContent className="p-6 pt-0 flex flex-col">
             <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
-              <StethoscopeFillIcon className="h-8 w-8 text-primary/60" />
+              <div className="text-red-600">
+                {React.cloneElement(getServiceIcon(name), { className: "h-8 w-8" })}
+              </div>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>
             <div className="space-y-3 pt-4 border-t border-muted flex-shrink-0">
@@ -875,7 +953,9 @@ function ServiceCard({
             <h3 className="text-xl font-semibold mb-4">{name}</h3>
             {/* Image placeholder - full width */}
             <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
-              <StethoscopeFillIcon className="h-8 w-8 text-primary/60" />
+              <div className="text-red-600">
+                {React.cloneElement(getServiceIcon(name), { className: "h-8 w-8" })}
+              </div>
             </div>
             {/* Main description */}
             <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">{detailedDescription}</p>

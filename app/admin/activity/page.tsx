@@ -33,7 +33,7 @@ const allActivityData = [
     avatar: "/placeholder-user.jpg",
     status: "completed",
     icon: UserAddFillIcon,
-    color: "bg-green-100 text-green-700 border-green-200",
+    color: "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
     category: "patient"
   },
   {
@@ -47,7 +47,7 @@ const allActivityData = [
     avatar: "/placeholder-user.jpg",
     status: "pending",
     icon: Calendar2FillIcon,
-    color: "bg-blue-100 text-blue-700 border-blue-200",
+    color: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800",
     category: "appointment"
   },
   {
@@ -61,7 +61,7 @@ const allActivityData = [
     avatar: "/placeholder-user.jpg",
     status: "pending",
     icon: CapsuleFillIcon,
-    color: "bg-purple-100 text-purple-700 border-purple-200",
+    color: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800",
     category: "prescription"
   },
   {
@@ -75,7 +75,7 @@ const allActivityData = [
     avatar: "/dr-sajid-ali.png",
     status: "completed",
     icon: Message2FillIcon,
-    color: "bg-orange-100 text-orange-700 border-orange-200",
+    color: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800",
     category: "communication"
   },
   {
@@ -89,7 +89,7 @@ const allActivityData = [
     avatar: "/placeholder-user.jpg",
     status: "completed",
     icon: FileTextFillIcon,
-    color: "bg-indigo-100 text-indigo-700 border-indigo-200",
+    color: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800",
     category: "document"
   },
   {
@@ -103,7 +103,7 @@ const allActivityData = [
     avatar: "/dr-asif-ali.png",
     status: "completed",
     icon: CapsuleFillIcon,
-    color: "bg-teal-100 text-teal-700 border-teal-200",
+    color: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800",
     category: "care-plan"
   },
   // Yesterday's activities
@@ -118,7 +118,7 @@ const allActivityData = [
     avatar: "/placeholder-user.jpg",
     status: "completed",
     icon: UserAddFillIcon,
-    color: "bg-green-100 text-green-700 border-green-200",
+    color: "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
     category: "patient"
   },
   {
@@ -132,7 +132,7 @@ const allActivityData = [
     avatar: "/placeholder-user.jpg",
     status: "completed",
     icon: Calendar2FillIcon,
-    color: "bg-red-100 text-red-700 border-red-200",
+    color: "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800",
     category: "appointment"
   },
   {
@@ -146,7 +146,7 @@ const allActivityData = [
     avatar: "/dr-sajid-ali.png",
     status: "completed",
     icon: CapsuleFillIcon,
-    color: "bg-green-100 text-green-700 border-green-200",
+    color: "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
     category: "prescription"
   },
   // Earlier activities
@@ -161,7 +161,7 @@ const allActivityData = [
     avatar: "/dr-abdul-ali.png",
     status: "completed",
     icon: Message2FillIcon,
-    color: "bg-orange-100 text-orange-700 border-orange-200",
+    color: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800",
     category: "communication"
   },
   {
@@ -175,7 +175,7 @@ const allActivityData = [
     avatar: "/dr-asif-ali.png",
     status: "completed",
     icon: FileTextFillIcon,
-    color: "bg-indigo-100 text-indigo-700 border-indigo-200",
+    color: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800",
     category: "document"
   },
   {
@@ -189,7 +189,7 @@ const allActivityData = [
     avatar: "/dr-sajid-ali.png",
     status: "completed",
     icon: CapsuleFillIcon,
-    color: "bg-teal-100 text-teal-700 border-teal-200",
+    color: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800",
     category: "care-plan"
   }
 ]
@@ -224,17 +224,17 @@ export default function AdminActivityPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Activity Log</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Activity Log</h1>
           <p className="text-muted-foreground">Monitor all system activities and user interactions</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleRefresh}>
+          <Button variant="outline" onClick={handleRefresh} className="flex-1 sm:flex-none">
             <RefreshFillIcon className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button variant="outline" onClick={handleExport}>
+          <Button variant="outline" onClick={handleExport} className="flex-1 sm:flex-none">
             <DownloadFillIcon className="h-4 w-4 mr-2" />
             Export
           </Button>
@@ -333,7 +333,7 @@ export default function AdminActivityPage() {
                             <div className="flex items-center gap-2">
                               <Avatar className="h-6 w-6">
                                 <AvatarImage src={activity.avatar} alt={activity.user} />
-                                <AvatarFallback className="text-xs">
+                                <AvatarFallback className="text-xs bg-muted text-muted-foreground">
                                   {activity.user.split(' ').map(n => n[0]).join('')}
                                 </AvatarFallback>
                               </Avatar>

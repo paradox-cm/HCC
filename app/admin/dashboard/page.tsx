@@ -10,9 +10,12 @@ import Calendar2FillIcon from 'remixicon-react/Calendar2FillIcon';
 import FileTextFillIcon from 'remixicon-react/FileTextFillIcon';
 import Message2FillIcon from 'remixicon-react/Message2FillIcon';
 import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon';
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
+import { Search, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const quickLinks = [
   { href: "/admin/patients", label: "Manage Patients", icon: User3FillIcon },
@@ -22,6 +25,20 @@ const quickLinks = [
   { href: "/admin/documents", label: "Documents", icon: FileTextFillIcon },
   { href: "/admin/billing", label: "Billing & Insurance", icon: BarChart2FillIcon },
   { href: "/admin/care-plans", label: "Care Plans", icon: CapsuleFillIcon },
+]
+
+// Mock patient data for search
+const mockPatients = [
+  { id: 1, name: "Sarah Johnson", email: "sarah.johnson@email.com", phone: "(555) 123-4567" },
+  { id: 2, name: "Michael Chen", email: "michael.chen@email.com", phone: "(555) 234-5678" },
+  { id: 3, name: "Emily Rodriguez", email: "emily.rodriguez@email.com", phone: "(555) 345-6789" },
+  { id: 4, name: "Robert Wilson", email: "robert.wilson@email.com", phone: "(555) 456-7890" },
+  { id: 5, name: "Lisa Thompson", email: "lisa.thompson@email.com", phone: "(555) 567-8901" },
+  { id: 6, name: "David Martinez", email: "david.martinez@email.com", phone: "(555) 678-9012" },
+  { id: 7, name: "Jennifer Lee", email: "jennifer.lee@email.com", phone: "(555) 789-0123" },
+  { id: 8, name: "Thomas Brown", email: "thomas.brown@email.com", phone: "(555) 890-1234" },
+  { id: 9, name: "Amanda Davis", email: "amanda.davis@email.com", phone: "(555) 901-2345" },
+  { id: 10, name: "Christopher Garcia", email: "christopher.garcia@email.com", phone: "(555) 012-3456" },
 ]
 
 // Mock activity data
@@ -36,7 +53,7 @@ const recentActivity = [
     avatar: "/placeholder-user.jpg",
     status: "completed",
     icon: UserAddFillIcon,
-    color: "bg-green-100 text-green-700 border-green-200"
+    color: "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
   },
   {
     id: 2,
@@ -48,7 +65,7 @@ const recentActivity = [
     avatar: "/placeholder-user.jpg",
     status: "pending",
     icon: Calendar2FillIcon,
-    color: "bg-blue-100 text-blue-700 border-blue-200"
+    color: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"
   },
   {
     id: 3,
@@ -60,7 +77,7 @@ const recentActivity = [
     avatar: "/placeholder-user.jpg",
     status: "pending",
     icon: CapsuleFillIcon,
-    color: "bg-purple-100 text-purple-700 border-purple-200"
+    color: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800"
   },
   {
     id: 4,
@@ -72,7 +89,7 @@ const recentActivity = [
     avatar: "/dr-sajid-ali.png",
     status: "completed",
     icon: Message2FillIcon,
-    color: "bg-orange-100 text-orange-700 border-orange-200"
+    color: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800"
   },
   {
     id: 5,
@@ -84,7 +101,7 @@ const recentActivity = [
     avatar: "/placeholder-user.jpg",
     status: "completed",
     icon: FileTextFillIcon,
-    color: "bg-indigo-100 text-indigo-700 border-indigo-200"
+    color: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800"
   },
   {
     id: 6,
@@ -96,15 +113,106 @@ const recentActivity = [
     avatar: "/dr-asif-ali.png",
     status: "completed",
     icon: CapsuleFillIcon,
-    color: "bg-teal-100 text-teal-700 border-teal-200"
+    color: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800"
   }
 ]
 
 export default function AdminDashboardPage() {
+  const router = useRouter()
+  const [searchTerm, setSearchTerm] = useState("")
+  const [searchResults, setSearchResults] = useState<typeof mockPatients>([])
+  const [showSearchResults, setShowSearchResults] = useState(false)
+  const searchRef = useRef<HTMLDivElement>(null)
+
+  // Handle click outside to close search results
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearchResults(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term)
+    if (term.trim() === "") {
+      setSearchResults([])
+      setShowSearchResults(false)
+      return
+    }
+
+    const filtered = mockPatients.filter(patient =>
+      patient.name.toLowerCase().includes(term.toLowerCase()) ||
+      patient.email.toLowerCase().includes(term.toLowerCase()) ||
+      patient.phone.includes(term)
+    )
+    setSearchResults(filtered)
+    setShowSearchResults(true)
+  }
+
+  const handlePatientSelect = (patientId: number) => {
+    router.push(`/admin/patients/${patientId}`)
+    setSearchTerm("")
+    setSearchResults([])
+    setShowSearchResults(false)
+  }
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-4 pt-16 sm:pt-0">Welcome, Admin</h1>
       <p className="text-muted-foreground mb-8">Manage all aspects of the patient portal from this dashboard.</p>
+      
+      {/* Patient Search Bar */}
+      <div className="mb-8">
+        <div className="relative max-w-md" ref={searchRef}>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search patients by name, email, or phone..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10 pr-4"
+            />
+          </div>
+          
+          {/* Search Results Dropdown */}
+          {showSearchResults && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+              {searchResults.map((patient) => (
+                <button
+                  key={patient.id}
+                  onClick={() => handlePatientSelect(patient.id)}
+                  className="w-full p-3 text-left hover:bg-muted/50 transition-colors border-b last:border-b-0 flex items-center gap-3"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="text-xs">
+                      {patient.name.split(" ").map(n => n[0]).join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-sm truncate">{patient.name}</div>
+                    <div className="text-xs text-muted-foreground truncate">{patient.email}</div>
+                    <div className="text-xs text-muted-foreground">{patient.phone}</div>
+                  </div>
+                  <User className="h-4 w-4 text-muted-foreground" />
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {/* No Results Message */}
+          {showSearchResults && searchTerm.trim() !== "" && searchResults.length === 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-50 p-3 text-center text-muted-foreground">
+              No patients found matching "{searchTerm}"
+            </div>
+          )}
+        </div>
+      </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-10 instant-theme-switch">
         {quickLinks.map(({ href, label, icon: Icon }) => (
           <Link key={href} href={href}>
@@ -117,37 +225,40 @@ export default function AdminDashboardPage() {
           </Link>
         ))}
       </div>
-      {/* 1st Row: Stats (Mobile-first) */}
-      <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        <div className="flex flex-col items-center bg-card rounded-lg shadow p-4 border">
-          <User3FillIcon className="h-6 w-6 text-primary mb-1" />
-          <span className="text-2xl font-bold">1,234</span>
-          <span className="text-muted-foreground text-xs">Total Patients</span>
-        </div>
-        <div className="flex flex-col items-center bg-card rounded-lg shadow p-4 border">
-          <UserAddFillIcon className="h-6 w-6 text-primary mb-1" />
-          <span className="text-2xl font-bold">27</span>
-          <span className="text-muted-foreground text-xs">New Signups This Week</span>
-        </div>
-        <div className="flex flex-col items-center bg-card rounded-lg shadow p-4 border">
-          <BarChart2FillIcon className="h-6 w-6 text-primary mb-1" />
-          <span className="text-2xl font-bold">89</span>
-          <span className="text-muted-foreground text-xs">Active Patients Today</span>
-        </div>
-        <div className="flex flex-col items-center bg-card rounded-lg shadow p-4 border">
-          <Calendar2FillIcon className="h-6 w-6 text-primary mb-1" />
-          <span className="text-2xl font-bold">42</span>
-          <span className="text-muted-foreground text-xs">Appointments Booked</span>
-        </div>
-        <div className="flex flex-col items-center bg-card rounded-lg shadow p-4 border">
-          <CapsuleFillIcon className="h-6 w-6 text-primary mb-1" />
-          <span className="text-2xl font-bold">15</span>
-          <span className="text-muted-foreground text-xs">Prescriptions Requested</span>
-        </div>
-        <div className="flex flex-col items-center bg-card rounded-lg shadow p-4 border">
-          <Message2FillIcon className="h-6 w-6 text-primary mb-1" />
-          <span className="text-2xl font-bold">58</span>
-          <span className="text-muted-foreground text-xs">Messages Sent</span>
+      {/* Patient Portal Stats */}
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-4">Patient Portal Stats</h2>
+        <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex flex-col items-center bg-transparent rounded-lg border p-4">
+            <User3FillIcon className="h-6 w-6 text-primary mb-1" />
+            <span className="text-2xl font-bold">1,234</span>
+            <span className="text-muted-foreground text-xs">Total Patients</span>
+          </div>
+          <div className="flex flex-col items-center bg-transparent rounded-lg border p-4">
+            <UserAddFillIcon className="h-6 w-6 text-primary mb-1" />
+            <span className="text-2xl font-bold">27</span>
+            <span className="text-muted-foreground text-xs">New Signups This Week</span>
+          </div>
+          <div className="flex flex-col items-center bg-transparent rounded-lg border p-4">
+            <BarChart2FillIcon className="h-6 w-6 text-primary mb-1" />
+            <span className="text-2xl font-bold">89</span>
+            <span className="text-muted-foreground text-xs">Active Patients Today</span>
+          </div>
+          <div className="flex flex-col items-center bg-transparent rounded-lg border p-4">
+            <Calendar2FillIcon className="h-6 w-6 text-primary mb-1" />
+            <span className="text-2xl font-bold">42</span>
+            <span className="text-muted-foreground text-xs">Appointments Booked</span>
+          </div>
+          <div className="flex flex-col items-center bg-transparent rounded-lg border p-4">
+            <CapsuleFillIcon className="h-6 w-6 text-primary mb-1" />
+            <span className="text-2xl font-bold">15</span>
+            <span className="text-muted-foreground text-xs">Prescriptions Requested</span>
+          </div>
+          <div className="flex flex-col items-center bg-transparent rounded-lg border p-4">
+            <Message2FillIcon className="h-6 w-6 text-primary mb-1" />
+            <span className="text-2xl font-bold">58</span>
+            <span className="text-muted-foreground text-xs">Messages Sent</span>
+          </div>
         </div>
       </div>
       {/* 2nd Row: Quick Links as Buttons */}
@@ -217,7 +328,7 @@ export default function AdminDashboardPage() {
                           <div className="flex items-center gap-2">
                             <Avatar className="h-6 w-6">
                               <AvatarImage src={activity.avatar} alt={activity.user} />
-                              <AvatarFallback className="text-xs">
+                              <AvatarFallback className="text-xs bg-muted text-muted-foreground">
                                 {activity.user.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>

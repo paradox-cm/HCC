@@ -168,6 +168,10 @@ const MOCK_PRESCRIPTIONS = [
     instructions: "Take 1 tablet daily",
     status: "Active",
     canRefill: true,
+    prescribedBy: "Dr. Asif Ali",
+    refills: 3,
+    pharmacy: "CVS Pharmacy",
+    lastUpdated: "2024-06-01",
   },
   {
     id: 2,
@@ -176,6 +180,10 @@ const MOCK_PRESCRIPTIONS = [
     instructions: "Take 1 tablet daily",
     status: "Ongoing",
     canRefill: false,
+    prescribedBy: "Dr. Asif Ali",
+    refills: 0,
+    pharmacy: "Walgreens",
+    lastUpdated: "2024-05-15",
   },
   {
     id: 3,
@@ -184,6 +192,10 @@ const MOCK_PRESCRIPTIONS = [
     instructions: "Take 1 tablet daily",
     status: "Active",
     canRefill: true,
+    prescribedBy: "Dr. Asif Ali",
+    refills: 2,
+    pharmacy: "CVS Pharmacy",
+    lastUpdated: "2024-05-28",
   },
 ]
 const MOCK_PHARMACY = {
@@ -374,14 +386,14 @@ export default function PatientPortalDashboardClient() {
                 </Button>
               </div>
               <Button asChild size="sm" variant="outline" className="w-full mt-3">
-                <Link href="/patient-portal/dashboard/care-plan?create=1"> <HeartPulseFillIcon className="mr-2 h-4 w-4" /> Create Care Plan</Link>
+                <Link href="/patient-portal/dashboard/documents?upload=1"> <UploadFillIcon className="mr-2 h-4 w-4" /> Upload Document</Link>
               </Button>
             </div>
           </MobileCard>
 
           {/* Prescriptions */}
           <MobileCard
-            title="Active Prescriptions"
+            title="Prescriptions"
             icon={<CapsuleFillIcon className="h-5 w-5 text-primary" />}
             href="/patient-portal/dashboard/prescriptions"
           >
@@ -392,6 +404,14 @@ export default function PatientPortalDashboardClient() {
                     <div className="font-semibold text-base truncate">{rx.name} <span className="text-xs font-normal text-muted-foreground">{rx.dosage}</span></div>
                     <div className="text-xs text-muted-foreground truncate">{rx.instructions}</div>
                     <div className="text-xs text-muted-foreground mt-1">Status: <span className="font-medium text-primary">{rx.status}</span></div>
+                    <div className="text-xs text-muted-foreground">Prescribed by {rx.prescribedBy}</div>
+                    <div className="text-xs text-muted-foreground">{rx.pharmacy}</div>
+                    <div className="text-xs text-muted-foreground">
+                      <span className={rx.canRefill ? "text-green-600" : "text-red-600"}>
+                        {rx.canRefill ? "✓ Can refill" : "✗ No refills"}
+                      </span>
+                      {rx.canRefill && <span className="ml-2">({rx.refills} refills remaining)</span>}
+                    </div>
                 </div>
                   <div className="flex flex-col gap-2 min-w-[100px] items-end">
                     {rx.canRefill ? (
@@ -405,13 +425,8 @@ export default function PatientPortalDashboardClient() {
                   </div>
                 ))}
                 </div>
-              <div className="flex flex-1 justify-end mt-2">
-                <Button asChild variant="link" className="p-0 h-auto text-sm">
-                  <Link href="/patient-portal/dashboard/prescriptions">View All Prescriptions →</Link>
-                </Button>
-              </div>
               <Button asChild variant="outline" size="sm" className="w-full mt-3">
-                <Link href="/patient-portal/dashboard/prescriptions">View Pharmacy Info</Link>
+                <Link href="/patient-portal/dashboard/prescriptions">View All Prescriptions</Link>
               </Button>
             </MobileCard>
 

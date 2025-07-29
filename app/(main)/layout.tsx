@@ -12,12 +12,37 @@ import ClientOnlyChatWidget from "@/components/ClientOnlyChatWidget"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Houston Cardiology Consultants - Wireframe",
-  description: "Wireframe for the Houston Cardiology Consultants website.",
-  icons: {
-    icon: "/images/hcc-logo.ico", // Set the favicon
+  title: "Houston Cardiology Consultants | Heart Care in Houston, TX",
+  description: "Personalized cardiology care, advanced diagnostics, and compassionate heart health services in Houston, Texas. Board-certified cardiologists providing comprehensive cardiovascular care.",
+  keywords: "cardiologist, heart doctor, cardiology, Houston, Texas, cardiovascular care, heart health, cardiac diagnostics, POTS, dysautonomia",
+  authors: [{ name: "Houston Cardiology Consultants" }],
+  creator: "Houston Cardiology Consultants",
+  publisher: "Houston Cardiology Consultants",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
-    generator: 'v0.dev'
+  metadataBase: new URL('https://hccheart.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://hccheart.com',
+    title: 'Houston Cardiology Consultants | Heart Care in Houston, TX',
+    description: 'Personalized cardiology care, advanced diagnostics, and compassionate heart health services in Houston, Texas.',
+    siteName: 'Houston Cardiology Consultants',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Houston Cardiology Consultants | Heart Care in Houston, TX',
+    description: 'Personalized cardiology care, advanced diagnostics, and compassionate heart health services in Houston, Texas.',
+  },
+  icons: {
+    icon: "/images/hcc-logo.ico",
+  },
 }
 
 export default function MainLayout({

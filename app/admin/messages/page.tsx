@@ -31,6 +31,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { getPriorityColor, getMessageStatusColor, badgeColors } from "@/lib/admin-badge-utils"
 import Message2FillIcon from 'remixicon-react/Message2FillIcon'
+import { useMessages } from "@/contexts/MessageContext"
 
 
 
@@ -501,7 +502,15 @@ const statuses = [
 
 export default function AdminMessagesPage() {
   const searchParams = useSearchParams()
-  const [messageThreads, setMessageThreads] = useState(mockMessageThreads)
+  const { 
+    messageThreads, 
+    addMessageToThread, 
+    addReplyToThread, 
+    markThreadAsRead, 
+    archiveThread, 
+    deleteThread, 
+    restoreThread 
+  } = useMessages()
   const [selectedThread, setSelectedThread] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -515,6 +524,7 @@ export default function AdminMessagesPage() {
     patientId: "",
     patientName: "",
     patientEmail: "",
+    subject: "",
     message: "",
     category: "appointment",
     priority: "medium",
@@ -551,30 +561,19 @@ export default function AdminMessagesPage() {
   const sendReply = () => {
     if (!selectedThread || !replyText.trim()) return
 
-    const newMessage = {
-      id: Math.max(...selectedThread.messages.map(m => m.id)) + 1,
-      from: "admin",
-      sender: selectedThread.assignedTo,
-      text: replyText,
-      timestamp: new Date().toISOString()
-    }
-
-    setMessageThreads(prev => prev.map(thread => 
-      thread.id === selectedThread.id 
-        ? { 
-            ...thread, 
-            messages: [...thread.messages, newMessage],
-            lastMessageTime: newMessage.timestamp,
-            status: thread.status === "unread" ? "in-progress" : thread.status
-          }
-        : thread
-    ))
+    addReplyToThread(selectedThread.id, replyText)
 
     // Update the selectedThread to include the new message immediately
     setSelectedThread(prev => prev ? {
       ...prev,
-      messages: [...prev.messages, newMessage],
-      lastMessageTime: newMessage.timestamp,
+      messages: [...prev.messages, {
+        id: prev.messages.length + 1,
+        from: "admin",
+        sender: prev.assignedTo,
+        text: replyText,
+        timestamp: new Date().toISOString()
+      }],
+      lastMessageTime: new Date().toISOString(),
       status: prev.status === "unread" ? "in-progress" : prev.status
     } : null)
 
@@ -585,38 +584,26 @@ export default function AdminMessagesPage() {
   }
 
   const createNewMessage = () => {
-    if (!newMessage.patientId || !newMessage.message.trim()) return
+    if (!newMessage.patientId || !newMessage.message.trim() || !newMessage.subject.trim()) return
 
     const selectedPatient = mockPatients.find(p => p.id === newMessage.patientId)
     if (!selectedPatient) return
 
-    const thread = {
-      id: Math.max(...messageThreads.map(t => t.id)) + 1,
-      patientId: selectedPatient.id,
-      patientName: selectedPatient.name,
-      patientEmail: selectedPatient.email,
-      category: newMessage.category,
-      priority: newMessage.priority,
-      status: "unread",
-      assignedTo: newMessage.assignedTo,
+    addMessageToThread(
+      selectedPatient.id,
+      selectedPatient.name,
+      selectedPatient.email,
+      newMessage.subject,
+      newMessage.message,
+      newMessage.category,
+      newMessage.priority
+    )
 
-      messages: [
-        {
-          id: 1,
-          from: "admin",
-          sender: newMessage.assignedTo,
-          text: newMessage.message,
-          timestamp: new Date().toISOString()
-        }
-      ],
-      lastMessageTime: new Date().toISOString()
-    }
-
-    setMessageThreads(prev => [thread, ...prev])
     setNewMessage({
       patientId: "",
       patientName: "",
       patientEmail: "",
+      subject: "",
       message: "",
       category: "appointment",
       priority: "medium",
@@ -638,38 +625,26 @@ export default function AdminMessagesPage() {
     }
   }, [searchParams])
 
-  const markAsRead = (threadId: number) => {
-    setMessageThreads(prev => prev.map(thread => 
-      thread.id === threadId 
-        ? { ...thread, status: thread.status === "unread" ? "in-progress" : thread.status }
-        : thread
-    ))
+  const handleMarkAsRead = (threadId: number) => {
+    markThreadAsRead(threadId)
   }
 
-  const archiveThread = (threadId: number) => {
-    setMessageThreads(prev => prev.map(thread => 
-      thread.id === threadId 
-        ? { ...thread, status: "archived" }
-        : thread
-    ))
+  const handleArchiveThread = (threadId: number) => {
+    archiveThread(threadId)
     if (selectedThread?.id === threadId) {
       setSelectedThread(null)
     }
   }
 
-  const deleteThread = (threadId: number) => {
-    setMessageThreads(prev => prev.filter(thread => thread.id !== threadId))
+  const handleDeleteThread = (threadId: number) => {
+    deleteThread(threadId)
     if (selectedThread?.id === threadId) {
       setSelectedThread(null)
     }
   }
 
-  const restoreThread = (threadId: number) => {
-    setMessageThreads(prev => prev.map(thread => 
-      thread.id === threadId 
-        ? { ...thread, status: "completed" }
-        : thread
-    ))
+  const handleRestoreThread = (threadId: number) => {
+    restoreThread(threadId)
   }
 
 
@@ -685,7 +660,7 @@ export default function AdminMessagesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto h-screen flex flex-col overflow-hidden">
+    <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
               <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -805,18 +780,19 @@ export default function AdminMessagesPage() {
                         } ${thread.status === "unread" ? "border-l-4 border-l-blue-500" : ""}`}
                         onClick={() => {
                           setSelectedThread(thread)
-                          markAsRead(thread.id)
+                          handleMarkAsRead(thread.id)
                           // Auto-scroll to bottom when selecting a thread
                           setTimeout(scrollToBottom, 200)
                         }}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <Avatar className="h-8 w-8">
-                              <AvatarFallback>{thread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                            </Avatar>
+                                                      <Avatar className="w-7 h-7">
+                            <AvatarFallback className="text-xs font-bold">{thread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                          </Avatar>
                             <div>
                               <div className="font-medium text-sm">{thread.patientName}</div>
+                              <div className="text-xs font-medium text-primary">{thread.subject}</div>
                               <div className="text-xs text-muted-foreground">{formatTimestamp(thread.lastMessageTime)}</div>
                             </div>
                           </div>
@@ -867,6 +843,9 @@ export default function AdminMessagesPage() {
                         <AlertCircle className="h-5 w-5 text-red-500" />
                       )}
                     </CardTitle>
+                    <div className="text-sm font-medium text-primary mt-1">
+                      {selectedThread.subject}
+                    </div>
                     <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 mt-2">
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -967,8 +946,8 @@ export default function AdminMessagesPage() {
                     >
                       {message.from === "patient" && (
                         <div className="flex-shrink-0">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback>{selectedThread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                          <Avatar className="w-7 h-7">
+                            <AvatarFallback className="text-xs font-bold">{selectedThread.patientName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
                           </Avatar>
                         </div>
                       )}
@@ -1086,6 +1065,16 @@ export default function AdminMessagesPage() {
                )}
              </div>
 
+             <div>
+               <label className="text-sm font-medium">Subject *</label>
+               <Input
+                 value={newMessage.subject}
+                 onChange={(e) => setNewMessage(prev => ({ ...prev, subject: e.target.value }))}
+                 placeholder="Enter message subject..."
+                 className="mt-1"
+               />
+             </div>
+
              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                <div>
                  <label className="text-sm font-medium">Category</label>
@@ -1152,6 +1141,7 @@ export default function AdminMessagesPage() {
                      patientId: "",
                      patientName: "",
                      patientEmail: "",
+                     subject: "",
                      message: "",
                      category: "appointment",
                      priority: "medium",

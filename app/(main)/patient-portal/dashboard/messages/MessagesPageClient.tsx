@@ -7,6 +7,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import MailFillIcon from 'remixicon-react/MailFillIcon';
 import AddCircleFillIcon from 'remixicon-react/AddCircleFillIcon';
 import ArrowLeftFillIcon from 'remixicon-react/ArrowLeftFillIcon';
@@ -36,6 +38,9 @@ type Thread = {
   participants: string[];
   messages: Message[];
   unread: boolean;
+  category?: string;
+  priority?: string;
+  assignedDoctor?: string;
 };
 
 const MOCK_THREADS: Thread[] = [
@@ -48,6 +53,9 @@ const MOCK_THREADS: Thread[] = [
       { from: "You", text: "Thank you, I will review and follow up if needed.", time: "2024-06-01 10:15" },
     ],
     unread: true,
+    category: "test-results",
+    priority: "medium",
+    assignedDoctor: "Dr. Asif Ali",
   },
   {
     id: 2,
@@ -58,11 +66,57 @@ const MOCK_THREADS: Thread[] = [
       { from: "You", text: "Thank you for the reminder!", time: "2024-05-30 09:10" },
     ],
     unread: false,
+    category: "appointment",
+    priority: "low",
+    assignedDoctor: "Dr. Sajid Ali",
+  },
+  {
+    id: 3,
+    subject: "Medication Refill Request",
+    participants: ["Nursing Staff"],
+    messages: [
+      { from: "Nursing Staff", text: "Your medication refill request has been approved. Please pick up from your pharmacy.", time: "2024-05-28 14:30" },
+      { from: "You", text: "Great, thank you!", time: "2024-05-28 14:45" },
+    ],
+    unread: false,
+    category: "medication",
+    priority: "medium",
+    assignedDoctor: "Dr. Asif Ali",
+  },
+  {
+    id: 4,
+    subject: "Urgent: Side Effects Concern",
+    participants: ["Dr. Abdul Ali"],
+    messages: [
+      { from: "Dr. Abdul Ali", text: "I've reviewed your concerns about medication side effects. Please stop taking the medication and call us immediately.", time: "2024-05-27 16:00" },
+    ],
+    unread: true,
+    category: "medication",
+    priority: "urgent",
+    assignedDoctor: "Dr. Abdul Ali",
   },
 ]
 
 function getLatestMessage(thread: Thread) {
   return thread.messages[thread.messages.length - 1]
+}
+
+function getCategoryLabel(category: string): string {
+  const categoryMap: { [key: string]: string } = {
+    'appointment': 'Appointment',
+    'medication': 'Medication',
+    'test-results': 'Test Results',
+    'billing': 'Billing',
+    'general': 'General',
+    'records': 'Records'
+  }
+  return categoryMap[category] || category
+}
+
+function getPriorityColor(priority: string): string {
+  if (priority === 'urgent') return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800'
+  if (priority === 'high') return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800'
+  return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800'
 }
 
 function MessagesContent() {
@@ -162,6 +216,23 @@ function MessagesContent() {
                           <div className="truncate text-xs text-muted-foreground text-left max-w-xs">
                             {latest.from}: {latest.text}
                           </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            {thread.category && (
+                              <Badge variant="secondary" className="text-xs">
+                                {getCategoryLabel(thread.category)}
+                              </Badge>
+                            )}
+                            {(thread.priority === 'high' || thread.priority === 'urgent') && (
+                              <Badge className={`text-xs ${getPriorityColor(thread.priority)}`}>
+                                {thread.priority === 'urgent' ? 'Urgent' : 'High Priority'}
+                              </Badge>
+                            )}
+                            {thread.assignedDoctor && (
+                              <span className="text-xs text-muted-foreground">
+                                {thread.assignedDoctor}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-1 min-w-[70px]">
@@ -176,7 +247,10 @@ function MessagesContent() {
                           <div key={i} className={`flex items-end gap-2 ${msg.from === "You" ? "justify-end" : "justify-start"}`}>
                             {msg.from !== "You" && (
                               <div className="flex-shrink-0">
-                                <Image src="/images/hcc-logo.png" alt="HCC Logo" width={28} height={28} className="rounded-full bg-white border" />
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage src="/images/hcc-logo.png" alt="HCC" className="scale-50" />
+                                  <AvatarFallback>HCC</AvatarFallback>
+                                </Avatar>
                               </div>
                             )}
                             <div className={`max-w-[80%] px-3 py-2 rounded-lg text-sm
@@ -190,9 +264,9 @@ function MessagesContent() {
                             </div>
                             {msg.from === "You" && (
                               <div className="flex-shrink-0">
-                                <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center font-bold text-xs text-black border">
-                                  JD
-                                </div>
+                                <Avatar className="w-7 h-7">
+                                  <AvatarFallback className="text-xs font-bold">JD</AvatarFallback>
+                                </Avatar>
                               </div>
                             )}
                           </div>

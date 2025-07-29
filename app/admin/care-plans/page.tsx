@@ -365,25 +365,25 @@ export default function AdminCarePlansPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <HeartPulseFillIcon className="h-6 w-6" /> Care Plans
         </h1>
-        <Button variant="default" onClick={() => router.push("/admin/care-plans?add=1")}>
+        <Button variant="default" onClick={() => router.push("/admin/care-plans?add=1")} className="w-full sm:w-auto">
           <AddCircleFillIcon className="h-4 w-4 mr-2" /> Create Care Plan
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="mb-6 flex flex-wrap gap-4">
+      <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <Input
           placeholder="Search by patient name, type, or summary"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="max-w-xs"
+          className="w-full sm:max-w-xs"
         />
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -393,7 +393,7 @@ export default function AdminCarePlansPage() {
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
@@ -453,8 +453,65 @@ export default function AdminCarePlansPage() {
         </Card>
       </div>
 
-      {/* Care Plans Table */}
-      <Card>
+      {/* Mobile: Card Layout */}
+      <div className="sm:hidden space-y-3">
+        {filtered.length === 0 && (
+          <div className="text-center py-8 text-muted-foreground">No care plans found.</div>
+        )}
+        {filtered.map(plan => (
+          <Card key={plan.id} className="p-4">
+            <div className="space-y-3">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-semibold text-base">{plan.patientName}</h3>
+                  <p className="text-sm text-muted-foreground">{plan.type}</p>
+                </div>
+                <Badge variant={plan.status === "Active" ? "default" : "secondary"}>
+                  {plan.status}
+                </Badge>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Progress:</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-muted rounded-full h-2">
+                      <div 
+                        className="bg-primary h-2 rounded-full transition-all" 
+                        style={{ width: `${plan.progress}%` }}
+                      />
+                    </div>
+                    <span className="text-xs">{plan.progress}%</span>
+                  </div>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Last Updated: {plan.lastUpdated}
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-2 pt-2">
+                <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)} className="w-full">
+                  <Eye className="h-4 w-4 mr-1" /> View
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleEdit(plan)} className="w-full">
+                  <Edit className="h-4 w-4 mr-1" /> Edit
+                </Button>
+                <Button asChild size="sm" variant="outline" className="w-full">
+                  <Link href={`/admin/patients/${plan.patientId}`}>
+                    <User className="h-4 w-4 mr-1" /> Patient
+                  </Link>
+                </Button>
+                <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)} className="w-full">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Desktop: Table Layout */}
+      <Card className="hidden sm:block">
         <CardContent className="p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
@@ -493,22 +550,22 @@ export default function AdminCarePlansPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4 text-muted-foreground">{plan.lastUpdated}</td>
-                                         <td className="py-3 px-4 flex gap-2">
-                       <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)}>
-                         <Eye className="h-4 w-4 mr-1" /> View
-                       </Button>
-                       <Button size="sm" variant="outline" onClick={() => handleEdit(plan)}>
-                         <Edit className="h-4 w-4 mr-1" /> Edit
-                       </Button>
-                       <Button asChild size="sm" variant="outline">
-                         <Link href={`/admin/patients/${plan.patientId}`}>
-                           <User className="h-4 w-4 mr-1" /> Patient
-                         </Link>
-                       </Button>
-                       <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)}>
-                         <Trash2 className="h-4 w-4" />
-                       </Button>
-                     </td>
+                    <td className="py-3 px-4 flex gap-2">
+                      <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)}>
+                        <Eye className="h-4 w-4 mr-1" /> View
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleEdit(plan)}>
+                        <Edit className="h-4 w-4 mr-1" /> Edit
+                      </Button>
+                      <Button asChild size="sm" variant="outline">
+                        <Link href={`/admin/patients/${plan.patientId}`}>
+                          <User className="h-4 w-4 mr-1" /> Patient
+                        </Link>
+                      </Button>
+                      <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

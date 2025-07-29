@@ -73,19 +73,78 @@ export default function AdminPatientsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold flex items-center gap-2"><GroupFillIcon className="h-6 w-6" /> Patients</h1>
-        <Button variant="default" onClick={() => router.push("/admin/patients?add=1") }><AddCircleFillIcon className="h-4 w-4 mr-2" /> Add Patient</Button>
+        <Button variant="default" onClick={() => router.push("/admin/patients?add=1") } className="w-full sm:w-auto">
+          <AddCircleFillIcon className="h-4 w-4 mr-2" /> Add Patient
+        </Button>
       </div>
       <div className="mb-4 flex gap-2">
         <Input
           placeholder="Search by name, email, phone, or DOB"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="max-w-xs"
+          className="w-full md:max-w-xs"
         />
       </div>
-      <Card>
+      
+      {/* Mobile: Card Layout */}
+      <div className="md:hidden space-y-3">
+        {filtered.length === 0 && (
+          <div className="text-center py-8 text-muted-foreground">No patients found.</div>
+        )}
+        {filtered.map(pt => (
+          <Card key={pt.id} className="p-4">
+            <div className="space-y-3">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-semibold text-base">{pt.name}</h3>
+                  <p className="text-sm text-muted-foreground">{pt.email}</p>
+                </div>
+                <div className="text-right">
+                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${
+                    pt.status === 'Active' 
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' 
+                      : 'bg-gray-100 text-gray-700 dark:bg-gray-900/20 dark:text-gray-400'
+                  }`}>
+                    {pt.status}
+                  </span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="text-muted-foreground">DOB:</span>
+                  <span className="ml-1">{pt.dob}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Phone:</span>
+                  <span className="ml-1">{pt.phone}</span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Last Visit:</span>
+                  <span className="ml-1">{pt.lastVisit}</span>
+                </div>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button asChild size="sm" variant="outline" className="flex-1">
+                  <Link href={`/admin/patients/${pt.id}`}>
+                    <ArrowRight className="h-4 w-4 mr-1" /> Manage
+                  </Link>
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => {}} disabled className="flex-1">
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button size="sm" variant="destructive" onClick={() => setRemovePatient(pt)} className="flex-1">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Desktop: Table Layout */}
+      <Card className="hidden md:block">
         <CardContent className="p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">

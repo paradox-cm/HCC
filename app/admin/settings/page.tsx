@@ -170,9 +170,9 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-2">
           <Settings2FillIcon className="h-6 w-6 text-foreground" />
           <h1 className="text-2xl font-bold">Admin Settings</h1>
@@ -226,22 +226,26 @@ export default function AdminSettingsPage() {
 
       {/* Settings Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="users" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+          <TabsTrigger value="users" className="flex items-center gap-2 text-xs sm:text-sm">
             <User3FillIcon className="h-4 w-4" />
-            Users
+            <span className="hidden sm:inline">Users</span>
+            <span className="sm:hidden">Users</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex items-center gap-2">
+          <TabsTrigger value="notifications" className="flex items-center gap-2 text-xs sm:text-sm">
             <Notification3FillIcon className="h-4 w-4" />
-            Notifications
+            <span className="hidden sm:inline">Notifications</span>
+            <span className="sm:hidden">Notif</span>
           </TabsTrigger>
-          <TabsTrigger value="system" className="flex items-center gap-2">
+          <TabsTrigger value="system" className="flex items-center gap-2 text-xs sm:text-sm">
             <DatabaseFillIcon className="h-4 w-4" />
-            System
+            <span className="hidden sm:inline">System</span>
+            <span className="sm:hidden">System</span>
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex items-center gap-2">
+          <TabsTrigger value="security" className="flex items-center gap-2 text-xs sm:text-sm">
             <ShieldCheckFillIcon className="h-4 w-4" />
-            Security
+            <span className="hidden sm:inline">Security</span>
+            <span className="sm:hidden">Security</span>
           </TabsTrigger>
         </TabsList>
 

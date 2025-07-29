@@ -1,7 +1,18 @@
+import type { Metadata } from "next"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Phone, Printer } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Our Locations | Houston Cardiology Consultants",
+  description: "Find Houston Cardiology Consultants locations in Houston, Texas. Visit our Spring Branch and Heights clinics for comprehensive cardiology care and diagnostics.",
+  keywords: "cardiology locations, Houston cardiologist, Spring Branch, Heights, clinic locations, cardiology offices",
+  openGraph: {
+    title: "Our Locations | Houston Cardiology Consultants",
+    description: "Find Houston Cardiology Consultants locations in Houston, Texas. Visit our Spring Branch and Heights clinics for comprehensive cardiology care and diagnostics.",
+  },
+}
 
 export default function LocationsPage() {
   return (

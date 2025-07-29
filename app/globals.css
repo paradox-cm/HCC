@@ -69,6 +69,8 @@
 @layer base {
   * {
     @apply border-border;
+    /* Disable all transitions for instant theme switching */
+    transition: none !important;
   }
   body {
     @apply bg-background text-foreground;
@@ -103,6 +105,29 @@
 
 /* Utility: Instantly disable all transitions (for instant dark mode switch) */
 .instant-theme-switch, .instant-theme-switch * {
+  transition: none !important;
+}
+
+/* Global theme transition override - disable ALL transitions for instant theme switching */
+* {
+  transition: none !important;
+}
+
+/* Override any Tailwind transition classes for theme switching */
+.transition-all,
+.transition-colors,
+.transition-opacity,
+.transition-transform,
+.transition-shadow,
+.transition-border,
+.transition-background {
+  transition: none !important;
+}
+
+/* Ensure theme switching is instant across all components */
+[data-theme] *,
+[class*="dark"] *,
+[class*="light"] * {
   transition: none !important;
 }
 

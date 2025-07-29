@@ -1,7 +1,18 @@
+import type { Metadata } from "next"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Frequently Asked Questions | Houston Cardiology Consultants",
+  description: "Find answers to common questions about appointments, services, insurance, and patient care at Houston Cardiology Consultants. Get the information you need about our cardiology practice.",
+  keywords: "FAQ, frequently asked questions, cardiology questions, appointment questions, insurance questions, patient care",
+  openGraph: {
+    title: "Frequently Asked Questions | Houston Cardiology Consultants",
+    description: "Find answers to common questions about appointments, services, insurance, and patient care at Houston Cardiology Consultants.",
+  },
+}
 
 const faqCategories = [
   {

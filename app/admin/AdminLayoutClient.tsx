@@ -28,6 +28,7 @@ import { useRef } from "react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Drawer, DrawerTrigger, DrawerContent, DrawerClose, DrawerTitle } from "@/components/ui/drawer"
 import { SystemStatusModal } from "@/components/SystemStatusModal"
+import { MessageProvider } from "@/contexts/MessageContext"
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: Home2FillIcon },
@@ -164,9 +165,9 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-muted">
+    <div className="min-h-screen flex flex-col bg-muted instant-theme-switch">
       {/* Admin Top Nav */}
-      <header className="fixed top-0 left-0 right-0 z-50 w-full bg-background border-b flex items-center justify-between px-4 sm:px-6 h-16">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full bg-background border-b flex items-center justify-between px-4 sm:px-6 h-16 instant-theme-switch">
         <div className="flex items-center gap-3">
           {/* Hamburger menu for mobile/tablet (below 1240px) */}
           <button
@@ -276,7 +277,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       <Drawer open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <DrawerContent className="max-[1240px]:block hidden">
           <DrawerTitle className="sr-only">Admin Navigation</DrawerTitle>
-          <aside className="w-full bg-background border-r flex flex-col justify-between py-6 px-4 min-h-screen">
+          <aside className="w-full bg-background border-r flex flex-col justify-between py-6 px-4 min-h-screen instant-theme-switch">
             {/* Drawer Logo */}
             <div className="flex items-center justify-between mb-6 w-full">
               <Link href="/" className="flex items-center gap-2">
@@ -450,9 +451,9 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         </DialogContent>
       </Dialog>
       {/* Desktop Sidebar + Main Content */}
-      <div className="flex flex-1 min-h-0 pt-16">
+      <div className="flex flex-1 min-h-0 pt-16 instant-theme-switch">
         {/* Sidebar for desktop only (above 1240px) */}
-        <div className="hidden min-[1240px]:flex fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-background border-r flex-col justify-between py-6 px-4 overflow-y-auto z-40">
+        <div className="hidden min-[1240px]:flex fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-background border-r flex-col justify-between py-6 px-4 overflow-y-auto z-40 instant-theme-switch">
           <div>
             <nav className="flex flex-col gap-1">
               {navItems.map(({ href, label, icon: Icon }) => (
@@ -481,8 +482,10 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
             </div>
           </div>
         </div>
-        <main className="flex-1 bg-background p-2 sm:p-8 overflow-x-auto min-[1240px]:ml-64">
-          {children}
+        <main className="flex-1 bg-background p-2 sm:p-8 overflow-x-auto min-[1240px]:ml-64 instant-theme-switch">
+          <MessageProvider>
+            {children}
+          </MessageProvider>
         </main>
       </div>
 

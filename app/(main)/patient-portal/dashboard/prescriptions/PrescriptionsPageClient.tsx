@@ -30,6 +30,10 @@ const MOCK_PRESCRIPTIONS = [
     instructions: "Take 1 tablet daily",
     status: "Active",
     canRefill: true,
+    prescribedBy: "Dr. Asif Ali",
+    refills: 3,
+    pharmacy: "CVS Pharmacy",
+    lastUpdated: "2024-06-01",
   },
   {
     id: 2,
@@ -38,6 +42,10 @@ const MOCK_PRESCRIPTIONS = [
     instructions: "Take 1 tablet daily",
     status: "Ongoing",
     canRefill: false,
+    prescribedBy: "Dr. Asif Ali",
+    refills: 0,
+    pharmacy: "Walgreens",
+    lastUpdated: "2024-05-15",
   },
   {
     id: 3,
@@ -46,6 +54,10 @@ const MOCK_PRESCRIPTIONS = [
     instructions: "Take 1 tablet daily",
     status: "Active",
     canRefill: true,
+    prescribedBy: "Dr. Asif Ali",
+    refills: 2,
+    pharmacy: "CVS Pharmacy",
+    lastUpdated: "2024-05-28",
   },
 ]
 
@@ -101,6 +113,10 @@ function PrescriptionsContent() {
         instructions: newRx.notes || "",
         status: "Requested",
         canRefill: false,
+        prescribedBy: "Pending",
+        refills: 0,
+        pharmacy: "TBD",
+        lastUpdated: new Date().toISOString().slice(0, 10),
       },
       ...prev,
     ])
@@ -209,6 +225,15 @@ function PrescriptionsContent() {
                     <div className="font-semibold text-base truncate">{rx.name} <span className="text-xs font-normal text-muted-foreground">{rx.dosage}</span></div>
                     <div className="text-xs text-muted-foreground truncate">{rx.instructions}</div>
                     <div className="text-xs text-muted-foreground mt-1">Status: <span className="font-medium text-primary">{rx.status}</span></div>
+                    <div className="text-xs text-muted-foreground">Prescribed by {rx.prescribedBy}</div>
+                    <div className="text-xs text-muted-foreground">{rx.pharmacy}</div>
+                    <div className="text-xs text-muted-foreground">
+                      <span className={rx.canRefill ? "text-green-600" : "text-red-600"}>
+                        {rx.canRefill ? "✓ Can refill" : "✗ No refills"}
+                      </span>
+                      {rx.canRefill && <span className="ml-2">({rx.refills} refills remaining)</span>}
+                    </div>
+                    <div className="text-xs text-muted-foreground">Last updated: {rx.lastUpdated}</div>
                   </div>
                   <div className="flex flex-col gap-2 min-w-[160px]">
                     {refillStatus[rx.id] ? (

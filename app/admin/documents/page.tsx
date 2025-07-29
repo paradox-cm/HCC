@@ -222,7 +222,7 @@ export default function AdminDocumentsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div>
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-4">

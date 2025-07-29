@@ -31,8 +31,10 @@ import {
   Pill,
   Activity,
   Plus,
-  Send
+  Send,
+  Edit
 } from "lucide-react"
+import { useMessages } from "@/contexts/MessageContext"
 
 // Mock patient data with comprehensive information
 const MOCK_PATIENT = {
@@ -114,6 +116,9 @@ export default function AdminPatientDetailPage() {
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false)
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
   const [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = useState(false)
+  const [isContactEditModalOpen, setIsContactEditModalOpen] = useState(false)
+  const [isInsuranceEditModalOpen, setIsInsuranceEditModalOpen] = useState(false)
+  const [isMedicalEditModalOpen, setIsMedicalEditModalOpen] = useState(false)
 
   // Form data
   const [appointmentData, setAppointmentData] = useState({
@@ -127,7 +132,9 @@ export default function AdminPatientDetailPage() {
   const [messageData, setMessageData] = useState({
     subject: "",
     message: "",
-    priority: "normal"
+    category: "appointment",
+    priority: "medium",
+    assignedTo: "Dr. Asif Ali"
   })
 
   const [prescriptionData, setPrescriptionData] = useState({
@@ -136,6 +143,31 @@ export default function AdminPatientDetailPage() {
     frequency: "",
     duration: "",
     notes: ""
+  })
+
+  const [contactData, setContactData] = useState({
+    name: patient.name,
+    email: patient.email,
+    phone: patient.phone,
+    address: patient.address,
+    emergencyContact: {
+      name: patient.emergencyContact.name,
+      relationship: patient.emergencyContact.relationship,
+      phone: patient.emergencyContact.phone
+    }
+  })
+
+  const [insuranceData, setInsuranceData] = useState({
+    provider: patient.insurance.provider,
+    memberId: patient.insurance.memberId,
+    group: patient.insurance.group,
+    status: patient.insurance.status
+  })
+
+  const [medicalData, setMedicalData] = useState({
+    conditions: [...patient.medicalHistory.conditions],
+    allergies: [...patient.medicalHistory.allergies],
+    medications: [...patient.medicalHistory.medications]
   })
 
   if (!patient) {
@@ -183,17 +215,32 @@ export default function AdminPatientDetailPage() {
     // router.push(`/admin/appointments?patient=${patient.id}&action=create`)
   }
 
+  const { addMessageToThread } = useMessages()
+
   const handleSendMessage = () => {
-    // In real app, this would send a message
-    console.log("Sending message to:", patient.name, messageData)
+    // Add message to shared context
+    addMessageToThread(
+      `P${patient.id.toString().padStart(3, '0')}`, // Format patient ID as P001, P002, etc.
+      patient.name,
+      patient.email,
+      messageData.subject,
+      messageData.message,
+      messageData.category,
+      messageData.priority
+    )
+    
+    console.log("Message sent to:", patient.name, messageData)
     setIsMessageModalOpen(false)
     setMessageData({
       subject: "",
       message: "",
-      priority: "normal"
+      category: "appointment",
+      priority: "medium",
+      assignedTo: "Dr. Asif Ali"
     })
-    // You could navigate to messages page with this patient pre-selected
-    // router.push(`/admin/messages?patient=${patient.id}&action=compose`)
+    
+    // Optionally navigate to messages page to see the sent message
+    // router.push(`/admin/messages`)
   }
 
   const handleCreatePrescription = () => {
@@ -211,8 +258,38 @@ export default function AdminPatientDetailPage() {
     // router.push(`/admin/prescriptions?patient=${patient.id}&action=create`)
   }
 
+  const handleUpdateContact = () => {
+    // In real app, this would update patient contact information
+    console.log("Updating contact info for:", patient.name, contactData)
+    setIsContactEditModalOpen(false)
+    // Update the patient object with new data
+    Object.assign(patient, {
+      name: contactData.name,
+      email: contactData.email,
+      phone: contactData.phone,
+      address: contactData.address,
+      emergencyContact: contactData.emergencyContact
+    })
+  }
+
+  const handleUpdateInsurance = () => {
+    // In real app, this would update patient insurance information
+    console.log("Updating insurance info for:", patient.name, insuranceData)
+    setIsInsuranceEditModalOpen(false)
+    // Update the patient object with new data
+    Object.assign(patient.insurance, insuranceData)
+  }
+
+  const handleUpdateMedical = () => {
+    // In real app, this would update patient medical information
+    console.log("Updating medical info for:", patient.name, medicalData)
+    setIsMedicalEditModalOpen(false)
+    // Update the patient object with new data
+    Object.assign(patient.medicalHistory, medicalData)
+  }
+
   return (
-    <div className="max-w-7xl mx-auto">
+    <div>
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 mb-6">
         <Button variant="ghost" size="icon" onClick={() => router.push("/admin/patients")}>
@@ -356,9 +433,18 @@ export default function AdminPatientDetailPage() {
           {/* Contact Information */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Contact Information
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  Contact Information
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsContactEditModalOpen(true)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -386,9 +472,18 @@ export default function AdminPatientDetailPage() {
           {/* Insurance Information */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Insurance
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  Insurance
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsInsuranceEditModalOpen(true)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -413,9 +508,18 @@ export default function AdminPatientDetailPage() {
           {/* Medical Information */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <HeartPulse className="h-5 w-5" />
-                Medical Information
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <HeartPulse className="h-5 w-5" />
+                  Medical Information
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsMedicalEditModalOpen(true)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -572,42 +676,78 @@ export default function AdminPatientDetailPage() {
 
       {/* Send Message Modal */}
       <Dialog open={isMessageModalOpen} onOpenChange={setIsMessageModalOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Send Message to {patient.name}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="message-subject">Subject</Label>
+              <Label htmlFor="message-subject">Subject *</Label>
               <Input
                 id="message-subject"
-                placeholder="Message subject..."
+                placeholder="Enter message subject..."
                 value={messageData.subject}
                 onChange={(e) => setMessageData(prev => ({ ...prev, subject: e.target.value }))}
+                className="mt-1"
               />
             </div>
-            <div>
-              <Label htmlFor="message-priority">Priority</Label>
-              <Select value={messageData.priority} onValueChange={(value) => setMessageData(prev => ({ ...prev, priority: value }))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                </SelectContent>
-              </Select>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="message-category">Category</Label>
+                <Select value={messageData.category} onValueChange={(value) => setMessageData(prev => ({ ...prev, category: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="appointment">Appointment</SelectItem>
+                    <SelectItem value="medication">Medication</SelectItem>
+                    <SelectItem value="test-results">Test Results</SelectItem>
+                    <SelectItem value="billing">Billing</SelectItem>
+                    <SelectItem value="general">General</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="message-priority">Priority</Label>
+                <Select value={messageData.priority} onValueChange={(value) => setMessageData(prev => ({ ...prev, priority: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="message-assigned">Assign To</Label>
+                <Select value={messageData.assignedTo} onValueChange={(value) => setMessageData(prev => ({ ...prev, assignedTo: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Dr. Asif Ali">Dr. Asif Ali</SelectItem>
+                    <SelectItem value="Dr. Sajid Ali">Dr. Sajid Ali</SelectItem>
+                    <SelectItem value="Dr. Abdul Ali">Dr. Abdul Ali</SelectItem>
+                    <SelectItem value="Billing Team">Billing Team</SelectItem>
+                    <SelectItem value="Nursing Staff">Nursing Staff</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
+
             <div>
-              <Label htmlFor="message-content">Message</Label>
+              <Label htmlFor="message-content">Message *</Label>
               <Textarea
                 id="message-content"
-                placeholder="Type your message..."
+                placeholder="Enter the message content..."
                 value={messageData.message}
                 onChange={(e) => setMessageData(prev => ({ ...prev, message: e.target.value }))}
-                rows={4}
+                rows={3}
+                className="mt-1"
               />
             </div>
           </div>
@@ -615,7 +755,11 @@ export default function AdminPatientDetailPage() {
             <Button variant="outline" onClick={() => setIsMessageModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSendMessage}>
+            <Button 
+              onClick={handleSendMessage}
+              disabled={!messageData.subject.trim() || !messageData.message.trim()}
+            >
+              <Send className="h-4 w-4 mr-2" />
               Send Message
             </Button>
           </DialogFooter>
@@ -683,6 +827,305 @@ export default function AdminPatientDetailPage() {
             </Button>
             <Button onClick={handleCreatePrescription}>
               Create Prescription
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Contact Information Edit Modal */}
+      <Dialog open={isContactEditModalOpen} onOpenChange={setIsContactEditModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Contact Information</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="contact-name">Full Name</Label>
+                <Input
+                  id="contact-name"
+                  value={contactData.name}
+                  onChange={(e) => setContactData(prev => ({ ...prev, name: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="contact-email">Email</Label>
+                <Input
+                  id="contact-email"
+                  type="email"
+                  value={contactData.email}
+                  onChange={(e) => setContactData(prev => ({ ...prev, email: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="contact-phone">Phone</Label>
+              <Input
+                id="contact-phone"
+                value={contactData.phone}
+                onChange={(e) => setContactData(prev => ({ ...prev, phone: e.target.value }))}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="contact-address">Address</Label>
+              <Textarea
+                id="contact-address"
+                value={contactData.address}
+                onChange={(e) => setContactData(prev => ({ ...prev, address: e.target.value }))}
+                rows={2}
+                className="mt-1"
+              />
+            </div>
+            <Separator />
+            <div className="space-y-4">
+              <h4 className="font-medium">Emergency Contact</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="emergency-name">Name</Label>
+                  <Input
+                    id="emergency-name"
+                    value={contactData.emergencyContact.name}
+                    onChange={(e) => setContactData(prev => ({ 
+                      ...prev, 
+                      emergencyContact: { ...prev.emergencyContact, name: e.target.value }
+                    }))}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="emergency-relationship">Relationship</Label>
+                  <Input
+                    id="emergency-relationship"
+                    value={contactData.emergencyContact.relationship}
+                    onChange={(e) => setContactData(prev => ({ 
+                      ...prev, 
+                      emergencyContact: { ...prev.emergencyContact, relationship: e.target.value }
+                    }))}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="emergency-phone">Phone</Label>
+                <Input
+                  id="emergency-phone"
+                  value={contactData.emergencyContact.phone}
+                  onChange={(e) => setContactData(prev => ({ 
+                    ...prev, 
+                    emergencyContact: { ...prev.emergencyContact, phone: e.target.value }
+                  }))}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsContactEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateContact}>
+              Update Contact
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Insurance Information Edit Modal */}
+      <Dialog open={isInsuranceEditModalOpen} onOpenChange={setIsInsuranceEditModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Insurance Information</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="insurance-provider">Provider</Label>
+                <Input
+                  id="insurance-provider"
+                  value={insuranceData.provider}
+                  onChange={(e) => setInsuranceData(prev => ({ ...prev, provider: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="insurance-member-id">Member ID</Label>
+                <Input
+                  id="insurance-member-id"
+                  value={insuranceData.memberId}
+                  onChange={(e) => setInsuranceData(prev => ({ ...prev, memberId: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="insurance-group">Group</Label>
+                <Input
+                  id="insurance-group"
+                  value={insuranceData.group}
+                  onChange={(e) => setInsuranceData(prev => ({ ...prev, group: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="insurance-status">Status</Label>
+                <Select value={insuranceData.status} onValueChange={(value) => setInsuranceData(prev => ({ ...prev, status: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">Inactive</SelectItem>
+                    <SelectItem value="Pending">Pending</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsInsuranceEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateInsurance}>
+              Update Insurance
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Medical Information Edit Modal */}
+      <Dialog open={isMedicalEditModalOpen} onOpenChange={setIsMedicalEditModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Medical Information</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div>
+              <Label htmlFor="medical-conditions">Medical Conditions</Label>
+              <div className="mt-2 space-y-2">
+                {medicalData.conditions.map((condition, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      value={condition}
+                      onChange={(e) => {
+                        const newConditions = [...medicalData.conditions]
+                        newConditions[index] = e.target.value
+                        setMedicalData(prev => ({ ...prev, conditions: newConditions }))
+                      }}
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newConditions = medicalData.conditions.filter((_, i) => i !== index)
+                        setMedicalData(prev => ({ ...prev, conditions: newConditions }))
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setMedicalData(prev => ({ 
+                    ...prev, 
+                    conditions: [...prev.conditions, ""]
+                  }))}
+                >
+                  Add Condition
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="medical-allergies">Allergies</Label>
+              <div className="mt-2 space-y-2">
+                {medicalData.allergies.map((allergy, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      value={allergy}
+                      onChange={(e) => {
+                        const newAllergies = [...medicalData.allergies]
+                        newAllergies[index] = e.target.value
+                        setMedicalData(prev => ({ ...prev, allergies: newAllergies }))
+                      }}
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newAllergies = medicalData.allergies.filter((_, i) => i !== index)
+                        setMedicalData(prev => ({ ...prev, allergies: newAllergies }))
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setMedicalData(prev => ({ 
+                    ...prev, 
+                    allergies: [...prev.allergies, ""]
+                  }))}
+                >
+                  Add Allergy
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="medical-medications">Current Medications</Label>
+              <div className="mt-2 space-y-2">
+                {medicalData.medications.map((medication, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      value={medication}
+                      onChange={(e) => {
+                        const newMedications = [...medicalData.medications]
+                        newMedications[index] = e.target.value
+                        setMedicalData(prev => ({ ...prev, medications: newMedications }))
+                      }}
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newMedications = medicalData.medications.filter((_, i) => i !== index)
+                        setMedicalData(prev => ({ ...prev, medications: newMedications }))
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setMedicalData(prev => ({ 
+                    ...prev, 
+                    medications: [...prev.medications, ""]
+                  }))}
+                >
+                  Add Medication
+                </Button>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsMedicalEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateMedical}>
+              Update Medical Info
             </Button>
           </DialogFooter>
         </DialogContent>

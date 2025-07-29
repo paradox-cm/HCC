@@ -445,14 +445,19 @@ export function HeaderAnimation({
       if (!canvasRef.current) return
 
       const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true })
       if (!ctx) return
+
+      // Enable canvas optimizations
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
 
       const resizeCanvas = () => {
         const rect = canvas.getBoundingClientRect()
-        canvas.width = rect.width * (responsive ? window.devicePixelRatio : 1)
-        canvas.height = rect.height * (responsive ? window.devicePixelRatio : 1)
-        ctx.scale(responsive ? window.devicePixelRatio : 1, responsive ? window.devicePixelRatio : 1)
+        const dpr = responsive ? window.devicePixelRatio : 1
+        canvas.width = rect.width * dpr
+        canvas.height = rect.height * dpr
+        ctx.scale(dpr, dpr)
       }
 
       resizeCanvas()
@@ -469,22 +474,31 @@ export function HeaderAnimation({
         color: string
       }> = []
 
-              let time = 0
-        let animationId: number
-        let lastPulseTime = -3.3 // Start immediately on load
+      let time = 0
+      let animationId: number
+      let lastPulseTime = -3.3 // Start immediately on load
+      let lastFrameTime = 0
 
-      const animate = () => {
+      const animate = (currentTime: number) => {
+        // Calculate delta time for smooth animation
+        const deltaTime = currentTime - lastFrameTime
+        lastFrameTime = currentTime
+        
+        // Cap delta time to prevent large jumps
+        const clampedDeltaTime = Math.min(deltaTime, 32) // Max 32ms (30fps minimum)
+        time += clampedDeltaTime / 1000 // Convert to seconds
+
         const rect = canvas.getBoundingClientRect()
         const width = rect.width
         const height = rect.height
         const centerX = width / 2
         const centerY = height / 2
 
-        // Clear canvas
+        // Clear canvas efficiently
         ctx.clearRect(0, 0, width, height)
 
-        // Create new ripple every 4.3 seconds (3.3s expansion + 1s gap)
-        if (time - lastPulseTime >= 4.3) {
+        // Create new ripple every 1.2 seconds (0.8s expansion + 0.4s gap) - faster heartbeat
+        if (time - lastPulseTime >= 1.2) {
           ripples.push({
             x: centerX,
             y: centerY,
@@ -497,11 +511,15 @@ export function HeaderAnimation({
           lastPulseTime = time
         }
 
+        // Batch similar drawing operations
+        ctx.lineCap = 'round'
+        ctx.lineJoin = 'round'
+
         // Update and draw ripples
         for (let i = ripples.length - 1; i >= 0; i--) {
           const ripple = ripples[i]
           const age = time - ripple.startTime
-          const progress = age / 3.3 // 3.3-second expansion cycle
+          const progress = age / 0.8 // 0.8-second expansion cycle - faster heartbeat
 
           if (progress >= 1.0) {
             // Remove expired ripples
@@ -513,7 +531,7 @@ export function HeaderAnimation({
           ripple.radius = ripple.maxRadius * progress
           ripple.opacity = 1.0 - progress
 
-          // Draw ripple ring
+          // Draw main ripple ring
           ctx.beginPath()
           ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2)
           ctx.strokeStyle = ripple.color
@@ -551,11 +569,10 @@ export function HeaderAnimation({
           }
         }
 
-        time += 0.016 // ~60fps
         animationId = requestAnimationFrame(animate)
       }
 
-      animate()
+      animate(0)
 
       return () => {
         window.removeEventListener('resize', resizeCanvas)

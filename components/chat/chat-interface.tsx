@@ -154,10 +154,10 @@ export function ChatInterface({ isModal = false }: ChatInterfaceProps) {
         ))}
       </CardContent>
       <CardFooter className="pt-4 border-t flex flex-col gap-0">
-        <form onSubmit={handleSubmit} className="flex w-full items-center space-x-2">
+        <form onSubmit={handleSubmit} className="flex w-full items-end space-x-2">
           <Textarea
             placeholder="Type your message..."
-            className="min-h-0 resize-none"
+            className="min-h-[40px] resize-none flex-1"
             rows={1}
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -169,12 +169,12 @@ export function ChatInterface({ isModal = false }: ChatInterfaceProps) {
             }}
           />
           {isAnswering ? (
-            <Button type="button" size="icon" className="h-8 w-8 bg-destructive hover:bg-destructive/80" onClick={handleStop}>
+            <Button type="button" size="icon" className="h-10 w-10 bg-destructive hover:bg-destructive/80 flex-shrink-0" onClick={handleStop}>
               <StopFillIcon className="h-4 w-4" />
               <span className="sr-only">Stop</span>
             </Button>
           ) : (
-            <Button type="submit" size="icon" disabled={!input.trim()}>
+            <Button type="submit" size="icon" className="h-10 w-10 flex-shrink-0" disabled={!input.trim()}>
               <SendPlane2FillIcon className="h-4 w-4" />
               <span className="sr-only">Send</span>
             </Button>

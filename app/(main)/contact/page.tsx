@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,6 +6,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Phone, Mail, Printer } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Contact Us | Houston Cardiology Consultants",
+  description: "Get in touch with Houston Cardiology Consultants. Contact us for appointments, questions, or to learn more about our cardiology services in Houston, Texas.",
+  keywords: "contact, cardiologist, Houston, appointment, phone, email, cardiology consultation",
+  openGraph: {
+    title: "Contact Us | Houston Cardiology Consultants",
+    description: "Get in touch with Houston Cardiology Consultants. Contact us for appointments, questions, or to learn more about our cardiology services in Houston, Texas.",
+  },
+}
 
 export default function ContactPage() {
   return (
