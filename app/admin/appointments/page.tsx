@@ -414,6 +414,23 @@ export default function AdminAppointmentsPage() {
     if (calendarRef.current) calendarRef.current.activeStartDate = new Date()
   }
 
+  function handleTodayClick() {
+    const today = new Date();
+    const todayString = format(today, 'yyyy-MM-dd');
+    
+    if (view === 'table') {
+      // For table view: set date range to today only
+      setDateRange({ from: todayString, to: todayString });
+      // Clear other filters to focus on today
+      setFilter('');
+      setStatusFilter('all');
+      setDoctorFilter('all');
+    } else {
+      // For calendar view: navigate to current month/date
+      setCalendarDate(today);
+    }
+  }
+
   const statusColors: Record<string, string> = {
     scheduled: "bg-blue-500",
     completed: "bg-green-500",
@@ -474,6 +491,13 @@ export default function AdminAppointmentsPage() {
             </Button>
             <Button variant="default" onClick={() => router.push("/admin/appointments?add=1")} className="hidden sm:inline-flex">
               <Plus className="h-4 w-4 mr-2" /> New Appointment
+            </Button>
+            {/* Today button: icon on mobile, text on sm+ */}
+            <Button variant="outline" onClick={handleTodayClick} className="sm:hidden" size="icon" aria-label="Today">
+              <Clock className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" onClick={handleTodayClick} className="hidden sm:inline-flex">
+              <Clock className="h-4 w-4 mr-2" /> Today
             </Button>
           </div>
         </div>
