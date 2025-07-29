@@ -55,7 +55,7 @@ export default function AppointmentsPageClient() {
       <SectionWrapper className="pt-0">
         <div className="w-full max-w-4xl mx-auto">
           {/* Mobile Dropdown */}
-          <div className="md:hidden mb-6">
+          <div className="md:hidden mb-6 pt-6">
             <Select value={selectedForm} onValueChange={setSelectedForm}>
               <SelectTrigger className="w-full bg-red-600 text-white border-red-600 hover:bg-red-700 hover:border-red-700 focus:ring-red-600 [&>svg]:text-white">
                 <SelectValue placeholder="Select form type" />

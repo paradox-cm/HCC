@@ -8,7 +8,7 @@ export function PrescriptionRenewalForm() {
   return (
     <Card className="mt-6">
       <CardHeader>
-        <CardTitle>Prescription Renewal Request</CardTitle>
+        <CardTitle className="text-lg sm:text-xl md:text-2xl">Prescription Renewal Request</CardTitle>
         <CardDescription>
           Need a refill? Use this form to request a renewal for an existing prescription. We will respond within 1
           business day.
@@ -16,7 +16,7 @@ export function PrescriptionRenewalForm() {
       </CardHeader>
       <CardContent className="space-y-6">
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold mb-2">Patient Information</legend>
+          <legend className="text-base sm:text-lg font-semibold mb-2">Patient Information</legend>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="pr-name">Full Name (Required)</Label>
@@ -30,7 +30,7 @@ export function PrescriptionRenewalForm() {
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold mb-2">Medication Details</legend>
+          <legend className="text-base sm:text-lg font-semibold mb-2">Medication Details</legend>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="pr-med-name">Medication Name (Required)</Label>
@@ -48,7 +48,7 @@ export function PrescriptionRenewalForm() {
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold mb-2">Pharmacy Details</legend>
+          <legend className="text-base sm:text-lg font-semibold mb-2">Pharmacy Details</legend>
           <div className="space-y-2">
             <Label htmlFor="pr-pharm-name">Pharmacy Name (Required)</Label>
             <Input id="pr-pharm-name" disabled />

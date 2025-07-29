@@ -13,7 +13,7 @@ export function ExistingPatientForm() {
   return (
     <Card className="mt-6">
       <CardHeader>
-        <CardTitle>Existing Patient Follow-Up Form</CardTitle>
+        <CardTitle className="text-lg sm:text-xl md:text-2xl">Existing Patient Follow-Up Form</CardTitle>
         <CardDescription>
           Welcome back! Let's make your follow-up visit easy to schedule. We'll confirm your appointment within 1
           business day.
@@ -21,7 +21,7 @@ export function ExistingPatientForm() {
       </CardHeader>
       <CardContent className="space-y-6">
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold mb-2">Patient Identification</legend>
+          <legend className="text-base sm:text-lg font-semibold mb-2">Patient Identification</legend>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="ep-name">Full Name (Required)</Label>
@@ -43,7 +43,7 @@ export function ExistingPatientForm() {
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold mb-2">Appointment Details</legend>
+          <legend className="text-base sm:text-lg font-semibold mb-2">Appointment Details</legend>
           <div className="space-y-2">
             <Label htmlFor="ep-preferred-date">Preferred Appointment Date</Label>
             <Input

@@ -164,10 +164,10 @@ export function Header() {
                     </Link>
                   ))}
                 </div>
-                <Button asChild variant="outline" size="sm" className="w-full">
+                <Button asChild variant="outline" size="sm" className="w-full py-3">
                   <Link href="/patient-portal" onClick={() => setIsOpen(false)}>Patient Portal</Link>
                 </Button>
-                <Button asChild size="sm" className="w-full">
+                <Button asChild size="sm" className="w-full py-3">
                   <Link href="/appointments" onClick={() => setIsOpen(false)}>
                     <CalendarFillIcon className="h-4 w-4 mr-2" />
                     Appointments
@@ -178,19 +178,19 @@ export function Header() {
                   <div>
                     <h3 className="font-semibold uppercase text-xs mb-1.5 tracking-wider text-muted-foreground">Company</h3>
                     <ul className="flex flex-col gap-1">
-                      <li><Link href="/about-us" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>About Us</Link></li>
-                      <li><Link href="/testimonials" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Testimonials</Link></li>
-                      <li><Link href="/locations" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Locations</Link></li>
-                      <li><Link href="/contact" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Contact</Link></li>
-                      <li><Link href="/faq" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>FAQ</Link></li>
+                      <li><Link href="/about-us" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>About Us</Link></li>
+                      <li><Link href="/testimonials" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Testimonials</Link></li>
+                      <li><Link href="/locations" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Locations</Link></li>
+                      <li><Link href="/contact" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Contact</Link></li>
+                      <li><Link href="/faq" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>FAQ</Link></li>
                     </ul>
                   </div>
                   <div>
                     <h3 className="font-semibold uppercase text-xs mb-1.5 tracking-wider text-muted-foreground">Patient Info</h3>
                     <ul className="flex flex-col gap-1">
-                      <li><Link href="/services" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Services</Link></li>
-                      <li><Link href="/learn" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Learn</Link></li>
-                      <li><Link href="/billing-and-insurance" className="mobile-nav-link text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Billing & Insurance</Link></li>
+                      <li><Link href="/services" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Services</Link></li>
+                      <li><Link href="/learn" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Learn</Link></li>
+                      <li><Link href="/billing-and-insurance" className="text-xs text-muted-foreground transition-colors hover:text-primary" onClick={() => setIsOpen(false)}>Billing & Insurance</Link></li>
                     </ul>
                   </div>
                   <div className="col-span-2">

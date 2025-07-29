@@ -16,7 +16,7 @@ export function NewPatientForm() {
   return (
     <Card className="mt-6">
       <CardHeader>
-        <CardTitle>New Patient Appointment Form</CardTitle>
+        <CardTitle className="text-lg sm:text-xl md:text-2xl">New Patient Appointment Form</CardTitle>
         <CardDescription>
           Welcome! To schedule your first visit, please complete the form below. Our team will contact you within 1
           business day.
@@ -24,7 +24,7 @@ export function NewPatientForm() {
       </CardHeader>
       <CardContent className="space-y-6">
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold mb-2">Patient Information</legend>
+          <legend className="text-base sm:text-lg font-semibold mb-2">Patient Information</legend>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="np-name">Full Name (Required)</Label>
@@ -67,7 +67,7 @@ export function NewPatientForm() {
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold mb-2">Appointment Details</legend>
+          <legend className="text-base sm:text-lg font-semibold mb-2">Appointment Details</legend>
           <div className="space-y-2">
             <Label>Preferred Location</Label>
             <RadioGroup defaultValue="spring-branch" disabled>
