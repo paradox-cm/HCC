@@ -745,7 +745,7 @@ export default function AdminAppointmentsPage() {
                     {filtered.map(appt => (
                       <tr 
                         key={appt.id} 
-                        className={`border-b hover:bg-gray-300 transition-colors cursor-pointer ${
+                        className={`border-b hover:bg-gray-300 dark:hover:bg-red-900/30 transition-colors cursor-pointer ${
                           selectedIds.includes(appt.id) ? 'bg-blue-50 border-blue-200' : ''
                         }`}
                         onClick={() => toggleSelect(appt.id)}

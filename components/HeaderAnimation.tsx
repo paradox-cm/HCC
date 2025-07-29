@@ -225,7 +225,7 @@ export function HeaderAnimation({
           lineWidth: 2
         },
         { 
-          color: '#d1d5db', // Light gray
+          color: document.documentElement.classList.contains('dark') ? '#374151' : '#d1d5db', // Dark gray in dark mode, light gray in light mode
           angle: 90, 
           opacity: 0.3, 
           scale: 1.1,
