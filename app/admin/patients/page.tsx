@@ -74,7 +74,44 @@ export default function AdminPatientsPage() {
     name: string
     filters: typeof filters
     search: string
-  }>>([])
+  }>>([
+    {
+      id: "1",
+      name: "Active Patients",
+      filters: {
+        status: "Active",
+        assignedDoctor: "all",
+        insurance: "all",
+        lastVisitFrom: null,
+        lastVisitTo: null,
+      },
+      search: ""
+    },
+    {
+      id: "2", 
+      name: "Dr. Asif Ali Patients",
+      filters: {
+        status: "all",
+        assignedDoctor: "Dr. Asif Ali",
+        insurance: "all",
+        lastVisitFrom: null,
+        lastVisitTo: null,
+      },
+      search: ""
+    },
+    {
+      id: "3",
+      name: "Aetna Insurance",
+      filters: {
+        status: "all",
+        assignedDoctor: "all",
+        insurance: "Aetna",
+        lastVisitFrom: null,
+        lastVisitTo: null,
+      },
+      search: ""
+    }
+  ])
   const [saveFilterName, setSaveFilterName] = useState("")
   const [showSaveFilterDialog, setShowSaveFilterDialog] = useState(false)
 
@@ -306,7 +343,7 @@ export default function AdminPatientsPage() {
     totalPatients: patients.length,
     activePatients: patients.filter(p => p.status === "Active").length,
     inactivePatients: patients.filter(p => p.status === "Inactive").length,
-    activePercentage: Math.round((patients.filter(p => p.status === "Active").length / patients.length) * 100),
+    activePercentage: patients.length > 0 ? Math.round((patients.filter(p => p.status === "Active").length / patients.length) * 100) : 0,
 
     // Doctor distribution
     doctorDistribution: doctors.reduce((acc, doctor) => {
@@ -322,19 +359,28 @@ export default function AdminPatientsPage() {
 
     // Recent activity (last 30 days)
     recentActivity: patients.filter(p => {
-      const lastVisit = new Date(p.lastVisit)
-      const thirtyDaysAgo = new Date()
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-      return lastVisit >= thirtyDaysAgo
+      if (p.lastVisit === "-" || !p.lastVisit) return false
+      try {
+        const lastVisit = new Date(p.lastVisit)
+        const thirtyDaysAgo = new Date()
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+        return lastVisit >= thirtyDaysAgo
+      } catch (error) {
+        return false
+      }
     }).length,
 
     // Age distribution
     ageDistribution: patients.reduce((acc, patient) => {
-      const age = new Date().getFullYear() - new Date(patient.dob).getFullYear()
-      if (age < 30) acc.under30++
-      else if (age < 50) acc.age30to50++
-      else if (age < 70) acc.age50to70++
-      else acc.over70++
+      try {
+        const age = new Date().getFullYear() - new Date(patient.dob).getFullYear()
+        if (age < 30) acc.under30++
+        else if (age < 50) acc.age30to50++
+        else if (age < 70) acc.age50to70++
+        else acc.over70++
+      } catch (error) {
+        // If date parsing fails, skip this patient
+      }
       return acc
     }, { under30: 0, age30to50: 0, age50to70: 0, over70: 0 }),
 
@@ -344,8 +390,13 @@ export default function AdminPatientsPage() {
       date.setMonth(date.getMonth() - i)
       const monthYear = format(date, 'MMM yyyy')
       const visitsInMonth = patients.filter(p => {
-        const visitDate = new Date(p.lastVisit)
-        return visitDate.getMonth() === date.getMonth() && visitDate.getFullYear() === date.getFullYear()
+        if (p.lastVisit === "-" || !p.lastVisit) return false
+        try {
+          const visitDate = new Date(p.lastVisit)
+          return visitDate.getMonth() === date.getMonth() && visitDate.getFullYear() === date.getFullYear()
+        } catch (error) {
+          return false
+        }
       }).length
       return { month: monthYear, visits: visitsInMonth }
     }).reverse()
@@ -658,7 +709,7 @@ export default function AdminPatientsPage() {
                     <span className="text-sm font-medium text-purple-600">Inactive Patients</span>
                   </div>
                   <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">{analytics.inactivePatients}</div>
-                  <div className="text-sm text-purple-600">{Math.round((analytics.inactivePatients / analytics.totalPatients) * 100)}% of total</div>
+                  <div className="text-sm text-purple-600">{analytics.totalPatients > 0 ? Math.round((analytics.inactivePatients / analytics.totalPatients) * 100) : 0}% of total</div>
                 </div>
               </div>
 
@@ -675,7 +726,7 @@ export default function AdminPatientsPage() {
                           <div className="w-24 bg-gray-200 rounded-full h-2">
                             <div 
                               className="bg-blue-600 h-2 rounded-full" 
-                              style={{ width: `${(count / analytics.totalPatients) * 100}%` }}
+                              style={{ width: `${analytics.totalPatients > 0 ? (count / analytics.totalPatients) * 100 : 0}%` }}
                             />
                           </div>
                           <span className="text-sm font-medium w-8 text-right">{count}</span>
@@ -696,7 +747,7 @@ export default function AdminPatientsPage() {
                           <div className="w-24 bg-gray-200 rounded-full h-2">
                             <div 
                               className="bg-green-600 h-2 rounded-full" 
-                              style={{ width: `${(count / analytics.totalPatients) * 100}%` }}
+                              style={{ width: `${analytics.totalPatients > 0 ? (count / analytics.totalPatients) * 100 : 0}%` }}
                             />
                           </div>
                           <span className="text-sm font-medium w-8 text-right">{count}</span>
@@ -719,7 +770,7 @@ export default function AdminPatientsPage() {
                         <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div 
                             className="bg-purple-600 h-2 rounded-full" 
-                            style={{ width: `${(analytics.ageDistribution.under30 / analytics.totalPatients) * 100}%` }}
+                            style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.under30 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
                         <span className="text-sm font-medium w-8 text-right">{analytics.ageDistribution.under30}</span>
@@ -731,7 +782,7 @@ export default function AdminPatientsPage() {
                         <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div 
                             className="bg-blue-600 h-2 rounded-full" 
-                            style={{ width: `${(analytics.ageDistribution.age30to50 / analytics.totalPatients) * 100}%` }}
+                            style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.age30to50 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
                         <span className="text-sm font-medium w-8 text-right">{analytics.ageDistribution.age30to50}</span>
@@ -743,7 +794,7 @@ export default function AdminPatientsPage() {
                         <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div 
                             className="bg-green-600 h-2 rounded-full" 
-                            style={{ width: `${(analytics.ageDistribution.age50to70 / analytics.totalPatients) * 100}%` }}
+                            style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.age50to70 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
                         <span className="text-sm font-medium w-8 text-right">{analytics.ageDistribution.age50to70}</span>
@@ -755,7 +806,7 @@ export default function AdminPatientsPage() {
                         <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div 
                             className="bg-orange-600 h-2 rounded-full" 
-                            style={{ width: `${(analytics.ageDistribution.over70 / analytics.totalPatients) * 100}%` }}
+                            style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.over70 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
                         <span className="text-sm font-medium w-8 text-right">{analytics.ageDistribution.over70}</span>
@@ -775,7 +826,7 @@ export default function AdminPatientsPage() {
                           <div className="w-24 bg-gray-200 rounded-full h-2">
                             <div 
                               className="bg-red-600 h-2 rounded-full" 
-                              style={{ width: `${Math.min((trend.visits / Math.max(...analytics.monthlyTrends.map(t => t.visits))) * 100, 100)}%` }}
+                              style={{ width: `${Math.min((trend.visits / Math.max(...analytics.monthlyTrends.map(t => t.visits), 1)) * 100, 100)}%` }}
                             />
                           </div>
                           <span className="text-sm font-medium w-8 text-right">{trend.visits}</span>
@@ -792,14 +843,14 @@ export default function AdminPatientsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-muted-foreground">
-                      <strong>Most Active Doctor:</strong> {Object.entries(analytics.doctorDistribution).reduce((a, b) => a[1] > b[1] ? a : b)[0]} 
-                      with {Math.max(...Object.values(analytics.doctorDistribution))} patients
+                      <strong>Most Active Doctor:</strong> {Object.entries(analytics.doctorDistribution).length > 0 ? Object.entries(analytics.doctorDistribution).reduce((a, b) => a[1] > b[1] ? a : b)[0] : "None"} 
+                      with {Object.values(analytics.doctorDistribution).length > 0 ? Math.max(...Object.values(analytics.doctorDistribution)) : 0} patients
                     </p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">
-                      <strong>Primary Insurance:</strong> {Object.entries(analytics.insuranceDistribution).reduce((a, b) => a[1] > b[1] ? a : b)[0]} 
-                      covers {Math.max(...Object.values(analytics.insuranceDistribution))} patients
+                      <strong>Primary Insurance:</strong> {Object.entries(analytics.insuranceDistribution).length > 0 ? Object.entries(analytics.insuranceDistribution).reduce((a, b) => a[1] > b[1] ? a : b)[0] : "None"} 
+                      covers {Object.values(analytics.insuranceDistribution).length > 0 ? Math.max(...Object.values(analytics.insuranceDistribution)) : 0} patients
                     </p>
                   </div>
                   <div>
@@ -830,6 +881,13 @@ export default function AdminPatientsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>💡 Tip:</strong> Save your frequently used filter combinations for quick access. 
+                  Click "Save Filter" in the filters section to create new saved filters.
+                </p>
+              </div>
+              
               {savedFilters.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <FilterIcon className="h-12 w-12 mx-auto mb-2 opacity-50" />
@@ -873,7 +931,17 @@ export default function AdminPatientsPage() {
                         )}
                         {(savedFilter.filters.lastVisitFrom || savedFilter.filters.lastVisitTo) && (
                           <Badge variant="outline" className="text-xs">
-                            Date Range
+                            Date Range: {savedFilter.filters.lastVisitFrom ? format(savedFilter.filters.lastVisitFrom, "MMM dd") : "Any"} - {savedFilter.filters.lastVisitTo ? format(savedFilter.filters.lastVisitTo, "MMM dd") : "Any"}
+                          </Badge>
+                        )}
+                        {!savedFilter.search && 
+                         savedFilter.filters.status === "all" && 
+                         savedFilter.filters.assignedDoctor === "all" && 
+                         savedFilter.filters.insurance === "all" && 
+                         !savedFilter.filters.lastVisitFrom && 
+                         !savedFilter.filters.lastVisitTo && (
+                          <Badge variant="outline" className="text-xs">
+                            All Patients
                           </Badge>
                         )}
                       </div>
