@@ -21,7 +21,9 @@ import {
   Shield,
   Zap,
   Smartphone,
-  Monitor
+  Monitor,
+  Database,
+  Server
 } from "lucide-react"
 
 export default function DocumentationPage() {
@@ -1178,6 +1180,384 @@ useEffect(() => {
           </div>
         </div>
       )
+    },
+    {
+      id: "integration",
+      title: "Backend Integration",
+      icon: Database,
+      description: "HIPAA-compliant backend API and database implementation guide",
+      content: (
+        <div className="space-y-6">
+          <div className="prose prose-gray max-w-none">
+            <h2>Backend Integration Guide</h2>
+            <p className="text-lg text-muted-foreground mb-6">
+              Comprehensive documentation for implementing a HIPAA-compliant backend API and database setup for the HCC Healthcare Admin Portal.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Server className="h-5 w-5 text-blue-600" />
+                    <CardTitle className="text-sm">Technology Stack</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">Node.js/Express</Badge>
+                  <Badge variant="outline">Supabase PostgreSQL</Badge>
+                  <Badge variant="outline">TypeScript</Badge>
+                  <Badge variant="outline">JWT Authentication</Badge>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-green-600" />
+                    <CardTitle className="text-sm">HIPAA Compliance</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">Data Encryption</Badge>
+                  <Badge variant="outline">Access Controls</Badge>
+                  <Badge variant="outline">Audit Logging</Badge>
+                  <Badge variant="outline">PHI Protection</Badge>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Code className="h-5 w-5 text-purple-600" />
+                    <CardTitle className="text-sm">API Design</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">RESTful Endpoints</Badge>
+                  <Badge variant="outline">Validation</Badge>
+                  <Badge variant="outline">Error Handling</Badge>
+                  <Badge variant="outline">Rate Limiting</Badge>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Database className="h-5 w-5 text-orange-600" />
+                    <CardTitle className="text-sm">Database</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">PostgreSQL Schema</Badge>
+                  <Badge variant="outline">Row Level Security</Badge>
+                  <Badge variant="outline">Indexes</Badge>
+                  <Badge variant="outline">Real-time</Badge>
+                </CardContent>
+              </Card>
+            </div>
+
+            <h3>Documentation Sections</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-blue-600" />
+                    Implementation Guide
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <h5 className="font-medium text-sm">HIPAA Backend Implementation</h5>
+                    <p className="text-sm text-muted-foreground">Complete guide for implementing a HIPAA-compliant backend API and database setup.</p>
+                    <div className="mt-2 space-y-1">
+                      <div className="text-xs text-muted-foreground">• API Requirements Analysis</div>
+                      <div className="text-xs text-muted-foreground">• Database Schema Design</div>
+                      <div className="text-xs text-muted-foreground">• Technology Stack Documentation</div>
+                      <div className="text-xs text-muted-foreground">• HIPAA Compliance Implementation</div>
+                      <div className="text-xs text-muted-foreground">• Integration Guide</div>
+                      <div className="text-xs text-muted-foreground">• Code Examples</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Code className="h-5 w-5 text-green-600" />
+                    API Reference
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <h5 className="font-medium text-sm">API Endpoints Reference</h5>
+                    <p className="text-sm text-muted-foreground">Detailed API documentation with request/response examples and error handling.</p>
+                    <div className="mt-2 space-y-1">
+                      <div className="text-xs text-muted-foreground">• Authentication Endpoints</div>
+                      <div className="text-xs text-muted-foreground">• Patient Management APIs</div>
+                      <div className="text-xs text-muted-foreground">• Appointment & Message APIs</div>
+                      <div className="text-xs text-muted-foreground">• Prescription & Care Plan APIs</div>
+                      <div className="text-xs text-muted-foreground">• Document & Billing APIs</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Code className="h-5 w-5 text-purple-600" />
+                    TypeScript Types
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <h5 className="font-medium text-sm">TypeScript Types Reference</h5>
+                    <p className="text-sm text-muted-foreground">Complete interface definitions and type safety for the entire API.</p>
+                    <div className="mt-2 space-y-1">
+                      <div className="text-xs text-muted-foreground">• Core Entity Interfaces</div>
+                      <div className="text-xs text-muted-foreground">• API Request/Response Types</div>
+                      <div className="text-xs text-muted-foreground">• Context Types</div>
+                      <div className="text-xs text-muted-foreground">• Utility Types</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Server className="h-5 w-5 text-orange-600" />
+                    Deployment Guide
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <h5 className="font-medium text-sm">Deployment & Setup Guide</h5>
+                    <p className="text-sm text-muted-foreground">Step-by-step deployment instructions and production setup.</p>
+                    <div className="mt-2 space-y-1">
+                      <div className="text-xs text-muted-foreground">• Supabase Setup</div>
+                      <div className="text-xs text-muted-foreground">• Backend Configuration</div>
+                      <div className="text-xs text-muted-foreground">• Vercel Deployment</div>
+                      <div className="text-xs text-muted-foreground">• Security Configuration</div>
+                      <div className="text-xs text-muted-foreground">• HIPAA Compliance Checklist</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <h3>Quick Start Guide</h3>
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg my-6">
+              <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">Implementation Steps</h4>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                  <div>
+                    <h5 className="font-medium text-blue-900 dark:text-blue-100">Set up Supabase Project</h5>
+                    <p className="text-blue-800 dark:text-blue-200">Create a new Supabase project and configure the database schema with all required tables and indexes.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                  <div>
+                    <h5 className="font-medium text-blue-900 dark:text-blue-100">Create Backend API</h5>
+                    <p className="text-blue-800 dark:text-blue-200">Set up Node.js/Express backend with TypeScript, implement all API endpoints, and configure authentication.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                  <div>
+                    <h5 className="font-medium text-blue-900 dark:text-blue-100">Configure Security</h5>
+                    <p className="text-blue-800 dark:text-blue-200">Implement HIPAA compliance measures including encryption, access controls, and audit logging.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">4</div>
+                  <div>
+                    <h5 className="font-medium text-blue-900 dark:text-blue-100">Deploy to Production</h5>
+                    <p className="text-blue-800 dark:text-blue-200">Deploy the backend to Vercel and configure environment variables for production use.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">5</div>
+                  <div>
+                    <h5 className="font-medium text-blue-900 dark:text-blue-100">Update Frontend</h5>
+                    <p className="text-blue-800 dark:text-blue-200">Replace mock data with real API calls and implement the new API client in your frontend.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h3>Key Features</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">HIPAA Compliance Features</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">AES-256 Data Encryption</Badge>
+                  <Badge variant="outline">Role-Based Access Control</Badge>
+                  <Badge variant="outline">Comprehensive Audit Logging</Badge>
+                  <Badge variant="outline">PHI Field Encryption</Badge>
+                  <Badge variant="outline">Secure Session Management</Badge>
+                  <Badge variant="outline">Input Validation & Sanitization</Badge>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">API Features</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">RESTful Design</Badge>
+                  <Badge variant="outline">JWT Authentication</Badge>
+                  <Badge variant="outline">Rate Limiting</Badge>
+                  <Badge variant="outline">Pagination Support</Badge>
+                  <Badge variant="outline">Real-time Updates</Badge>
+                  <Badge variant="outline">File Upload/Download</Badge>
+                </CardContent>
+              </Card>
+            </div>
+
+            <h3>Technology Stack</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm">Backend Framework</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">Node.js 18+</Badge>
+                  <Badge variant="outline">Express.js</Badge>
+                  <Badge variant="outline">TypeScript</Badge>
+                  <Badge variant="outline">JWT Authentication</Badge>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm">Database & Storage</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">Supabase PostgreSQL</Badge>
+                  <Badge variant="outline">Row Level Security</Badge>
+                  <Badge variant="outline">Real-time Subscriptions</Badge>
+                  <Badge variant="outline">File Storage</Badge>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm">Deployment & Security</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Badge variant="outline">Vercel Deployment</Badge>
+                  <Badge variant="outline">HTTPS/TLS</Badge>
+                  <Badge variant="outline">CORS Configuration</Badge>
+                  <Badge variant="outline">Environment Variables</Badge>
+                </CardContent>
+              </Card>
+            </div>
+
+            <h3>Documentation Files</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Available Documentation</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <h5 className="font-medium text-sm">HIPAA Backend Implementation</h5>
+                      <p className="text-xs text-muted-foreground">Complete implementation guide</p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-2" />
+                      View
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <h5 className="font-medium text-sm">API Endpoints Reference</h5>
+                      <p className="text-xs text-muted-foreground">Detailed API documentation</p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-2" />
+                      View
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <h5 className="font-medium text-sm">TypeScript Types</h5>
+                      <p className="text-xs text-muted-foreground">Complete type definitions</p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-2" />
+                      View
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <h5 className="font-medium text-sm">Deployment Guide</h5>
+                      <p className="text-xs text-muted-foreground">Setup and deployment instructions</p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-2" />
+                      View
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Implementation Resources</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="p-3 border rounded-lg">
+                    <h5 className="font-medium text-sm mb-2">Database Schema</h5>
+                    <p className="text-xs text-muted-foreground mb-2">Complete PostgreSQL schema with all tables, relationships, and indexes</p>
+                    <Badge variant="outline" className="text-xs">SQL Scripts</Badge>
+                  </div>
+                  <div className="p-3 border rounded-lg">
+                    <h5 className="font-medium text-sm mb-2">API Code Examples</h5>
+                    <p className="text-xs text-muted-foreground mb-2">Ready-to-use code examples for all endpoints</p>
+                    <Badge variant="outline" className="text-xs">TypeScript</Badge>
+                  </div>
+                  <div className="p-3 border rounded-lg">
+                    <h5 className="font-medium text-sm mb-2">Security Implementation</h5>
+                    <p className="text-xs text-muted-foreground mb-2">HIPAA compliance and security best practices</p>
+                    <Badge variant="outline" className="text-xs">Security</Badge>
+                  </div>
+                  <div className="p-3 border rounded-lg">
+                    <h5 className="font-medium text-sm mb-2">Frontend Integration</h5>
+                    <p className="text-xs text-muted-foreground mb-2">Guide for integrating with your existing frontend</p>
+                    <Badge variant="outline" className="text-xs">React/Next.js</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg my-6">
+              <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3">Ready to Implement?</h4>
+              <p className="text-green-800 dark:text-green-200 text-sm mb-4">
+                All documentation is available in the <code className="bg-green-100 dark:bg-green-800 px-1 rounded">docs/</code> directory of your project. 
+                The implementation guide provides step-by-step instructions for setting up a production-ready, HIPAA-compliant backend.
+              </p>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Code className="h-4 w-4 mr-2" />
+                  View Implementation Guide
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Server className="h-4 w-4 mr-2" />
+                  Setup Instructions
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
   ]
 
@@ -1231,7 +1611,7 @@ useEffect(() => {
       {/* Documentation Content */}
       <div className="min-h-[600px]">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             {documentationSections.map((section) => (
               <TabsTrigger key={section.id} value={section.id} className="text-xs">
                 {section.title.split(' ')[0]}

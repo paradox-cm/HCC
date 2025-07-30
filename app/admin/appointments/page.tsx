@@ -29,7 +29,7 @@
 // This is necessary to make the calendar grid truly responsive and fill the width of the container.
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
@@ -53,7 +53,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { useToast } from "@/hooks/use-toast"
 import { useRef } from "react"
 import { buttonVariants } from "@/components/ui/button"
-import { useAppointments } from "@/contexts/AppointmentContext"
+
 
 // CSS override for calendar width
 const calendarStyles = `
@@ -376,7 +376,23 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
 export default function AdminAppointmentsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { appointments, addAppointment, updateAppointment, deleteAppointment } = useAppointments()
+  const [appointments, setAppointments] = useState<Appointment[]>(initialAppointments)
+  
+  // Local appointment management functions
+  const addAppointment = useCallback((appointment: Appointment) => {
+    setAppointments(prev => [...prev, { ...appointment, id: Date.now() }])
+  }, [])
+  
+  const updateAppointment = useCallback((id: number, updates: Partial<Appointment>) => {
+    setAppointments(prev => prev.map(appt => 
+      appt.id === id ? { ...appt, ...updates } : appt
+    ))
+  }, [])
+  
+  const deleteAppointment = useCallback((id: number) => {
+    setAppointments(prev => prev.filter(appt => appt.id !== id))
+  }, [])
+  
   const [selected, setSelected] = useState<Appointment | null>(null)
   const [showDetails, setShowDetails] = useState(false)
   const [showForm, setShowForm] = useState(false)
