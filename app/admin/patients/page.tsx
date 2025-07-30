@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -36,7 +37,16 @@ export default function AdminPatientsPage() {
   const [search, setSearch] = useState("")
   const [addOpen, setAddOpen] = useState(false)
   const [removePatient, setRemovePatient] = useState<any>(null)
-  const [newPatient, setNewPatient] = useState({ name: "", dob: "", email: "", phone: "" })
+  const [newPatient, setNewPatient] = useState({ 
+    name: "", 
+    dob: "", 
+    email: "", 
+    phone: "", 
+    address: "",
+    assignedDoctor: "",
+    insurance: "",
+    status: "Active"
+  })
   const [addError, setAddError] = useState("")
   
   // Enhanced filtering state
@@ -343,16 +353,30 @@ export default function AdminPatientsPage() {
 
   function handleAdd(e: React.FormEvent) {
     e.preventDefault()
-    if (!newPatient.name || !newPatient.dob || !newPatient.email || !newPatient.phone) {
-      setAddError("All fields are required.")
+    if (!newPatient.name || !newPatient.dob || !newPatient.email || !newPatient.phone || !newPatient.assignedDoctor || !newPatient.insurance) {
+      setAddError("Name, DOB, Email, Phone, Assigned Doctor, and Insurance are required.")
       return
     }
     setPatients(p => [
-      { id: Date.now(), ...newPatient, lastVisit: "-", status: "Active" },
+      { 
+        id: Date.now(), 
+        ...newPatient, 
+        lastVisit: "-", 
+        status: newPatient.status || "Active" 
+      },
       ...p,
     ])
     setAddOpen(false)
-    setNewPatient({ name: "", dob: "", email: "", phone: "" })
+    setNewPatient({ 
+      name: "", 
+      dob: "", 
+      email: "", 
+      phone: "", 
+      address: "",
+      assignedDoctor: "",
+      insurance: "",
+      status: "Active"
+    })
     setAddError("")
   }
 
@@ -1013,30 +1037,133 @@ export default function AdminPatientsPage() {
       </Card>
       {/* Add Patient Modal */}
       <Dialog open={addOpen} onOpenChange={handleAddOpenChange}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add Patient</DialogTitle>
+            <DialogTitle>Add New Patient</DialogTitle>
+            <DialogDescription>
+              Enter the patient's information below. Required fields are marked with an asterisk (*).
+            </DialogDescription>
           </DialogHeader>
-          <form className="space-y-4" onSubmit={handleAdd}>
-            <div>
-              <label className="block text-xs font-medium mb-1">Name</label>
-              <Input value={newPatient.name} onChange={e => setNewPatient(p => ({ ...p, name: e.target.value }))} required />
+          <form className="space-y-6" onSubmit={handleAdd}>
+            {/* Basic Information */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground">Basic Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Full Name *</label>
+                  <Input 
+                    value={newPatient.name} 
+                    onChange={e => setNewPatient(p => ({ ...p, name: e.target.value }))} 
+                    placeholder="Enter full name"
+                    required 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Date of Birth *</label>
+                  <Input 
+                    type="date" 
+                    value={newPatient.dob} 
+                    onChange={e => setNewPatient(p => ({ ...p, dob: e.target.value }))} 
+                    required 
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-medium mb-1">Date of Birth</label>
-              <Input type="date" value={newPatient.dob} onChange={e => setNewPatient(p => ({ ...p, dob: e.target.value }))} required />
+
+            {/* Contact Information */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground">Contact Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Email Address *</label>
+                  <Input 
+                    type="email" 
+                    value={newPatient.email} 
+                    onChange={e => setNewPatient(p => ({ ...p, email: e.target.value }))} 
+                    placeholder="patient@email.com"
+                    required 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Phone Number *</label>
+                  <Input 
+                    value={newPatient.phone} 
+                    onChange={e => setNewPatient(p => ({ ...p, phone: e.target.value }))} 
+                    placeholder="(555) 123-4567"
+                    required 
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Address</label>
+                <Textarea 
+                  value={newPatient.address} 
+                  onChange={e => setNewPatient(p => ({ ...p, address: e.target.value }))} 
+                  placeholder="Street address, city, state, ZIP"
+                  rows={2}
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-medium mb-1">Email</label>
-              <Input type="email" value={newPatient.email} onChange={e => setNewPatient(p => ({ ...p, email: e.target.value }))} required />
+
+            {/* Medical Information */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground">Medical Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Assigned Doctor *</label>
+                  <Select value={newPatient.assignedDoctor} onValueChange={(value) => setNewPatient(p => ({ ...p, assignedDoctor: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a doctor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Dr. Asif Ali">Dr. Asif Ali</SelectItem>
+                      <SelectItem value="Dr. Abdul Ali">Dr. Abdul Ali</SelectItem>
+                      <SelectItem value="Dr. Sajid Ali">Dr. Sajid Ali</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Insurance Provider *</label>
+                  <Select value={newPatient.insurance} onValueChange={(value) => setNewPatient(p => ({ ...p, insurance: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select insurance" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Aetna">Aetna</SelectItem>
+                      <SelectItem value="Blue Cross">Blue Cross</SelectItem>
+                      <SelectItem value="Cigna">Cigna</SelectItem>
+                      <SelectItem value="Humana">Humana</SelectItem>
+                      <SelectItem value="UnitedHealth">UnitedHealth</SelectItem>
+                      <SelectItem value="Medicare">Medicare</SelectItem>
+                      <SelectItem value="Medicaid">Medicaid</SelectItem>
+                      <SelectItem value="Tricare">Tricare</SelectItem>
+                      <SelectItem value="Self Pay">Self Pay</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Patient Status</label>
+                <Select value={newPatient.status} onValueChange={(value) => setNewPatient(p => ({ ...p, status: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">Inactive</SelectItem>
+                    <SelectItem value="Pending">Pending</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-medium mb-1">Phone</label>
-              <Input value={newPatient.phone} onChange={e => setNewPatient(p => ({ ...p, phone: e.target.value }))} required />
-            </div>
-            {addError && <div className="text-xs text-red-600">{addError}</div>}
+
+            {addError && <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">{addError}</div>}
+            
             <DialogFooter>
-              <Button type="submit" className="w-full">Add Patient</Button>
+              <Button type="button" variant="outline" onClick={() => setAddOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Add Patient</Button>
             </DialogFooter>
           </form>
         </DialogContent>
