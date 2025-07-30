@@ -267,37 +267,21 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Admin Tools Dropdown for desktop only (above 1240px) */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="hidden min-[1240px]:inline-flex">
-                Admin Tools
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              {secondaryNavItems.map(({ href, label, icon: Icon }) => (
-                <DropdownMenuItem key={href} asChild>
-                  <Link href={href} className="flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    localStorage.removeItem("hcc_admin_auth");
-                    sessionStorage.removeItem("hcc_admin_auth");
-                  }
-                  router.replace("/admin-login");
-                }}
-                className="text-red-600 focus:text-red-600"
-              >
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Logout Button for desktop only (above 1240px) */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden min-[1240px]:inline-flex text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                localStorage.removeItem("hcc_admin_auth");
+                sessionStorage.removeItem("hcc_admin_auth");
+              }
+              router.replace("/admin-login");
+            }}
+          >
+            Logout
+          </Button>
         </div>
       </header>
       {/* Sidebar as Drawer for mobile/tablet (below 1240px) */}
