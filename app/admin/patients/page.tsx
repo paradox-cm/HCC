@@ -654,21 +654,33 @@ export default function AdminPatientsPage() {
     }, { under30: 0, age30to50: 0, age50to70: 0, over70: 0 }),
 
     // Monthly trends (last 6 months)
-    monthlyTrends: Array.from({ length: 6 }, (_, i) => {
-      const date = new Date()
-      date.setMonth(date.getMonth() - i)
-      const monthYear = format(date, 'MMM yyyy')
-      const visitsInMonth = patients.filter(p => {
-        if (p.lastVisit === "-" || !p.lastVisit) return false
-        try {
-          const visitDate = new Date(p.lastVisit)
-          return visitDate.getMonth() === date.getMonth() && visitDate.getFullYear() === date.getFullYear()
-        } catch (error) {
-          return false
+    monthlyTrends: (() => {
+      const trends = []
+      const seen = new Set()
+      
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date()
+        date.setMonth(date.getMonth() - i)
+        const monthYear = format(date, 'MMM yyyy')
+        
+        // Ensure unique months
+        if (!seen.has(monthYear)) {
+          seen.add(monthYear)
+          const visitsInMonth = patients.filter(p => {
+            if (p.lastVisit === "-" || !p.lastVisit) return false
+            try {
+              const visitDate = new Date(p.lastVisit)
+              return visitDate.getMonth() === date.getMonth() && visitDate.getFullYear() === date.getFullYear()
+            } catch (error) {
+              return false
+            }
+          }).length
+          trends.push({ month: monthYear, visits: visitsInMonth })
         }
-      }).length
-      return { month: monthYear, visits: visitsInMonth }
-    }).reverse()
+      }
+      
+      return trends
+    })()
   }
 
   function handleAdd(e: React.FormEvent) {
@@ -1084,9 +1096,9 @@ export default function AdminPatientsPage() {
                       <div key={doctor} className="flex items-center justify-between">
                         <span className="text-sm">{doctor}</span>
                         <div className="flex items-center gap-2">
-                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div 
-                              className="bg-blue-600 h-2 rounded-full" 
+                              className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full" 
                               style={{ width: `${analytics.totalPatients > 0 ? (count / analytics.totalPatients) * 100 : 0}%` }}
                             />
                           </div>
@@ -1105,9 +1117,9 @@ export default function AdminPatientsPage() {
                       <div key={provider} className="flex items-center justify-between">
                         <span className="text-sm">{provider}</span>
                         <div className="flex items-center gap-2">
-                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div 
-                              className="bg-green-600 h-2 rounded-full" 
+                              className="bg-green-600 dark:bg-green-500 h-2 rounded-full" 
                               style={{ width: `${analytics.totalPatients > 0 ? (count / analytics.totalPatients) * 100 : 0}%` }}
                             />
                           </div>
@@ -1128,9 +1140,9 @@ export default function AdminPatientsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Under 30</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                        <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div 
-                            className="bg-purple-600 h-2 rounded-full" 
+                            className="bg-purple-600 dark:bg-purple-500 h-2 rounded-full" 
                             style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.under30 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
@@ -1140,9 +1152,9 @@ export default function AdminPatientsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">30-50</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                        <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div 
-                            className="bg-blue-600 h-2 rounded-full" 
+                            className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full" 
                             style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.age30to50 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
@@ -1152,9 +1164,9 @@ export default function AdminPatientsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">50-70</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                        <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div 
-                            className="bg-green-600 h-2 rounded-full" 
+                            className="bg-green-600 dark:bg-green-500 h-2 rounded-full" 
                             style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.age50to70 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
@@ -1164,9 +1176,9 @@ export default function AdminPatientsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Over 70</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                        <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div 
-                            className="bg-orange-600 h-2 rounded-full" 
+                            className="bg-orange-600 dark:bg-orange-500 h-2 rounded-full" 
                             style={{ width: `${analytics.totalPatients > 0 ? (analytics.ageDistribution.over70 / analytics.totalPatients) * 100 : 0}%` }}
                           />
                         </div>
@@ -1180,13 +1192,13 @@ export default function AdminPatientsPage() {
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-semibold mb-4">Monthly Visit Trends (Last 6 Months)</h3>
                   <div className="space-y-3">
-                    {analytics.monthlyTrends.map((trend) => (
-                      <div key={trend.month} className="flex items-center justify-between">
+                    {analytics.monthlyTrends.map((trend, index) => (
+                      <div key={`${trend.month}-${index}`} className="flex items-center justify-between">
                         <span className="text-sm">{trend.month}</span>
                         <div className="flex items-center gap-2">
-                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div 
-                              className="bg-red-600 h-2 rounded-full" 
+                              className="bg-red-600 dark:bg-red-500 h-2 rounded-full" 
                               style={{ width: `${Math.min((trend.visits / Math.max(...analytics.monthlyTrends.map(t => t.visits), 1)) * 100, 100)}%` }}
                             />
                           </div>

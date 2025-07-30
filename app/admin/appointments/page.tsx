@@ -218,7 +218,7 @@ const initialAppointments = [
 
 type Appointment = {
   id: number;
-  patientId: number;
+  patientId: string | number;
   doctorId: number;
   date: Date;
   status: string;
@@ -233,7 +233,23 @@ type AppointmentForm = {
   notes: string;
 };
 
-function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDate, statusColors, mockPatients, mockDoctors }) {
+function CustomCalendar({ 
+  appointments, 
+  onDayClick, 
+  selectedDate, 
+  setSelectedDate, 
+  statusColors, 
+  patients, 
+  mockDoctors 
+}: {
+  appointments: Appointment[]
+  onDayClick: (date: Date) => void
+  selectedDate: Date
+  setSelectedDate: (date: Date) => void
+  statusColors: Record<string, string>
+  patients: Array<{ id: string | number; name: string }>
+  mockDoctors: Array<{ id: number; name: string }>
+}) {
   // Use selectedDate as the source of truth for viewDate
   const [viewDate, setViewDate] = useState(selectedDate || new Date(2025, 6, 1));
   
@@ -275,7 +291,7 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
         const dayAppointments = appointments.filter(a => isSameDay(a.date, day));
         
         // Sort appointments by time
-        const sortedAppointments = dayAppointments.sort((a, b) => a.date.getTime() - b.date.getTime());
+        const sortedAppointments = dayAppointments.sort((a: Appointment, b: Appointment) => a.date.getTime() - b.date.getTime());
         
         // Limit visible appointments to prevent overflow
         const maxVisibleAppointments = 3;
@@ -309,7 +325,7 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
             
             <div className="flex flex-col gap-0.5 w-full items-start relative z-20">
               {visibleAppointments.map((a, i) => {
-                const patient = mockPatients.find(p => p.id === a.patientId);
+                const patient = patients.find(p => p.id === a.patientId);
                 const doctor = mockDoctors.find(d => d.id === a.doctorId);
                 const timeStr = formatDate(a.date, 'HH:mm');
                 const patientInitial = patient?.name?.charAt(0) || '?';
@@ -381,7 +397,7 @@ export default function AdminAppointmentsPage() {
   
   // DataSync context integration
   const { 
-    appointments, 
+    appointments: dataSyncAppointments, 
     addAppointment, 
     syncAppointmentData, 
     deleteAppointment,
@@ -389,13 +405,72 @@ export default function AdminAppointmentsPage() {
     patients
   } = useDataSync()
   
+  // Convert DataSync appointments to calendar format
+  const appointments = dataSyncAppointments.map(appt => {
+    // Parse the date and time properly
+    const [year, month, day] = appt.date.split('-').map(Number)
+    const timeStr = appt.time
+    let hours = 0
+    let minutes = 0
+    
+    // Parse time like "9:00 AM" or "2:30 PM"
+    if (timeStr.includes('AM') || timeStr.includes('PM')) {
+      const timeMatch = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/)
+      if (timeMatch) {
+        hours = parseInt(timeMatch[1])
+        minutes = parseInt(timeMatch[2])
+        const period = timeMatch[3]
+        
+        if (period === 'PM' && hours !== 12) {
+          hours += 12
+        } else if (period === 'AM' && hours === 12) {
+          hours = 0
+        }
+      }
+    } else {
+      // Handle 24-hour format like "14:30"
+      const [h, m] = timeStr.split(':').map(Number)
+      hours = h
+      minutes = m
+    }
+    
+    const appointmentDate = new Date(year, month - 1, day, hours, minutes)
+    
+    return {
+      id: appt.id,
+      patientId: appt.patientId, // Keep as string to match patients array
+      doctorId: appt.doctorId,
+      date: appointmentDate,
+      status: appt.status,
+      notes: appt.notes
+    }
+  })
+  
   // Local appointment management functions
   const addAppointmentLocal = useCallback((appointment: Appointment) => {
-    addAppointment(appointment)
-  }, [addAppointment])
+    // Convert to DataSync format
+    addAppointment({
+      patientId: appointment.patientId,
+      patientName: patients.find(p => p.id === appointment.patientId)?.name || '',
+      doctorId: appointment.doctorId,
+      doctorName: mockDoctors.find(d => d.id === appointment.doctorId)?.name || '',
+      date: format(appointment.date, 'yyyy-MM-dd'),
+      time: format(appointment.date, 'h:mm a'),
+      type: 'Consultation',
+      status: appointment.status,
+      notes: appointment.notes || ''
+    })
+  }, [addAppointment, patients, mockDoctors])
   
   const updateAppointmentLocal = useCallback((id: number, updates: Partial<Appointment>) => {
-    updateAppointmentRelatedData(id, updates)
+    // Convert Date to string format for DataSync
+    const dataSyncUpdates: any = { ...updates }
+    if (updates.date) {
+      dataSyncUpdates.date = format(updates.date, 'yyyy-MM-dd')
+      dataSyncUpdates.time = format(updates.date, 'h:mm a')
+      delete dataSyncUpdates.date // Remove the Date object
+    }
+    updateAppointmentRelatedData(id, dataSyncUpdates)
   }, [updateAppointmentRelatedData])
   
   const deleteAppointmentLocal = useCallback((id: number) => {
@@ -531,13 +606,10 @@ export default function AdminAppointmentsPage() {
       updateAppointmentLocal(form.id, newAppt)
     } else {
       addAppointmentLocal({
+        id: 0, // Will be set by DataSync
         patientId: newAppt.patientId,
-        patientName: patients.find(p => p.id === newAppt.patientId)?.name || "",
         doctorId: newAppt.doctorId,
-        doctorName: mockDoctors.find(d => d.id === newAppt.doctorId)?.name || "",
-        date: format(newAppt.date, "yyyy-MM-dd"),
-        time: format(newAppt.date, "HH:mm"),
-        type: "Appointment",
+        date: new Date(newAppt.date),
         status: newAppt.status,
         notes: newAppt.notes
       })
@@ -658,7 +730,7 @@ export default function AdminAppointmentsPage() {
         <h1 className="text-2xl font-bold flex items-center gap-2 mb-2"><CalendarFillIcon className="h-6 w-6" /> Appointments</h1>
         <div className="flex flex-row items-center justify-between w-full mb-4">
           <div className="flex items-center gap-2">
-            <Tabs value={view} onValueChange={setView} className="">
+            <Tabs value={view} onValueChange={(value: string) => setView(value as 'table' | 'calendar')} className="">
               <TabsList className="justify-start">
                 <TabsTrigger value="calendar">Calendar</TabsTrigger>
                 <TabsTrigger value="table">Table</TabsTrigger>
@@ -875,7 +947,7 @@ export default function AdminAppointmentsPage() {
                     selectedDate={calendarDate}
                     setSelectedDate={setCalendarDate}
                     statusColors={statusColors}
-                    mockPatients={mockPatients}
+                    patients={patients}
                     mockDoctors={mockDoctors}
                   />
                 </div>

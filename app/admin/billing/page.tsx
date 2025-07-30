@@ -374,7 +374,7 @@ export default function AdminBillingPage() {
         : patient
     )
     
-          // Update selected patient
+    // Update selected patient
       setSelectedPatient((prev: any) => prev ? { ...prev, insurance: { ...insuranceData } } : null)
     
     // Close modals and reset form
