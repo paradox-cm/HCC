@@ -271,7 +271,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
           <Button
             variant="outline"
             size="sm"
-            className="hidden min-[1240px]:inline-flex text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20"
+            className="hidden min-[1240px]:inline-flex"
             onClick={() => {
               if (typeof window !== "undefined") {
                 localStorage.removeItem("hcc_admin_auth");
