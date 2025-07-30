@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Edit, Trash2, Plus, CheckCircle, ChevronDown } from "lucide-react"
+import { Edit, Trash2, Plus, CheckCircle, ChevronDown, Search } from "lucide-react"
 import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon'
 import EyeFillIcon from 'remixicon-react/EyeFillIcon'
 import { Card, CardContent } from "@/components/ui/card"
@@ -359,12 +359,15 @@ export default function AdminPrescriptionsPage() {
         <Button variant="default" onClick={() => handleOpenModal()} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-2" /> Add Prescription</Button>
       </div>
       <div className="mb-4 flex flex-col sm:flex-row gap-2 w-full">
-        <Input
-          placeholder="Search by patient or medication"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full sm:max-w-xs"
-        />
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by patient or medication"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="pl-10"
+          />
+        </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-36"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>

@@ -13,10 +13,11 @@ import {
   Eye, 
   Tag,
   ArrowRight,
-  Folder
+  Folder,
+  Search
 } from "lucide-react"
 import FileTextFillIcon from 'remixicon-react/FileTextFillIcon'
-import SearchFillIcon from 'remixicon-react/SearchFillIcon'
+
 import UploadFillIcon from 'remixicon-react/UploadFillIcon'
 import DownloadFillIcon from 'remixicon-react/DownloadFillIcon'
 import User3FillIcon from 'remixicon-react/User3FillIcon'
@@ -281,7 +282,7 @@ export default function AdminDocumentsPage() {
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <SearchFillIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search patients..."
                 value={searchTerm}

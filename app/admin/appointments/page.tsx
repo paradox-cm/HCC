@@ -38,7 +38,7 @@ import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Edit, Eye, Plus, CheckCircle, XCircle, RefreshCw, Trash2, ChevronLeft, ChevronRight, FileDown, Printer, Clock, MoreHorizontal } from "lucide-react"
+import { Edit, Eye, Plus, CheckCircle, XCircle, RefreshCw, Trash2, ChevronLeft, ChevronRight, FileDown, Printer, Clock, MoreHorizontal, Search } from "lucide-react"
 import CalendarFillIcon from 'remixicon-react/CalendarFillIcon'
 import User3FillIcon from 'remixicon-react/User3FillIcon'
 import UserAddFillIcon from 'remixicon-react/UserAddFillIcon'
@@ -709,12 +709,15 @@ export default function AdminAppointmentsPage() {
         </div>
       </div>
       <div className="mb-4 flex flex-col sm:flex-row gap-2 sm:gap-2 w-full">
-        <Input
-          placeholder="Search by patient, doctor, or date"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-          className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl h-10 sm:h-11 md:h-12 text-sm sm:text-base"
-        />
+        <div className="relative w-full sm:max-w-md md:max-w-lg lg:max-w-xl">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by patient, doctor, or date"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            className="pl-10 h-10 sm:h-11 md:h-12 text-sm sm:text-base"
+          />
+        </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-36"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>

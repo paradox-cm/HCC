@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
-import { Trash2, Edit, ArrowRight, Plus, Eye, Calendar, User, FileText } from "lucide-react"
+import { Trash2, Edit, ArrowRight, Plus, Eye, Calendar, User, FileText, Search } from "lucide-react"
 import HeartPulseFillIcon from 'remixicon-react/HeartPulseFillIcon'
 import AddCircleFillIcon from 'remixicon-react/AddCircleFillIcon'
 import CalendarFillIcon from 'remixicon-react/CalendarFillIcon'
@@ -376,12 +376,15 @@ export default function AdminCarePlansPage() {
 
       {/* Filters */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        <Input
-          placeholder="Search by patient name, type, or summary"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full sm:max-w-xs"
-        />
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by patient name, type, or summary"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="pl-10"
+          />
+        </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="Filter by status" />

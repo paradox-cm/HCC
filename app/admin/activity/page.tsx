@@ -14,10 +14,11 @@ import Calendar2FillIcon from 'remixicon-react/Calendar2FillIcon'
 import FileTextFillIcon from 'remixicon-react/FileTextFillIcon'
 import Message2FillIcon from 'remixicon-react/Message2FillIcon'
 import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon'
-import SearchFillIcon from 'remixicon-react/SearchFillIcon'
+
 import FilterFillIcon from 'remixicon-react/FilterFillIcon'
 import DownloadFillIcon from 'remixicon-react/DownloadFillIcon'
 import RefreshFillIcon from 'remixicon-react/RefreshFillIcon'
+import { Search } from "lucide-react"
 
 // Extended mock activity data
 const allActivityData = [
@@ -247,7 +248,7 @@ export default function AdminActivityPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <SearchFillIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search activities..."
                   value={searchTerm}

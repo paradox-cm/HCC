@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import MoneyDollarCircleFillIcon from 'remixicon-react/MoneyDollarCircleFillIcon'
 import BankCardFillIcon from 'remixicon-react/BankCardFillIcon'
-import SearchFillIcon from 'remixicon-react/SearchFillIcon'
+
 import FilterFillIcon from 'remixicon-react/FilterFillIcon'
 import User3FillIcon from 'remixicon-react/User3FillIcon'
 import CalendarFillIcon from 'remixicon-react/CalendarFillIcon'
@@ -28,6 +28,7 @@ import CheckboxCircleFillIcon from 'remixicon-react/CheckboxCircleFillIcon'
 import AlertFillIcon from 'remixicon-react/AlertFillIcon'
 import TimeFillIcon from 'remixicon-react/TimeFillIcon'
 import BarChart2FillIcon from 'remixicon-react/BarChart2FillIcon'
+import { Search } from "lucide-react"
 import { getStatusColor, getPriorityColor } from "@/lib/admin-badge-utils"
 
 // Mock data for admin billing
@@ -380,7 +381,7 @@ export default function AdminBillingPage() {
             <CardContent className="p-4">
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 relative">
-                  <SearchFillIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search patients by name or email..."
                     value={searchTerm}
