@@ -169,14 +169,14 @@ export default function AdminDashboardPage() {
       
       {/* Patient Search Bar */}
       <div className="mb-8">
-        <div className="relative max-w-md" ref={searchRef}>
+        <div className="relative max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl" ref={searchRef}>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search patients by name, email, or phone..."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className="pl-10 pr-4"
+              className="pl-10 pr-4 h-10 sm:h-11 md:h-12 text-sm sm:text-base"
             />
           </div>
           

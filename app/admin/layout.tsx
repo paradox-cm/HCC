@@ -1,6 +1,11 @@
 import "../globals.css";
 import type { Metadata } from "next"
 import AdminLayoutClient from "./AdminLayoutClient"
+import { MessageProvider } from "@/contexts/MessageContext"
+import { AppointmentProvider } from "@/contexts/AppointmentContext"
+import { PrescriptionProvider } from "@/contexts/PrescriptionContext"
+import { DocumentProvider } from "@/contexts/DocumentContext"
+import { CarePlanProvider } from "@/contexts/CarePlanContext"
 
 export const metadata: Metadata = {
   title: "HCC Admin Portal",
@@ -11,5 +16,17 @@ export const metadata: Metadata = {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <AdminLayoutClient>{children}</AdminLayoutClient>
+  return (
+    <MessageProvider>
+      <AppointmentProvider>
+        <PrescriptionProvider>
+          <DocumentProvider>
+            <CarePlanProvider>
+              <AdminLayoutClient>{children}</AdminLayoutClient>
+            </CarePlanProvider>
+          </DocumentProvider>
+        </PrescriptionProvider>
+      </AppointmentProvider>
+    </MessageProvider>
+  )
 } 

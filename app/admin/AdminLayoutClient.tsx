@@ -17,6 +17,7 @@ import Notification3FillIcon from 'remixicon-react/Notification3FillIcon';
 import CheckboxCircleFillIcon from 'remixicon-react/CheckboxCircleFillIcon';
 import MenuFillIcon from 'remixicon-react/MenuFillIcon';
 import CloseFillIcon from 'remixicon-react/CloseFillIcon';
+import BookOpenFillIcon from 'remixicon-react/BookOpenFillIcon';
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 import Image from "next/image"
@@ -25,20 +26,26 @@ import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useRef } from "react"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Drawer, DrawerTrigger, DrawerContent, DrawerClose, DrawerTitle } from "@/components/ui/drawer"
 import { SystemStatusModal } from "@/components/SystemStatusModal"
 import { MessageProvider } from "@/contexts/MessageContext"
 
-const navItems = [
+// Primary navigation - Patient-centric workflow
+const primaryNavItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: Home2FillIcon },
   { href: "/admin/patients", label: "Patients", icon: User3FillIcon },
   { href: "/admin/appointments", label: "Appointments", icon: CalendarFillIcon },
-  { href: "/admin/prescriptions", label: "Prescriptions", icon: CapsuleFillIcon },
   { href: "/admin/messages", label: "Messages", icon: Message2FillIcon },
-  { href: "/admin/documents", label: "Documents", icon: FileTextFillIcon },
   { href: "/admin/billing", label: "Billing & Insurance", icon: MoneyDollarCircleFillIcon },
+]
+
+// Secondary navigation - Admin tools and global lists
+const secondaryNavItems = [
+  { href: "/admin/prescriptions", label: "Prescriptions", icon: CapsuleFillIcon },
   { href: "/admin/care-plans", label: "Care Plans", icon: HeartPulseFillIcon },
+  { href: "/admin/documents", label: "Documents", icon: FileTextFillIcon },
+  { href: "/admin/documentation", label: "Documentation", icon: BookOpenFillIcon },
   { href: "/admin/settings", label: "Settings", icon: Settings2FillIcon },
 ]
 
@@ -260,26 +267,42 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Logout button for desktop only (above 1240px) */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                localStorage.removeItem("hcc_admin_auth");
-                sessionStorage.removeItem("hcc_admin_auth");
-              }
-              router.replace("/admin-login");
-            }}
-            className="hidden min-[1240px]:inline-flex"
-          >
-            Logout
-          </Button>
+          {/* Admin Tools Dropdown for desktop only (above 1240px) */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="hidden min-[1240px]:inline-flex">
+                Admin Tools
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {secondaryNavItems.map(({ href, label, icon: Icon }) => (
+                <DropdownMenuItem key={href} asChild>
+                  <Link href={href} className="flex items-center gap-2">
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    localStorage.removeItem("hcc_admin_auth");
+                    sessionStorage.removeItem("hcc_admin_auth");
+                  }
+                  router.replace("/admin-login");
+                }}
+                className="text-red-600 focus:text-red-600"
+              >
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       {/* Sidebar as Drawer for mobile/tablet (below 1240px) */}
       <Drawer open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <DrawerContent className="max-[1240px]:block hidden">
+        <DrawerContent className="max-[1240px]:block hidden w-full max-w-none">
           <DrawerTitle className="sr-only">Admin Navigation</DrawerTitle>
           <aside className="w-full bg-background border-r flex flex-col justify-between py-6 px-4 h-[calc(100vh-6rem)] max-h-[calc(100vh-6rem)] overflow-hidden instant-theme-switch safe-area-inset-bottom">
             {/* Drawer Logo */}
@@ -304,6 +327,25 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
             </div>
             {/* Drawer Top Utilities */}
             <div className="flex flex-col gap-4 mb-6">
+              {/* Quick Admin Tools Access */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="w-full justify-start">
+                    <Settings2FillIcon className="h-4 w-4 mr-2" />
+                    Admin Tools
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  {secondaryNavItems.map(({ href, label, icon: Icon }) => (
+                    <DropdownMenuItem key={href} asChild>
+                      <Link href={href} className="flex items-center gap-2" onClick={() => setSidebarOpen(false)}>
+                        <Icon className="h-4 w-4" />
+                        {label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <div className="flex items-center gap-2 justify-between">
                 <span className="text-sm text-muted-foreground font-medium min-w-max">{dateTime}</span>
                 {/* System Status */}
@@ -380,10 +422,28 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                 </DropdownMenu>
               </div>
             </div>
-            {/* Sidebar Links */}
+            {/* Primary Navigation */}
             <div className="flex-1 overflow-y-auto">
               <nav className="flex flex-col gap-2">
-                {navItems.map(({ href, label, icon: Icon }) => (
+                <div className="px-4 py-2">
+                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Main</h3>
+                </div>
+                {primaryNavItems.map(({ href, label, icon: Icon }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors text-sm min-h-[44px] ${pathname.startsWith(href) ? "bg-primary text-primary-foreground" : "hover:bg-accent text-foreground"}`}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    {label}
+                  </Link>
+                ))}
+                
+                <div className="px-4 py-2 mt-4">
+                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Admin Tools</h3>
+                </div>
+                {secondaryNavItems.map(({ href, label, icon: Icon }) => (
                   <Link
                     key={href}
                     href={href}
@@ -407,6 +467,13 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                   type="button"
                 >
                   Support
+                </button>
+                <button
+                  className="text-primary underline hover:no-underline focus:outline-none ml-2"
+                  onClick={() => router.push("/admin/documentation")}
+                  type="button"
+                >
+                  View Documentation
                 </button>
               </div>
               {/* Mobile Logout Button */}
@@ -479,7 +546,24 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         <div className="hidden min-[1240px]:flex fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-background border-r flex-col justify-between py-6 px-4 overflow-y-auto z-40 instant-theme-switch">
           <div>
             <nav className="flex flex-col gap-1">
-              {navItems.map(({ href, label, icon: Icon }) => (
+              <div className="px-3 py-2">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Main</h3>
+              </div>
+              {primaryNavItems.map(({ href, label, icon: Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors text-sm ${pathname.startsWith(href) ? "bg-primary text-primary-foreground" : "hover:bg-accent text-foreground"}`}
+                >
+                  <Icon className="h-5 w-5" />
+                  {label}
+                </Link>
+              ))}
+              
+              <div className="px-3 py-2 mt-4">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Admin Tools</h3>
+              </div>
+              {secondaryNavItems.map(({ href, label, icon: Icon }) => (
                 <Link
                   key={href}
                   href={href}

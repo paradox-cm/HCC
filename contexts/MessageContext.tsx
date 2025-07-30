@@ -32,6 +32,8 @@ interface MessageContextType {
   archiveThread: (threadId: number) => void
   deleteThread: (threadId: number) => void
   restoreThread: (threadId: number) => void
+  updateThreadCategory: (threadId: number, category: string) => void
+  updateThreadPriority: (threadId: number, priority: string) => void
 }
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined)
@@ -348,6 +350,22 @@ export function MessageProvider({ children }: { children: ReactNode }) {
     ))
   }
 
+  const updateThreadCategory = (threadId: number, category: string) => {
+    setMessageThreads(prev => prev.map(thread => 
+      thread.id === threadId 
+        ? { ...thread, category }
+        : thread
+    ))
+  }
+
+  const updateThreadPriority = (threadId: number, priority: string) => {
+    setMessageThreads(prev => prev.map(thread => 
+      thread.id === threadId 
+        ? { ...thread, priority }
+        : thread
+    ))
+  }
+
   return (
     <MessageContext.Provider value={{
       messageThreads,
@@ -356,7 +374,9 @@ export function MessageProvider({ children }: { children: ReactNode }) {
       markThreadAsRead,
       archiveThread,
       deleteThread,
-      restoreThread
+      restoreThread,
+      updateThreadCategory,
+      updateThreadPriority
     }}>
       {children}
     </MessageContext.Provider>

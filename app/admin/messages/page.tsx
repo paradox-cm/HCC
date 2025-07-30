@@ -510,7 +510,9 @@ export default function AdminMessagesPage() {
     markThreadAsRead, 
     archiveThread, 
     deleteThread, 
-    restoreThread 
+    restoreThread,
+    updateThreadCategory,
+    updateThreadPriority
   } = useMessages()
   const [selectedThread, setSelectedThread] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState("")
@@ -714,11 +716,11 @@ export default function AdminMessagesPage() {
                 placeholder="Search messages..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-10 sm:h-11 md:h-12 text-sm sm:text-base"
               />
             </div>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger>
+              <SelectTrigger className="h-10 min-h-[40px]">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -730,7 +732,7 @@ export default function AdminMessagesPage() {
               </SelectContent>
             </Select>
             <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-              <SelectTrigger>
+              <SelectTrigger className="h-10 min-h-[40px]">
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
               <SelectContent>
@@ -742,7 +744,7 @@ export default function AdminMessagesPage() {
               </SelectContent>
             </Select>
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger>
+              <SelectTrigger className="h-10 min-h-[40px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -758,7 +760,7 @@ export default function AdminMessagesPage() {
       </Card>
 
       {/* Messages List */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0 h-full">
         {/* Messages List */}
         <div className={`${selectedThread ? 'hidden lg:block' : 'block'} lg:col-span-1 h-full`}>
           <Card className="h-full flex flex-col">
@@ -838,21 +840,21 @@ export default function AdminMessagesPage() {
         {/* Message Detail - Mobile optimized */}
         <div className={`${selectedThread ? 'block' : 'hidden lg:block'} lg:col-span-2 h-full`}>
           {selectedThread ? (
-            <Card className="h-full flex flex-col">
+            <Card className="h-full flex flex-col min-h-0">
               <CardHeader className="flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
                     {/* Mobile back button */}
-                    <div className="flex items-center gap-2 mb-2 lg:hidden">
+                    <div className="flex items-center gap-2 mb-3 lg:hidden">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setSelectedThread(null)}
-                        className="h-8 w-8 p-0"
+                        className="h-9 w-9 p-0 hover:bg-muted"
                       >
                         <ArrowLeft className="h-4 w-4" />
                       </Button>
-                      <span className="text-sm text-muted-foreground">Back to messages</span>
+                      <span className="text-sm font-medium text-muted-foreground">Back to messages</span>
                     </div>
                     <CardTitle className="flex items-center gap-2 text-base lg:text-lg">
                       {selectedThread.patientName}
@@ -879,15 +881,11 @@ export default function AdminMessagesPage() {
                           value={selectedThread.category || "none"} 
                           onValueChange={(value) => {
                             const newCategory = value === "none" ? "" : value
-                            setMessageThreads(prev => prev.map(t => 
-                              t.id === selectedThread.id 
-                                ? { ...t, category: newCategory }
-                                : t
-                            ))
+                            updateThreadCategory(selectedThread.id, newCategory)
                             setSelectedThread(prev => prev ? { ...prev, category: newCategory } : null)
                           }}
                         >
-                          <SelectTrigger className="w-24 h-7 text-xs">
+                          <SelectTrigger className="w-24 h-8 text-xs">
                             <SelectValue placeholder="None" />
                           </SelectTrigger>
                           <SelectContent>
@@ -906,15 +904,11 @@ export default function AdminMessagesPage() {
                           value={selectedThread.priority || "none"} 
                           onValueChange={(value) => {
                             const newPriority = value === "none" ? "" : value
-                            setMessageThreads(prev => prev.map(t => 
-                              t.id === selectedThread.id 
-                                ? { ...t, priority: newPriority }
-                                : t
-                            ))
+                            updateThreadPriority(selectedThread.id, newPriority)
                             setSelectedThread(prev => prev ? { ...prev, priority: newPriority } : null)
                           }}
                         >
-                          <SelectTrigger className="w-20 h-7 text-xs">
+                          <SelectTrigger className="w-20 h-8 text-xs">
                             <SelectValue placeholder="None" />
                           </SelectTrigger>
                           <SelectContent>
@@ -961,7 +955,7 @@ export default function AdminMessagesPage() {
               </CardHeader>
               <CardContent className="flex-1 min-h-0 flex flex-col p-0">
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4" ref={chatContainerRef}>
                   {selectedThread.messages.map((message) => (
                     <div
                       key={message.id}
@@ -1104,7 +1098,7 @@ export default function AdminMessagesPage() {
                <div>
                  <label className="text-sm font-medium">Category</label>
                  <Select value={newMessage.category} onValueChange={(value) => setNewMessage(prev => ({ ...prev, category: value }))}>
-                   <SelectTrigger className="mt-1">
+                   <SelectTrigger className="mt-1 h-10 min-h-[40px]">
                      <SelectValue />
                    </SelectTrigger>
                    <SelectContent>
@@ -1119,7 +1113,7 @@ export default function AdminMessagesPage() {
                <div>
                  <label className="text-sm font-medium">Priority</label>
                  <Select value={newMessage.priority} onValueChange={(value) => setNewMessage(prev => ({ ...prev, priority: value }))}>
-                   <SelectTrigger className="mt-1">
+                   <SelectTrigger className="mt-1 h-10 min-h-[40px]">
                      <SelectValue />
                    </SelectTrigger>
                    <SelectContent>
@@ -1134,7 +1128,7 @@ export default function AdminMessagesPage() {
                <div>
                  <label className="text-sm font-medium">Assign To</label>
                  <Select value={newMessage.assignedTo} onValueChange={(value) => setNewMessage(prev => ({ ...prev, assignedTo: value }))}>
-                   <SelectTrigger className="mt-1">
+                   <SelectTrigger className="mt-1 h-10 min-h-[40px]">
                      <SelectValue />
                    </SelectTrigger>
                    <SelectContent>

@@ -173,8 +173,8 @@
 @media (max-width: 640px) {
   /* Ensure modal content fits properly on mobile */
   [data-vaul-drawer] {
-    max-width: 95vw !important;
-    width: 95vw !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
   }
 
   /* Optimize appointment action buttons for mobile */
@@ -292,4 +292,61 @@ body .calendar-override .rdp-button[aria-label*="Next month"] {
 }
 body .calendar-override .rdp-caption_label {
   font-weight: 700 !important;
+}
+
+/* Admin Messages Page Mobile Optimizations */
+@media (max-width: 1024px) {
+  /* Ensure message detail view takes full height on mobile */
+  .lg\\:col-span-2.h-full {
+    height: calc(100vh - 200px) !important;
+    min-height: calc(100vh - 200px) !important;
+  }
+  
+  /* Ensure message content area is properly sized */
+  .flex-1.overflow-y-auto.p-4.space-y-4 {
+    height: calc(100vh - 400px) !important;
+    min-height: 200px !important;
+  }
+  
+  /* Ensure reply input area stays at bottom */
+  .flex.gap-2.flex-shrink-0.mx-4.mb-4.mt-4 {
+    position: sticky;
+    bottom: 0;
+    background: hsl(var(--card));
+    border-top: 1px solid hsl(var(--border));
+    margin: 0;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Mobile-specific message detail optimizations */
+  .lg\\:col-span-2.h-full {
+    height: calc(100vh - 180px) !important;
+    min-height: calc(100vh - 180px) !important;
+  }
+  
+  /* Ensure message content is visible and scrollable */
+  .flex-1.overflow-y-auto.p-4.space-y-4 {
+    height: calc(100vh - 350px) !important;
+    min-height: 150px !important;
+    padding: 0.75rem !important;
+  }
+  
+  /* Optimize message bubbles for mobile */
+  .flex-1.max-w-\\[80\\%\\].lg\\:max-w-\\[70\\%\\] {
+    max-width: 85% !important;
+  }
+  
+  /* Ensure reply input is properly sized on mobile */
+  .flex.gap-2.flex-shrink-0.mx-4.mb-4.mt-4 {
+    padding: 0.75rem !important;
+    gap: 0.5rem !important;
+  }
+  
+  /* Optimize textarea for mobile */
+  .flex-1.min-h-\\[60px\\].max-h-\\[120px\\].resize-none {
+    min-height: 50px !important;
+    max-height: 100px !important;
+  }
 }

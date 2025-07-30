@@ -52,7 +52,8 @@ import { Calendar as ModernCalendar } from "@/components/ui/calendar"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { useToast } from "@/hooks/use-toast"
 import { useRef } from "react"
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button"
+import { useAppointments } from "@/contexts/AppointmentContext"
 
 // CSS override for calendar width
 const calendarStyles = `
@@ -375,7 +376,7 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
 export default function AdminAppointmentsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [appointments, setAppointments] = useState<Appointment[]>(initialAppointments)
+  const { appointments, addAppointment, updateAppointment, deleteAppointment } = useAppointments()
   const [selected, setSelected] = useState<Appointment | null>(null)
   const [showDetails, setShowDetails] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -395,7 +396,7 @@ export default function AdminAppointmentsPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [doctorFilter, setDoctorFilter] = useState("all")
   const [dateRange, setDateRange] = useState<{ from: string; to: string }>({ from: "", to: "" })
-  const [view, setView] = useState<'table' | 'calendar'>('table')
+  const [view, setView] = useState<'table' | 'calendar'>('calendar')
   const { toast } = useToast()
   const [calendarDate, setCalendarDate] = useState(new Date(2025, 6, 1)) // July 2025
   const [calendarDayAppts, setCalendarDayAppts] = useState<Appointment[] | null>(null)
@@ -502,20 +503,28 @@ export default function AdminAppointmentsPage() {
       id: form.id || Math.max(...appointments.map(a => a.id)) + 1,
       date: new Date(form.date)
     }
-    setAppointments(prev => {
-      if (form.id) {
-        return prev.map(a => a.id === form.id ? newAppt : a)
-      } else {
-        return [...prev, newAppt]
-      }
-    })
+    if (form.id) {
+      updateAppointment(form.id, newAppt)
+    } else {
+      addAppointment({
+        patientId: newAppt.patientId,
+        patientName: mockPatients.find(p => p.id === newAppt.patientId)?.name || "",
+        doctorId: newAppt.doctorId,
+        doctorName: mockDoctors.find(d => d.id === newAppt.doctorId)?.name || "",
+        date: format(newAppt.date, "yyyy-MM-dd"),
+        time: format(newAppt.date, "HH:mm"),
+        type: "Appointment",
+        status: newAppt.status,
+        notes: newAppt.notes
+      })
+    }
     setShowForm(false)
   }
   function handleStatusChange(id: number, status: string) {
-    setAppointments(prev => prev.map(a => a.id === id ? { ...a, status } : a))
+    updateAppointment(id, { status })
   }
   function handleDelete(id: number) {
-    setAppointments(prev => prev.filter(a => a.id !== id))
+    deleteAppointment(id)
     setRemoveAppt(null)
   }
   function toggleSelect(id: number) {
@@ -526,11 +535,11 @@ export default function AdminAppointmentsPage() {
     else setSelectedIds(filtered.map(a => a.id))
   }
   function handleBulkDelete() {
-    setAppointments(prev => prev.filter(a => !selectedIds.includes(a.id)))
+    selectedIds.forEach(id => deleteAppointment(id))
     setSelectedIds([])
   }
   function handleBulkStatus(status: string) {
-    setAppointments(prev => prev.map(a => selectedIds.includes(a.id) ? { ...a, status } : a))
+    selectedIds.forEach(id => updateAppointment(id, { status }))
     setSelectedIds([])
   }
   function handleBulkReminder() {
@@ -562,11 +571,11 @@ export default function AdminAppointmentsPage() {
   function handleReschedule(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!rescheduleAppt) return
-    setAppointments(prev => prev.map(a =>
-      a.id === rescheduleAppt.id
-        ? { ...a, date: new Date(rescheduleDate), status: "rescheduled", notes: (a.notes ? a.notes + "\n" : "") + `Rescheduled to ${format(new Date(rescheduleDate), "yyyy-MM-dd HH:mm")}` }
-        : a
-    ))
+    updateAppointment(rescheduleAppt.id, {
+      date: new Date(rescheduleDate),
+      status: "rescheduled",
+      notes: (rescheduleAppt.notes ? rescheduleAppt.notes + "\n" : "") + `Rescheduled to ${format(new Date(rescheduleDate), "yyyy-MM-dd HH:mm")}`
+    })
     setRescheduleAppt(null)
     setRescheduleDate("")
   }
@@ -627,8 +636,8 @@ export default function AdminAppointmentsPage() {
           <div className="flex items-center gap-2">
             <Tabs value={view} onValueChange={setView} className="">
               <TabsList className="justify-start">
-                <TabsTrigger value="table">Table</TabsTrigger>
                 <TabsTrigger value="calendar">Calendar</TabsTrigger>
+                <TabsTrigger value="table">Table</TabsTrigger>
               </TabsList>
             </Tabs>
             {/* Today Button - positioned immediately to the right of the toggle */}
@@ -688,7 +697,7 @@ export default function AdminAppointmentsPage() {
           placeholder="Search by patient, doctor, or date"
           value={filter}
           onChange={e => setFilter(e.target.value)}
-          className="w-full sm:max-w-xs"
+          className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl h-10 sm:h-11 md:h-12 text-sm sm:text-base"
         />
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-36"><SelectValue placeholder="Status" /></SelectTrigger>
@@ -1150,16 +1159,16 @@ export default function AdminAppointmentsPage() {
                         
                         {/* Action buttons row - optimized for mobile */}
                         <div className="flex gap-1.5 mt-2 appointment-actions-mobile">
-                          <Button size="sm" variant="outline" onClick={() => { handleOpenForm(appt); setCalendarDayAppts(null); }} className="flex-1 h-9 text-xs">
+                          <Button size="sm" variant="outline" onClick={() => handleOpenForm(appt)} className="flex-1 h-9 text-xs">
                             <Edit className="h-3.5 w-3.5 mr-1" /> Edit
                           </Button>
-                          <Button size="sm" variant="outline" onClick={() => { handleOpenReschedule(appt); setCalendarDayAppts(null); }} className="h-9 w-9 p-0" title="Reschedule">
+                          <Button size="sm" variant="outline" onClick={() => handleOpenReschedule(appt)} className="h-9 w-9 p-0" title="Reschedule">
                             <RefreshCw className="h-3.5 w-3.5" />
                           </Button>
-                          <Button size="sm" variant="outline" onClick={() => { handleSendReminder(appt); setCalendarDayAppts(null); }} className="flex-1 h-9 text-xs">
+                          <Button size="sm" variant="outline" onClick={() => handleSendReminder(appt)} className="flex-1 h-9 text-xs">
                             <UserAddFillIcon className="h-3.5 w-3.5 mr-1" /> Remind
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => { setRemoveAppt(appt); setCalendarDayAppts(null); }} className="h-9 w-9 p-0" title="Delete">
+                          <Button size="sm" variant="destructive" onClick={() => setRemoveAppt(appt)} className="h-9 w-9 p-0" title="Delete">
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
@@ -1176,8 +1185,7 @@ export default function AdminAppointmentsPage() {
                 variant="outline" 
                 className="mt-2"
                 onClick={() => { 
-                  setCalendarDayAppts(null); 
-                  router.push("/admin/appointments?add=1"); 
+                  handleOpenForm(null); 
                 }}
               >
                 <Plus className="h-4 w-4 mr-1" /> Add Appointment

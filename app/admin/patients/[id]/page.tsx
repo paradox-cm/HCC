@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   ArrowLeft, 
   Calendar, 
@@ -32,9 +33,19 @@ import {
   Activity,
   Plus,
   Send,
-  Edit
+  Edit,
+  Eye,
+  Trash2,
+  Archive,
+  Download,
+  Upload,
+  Reply
 } from "lucide-react"
 import { useMessages } from "@/contexts/MessageContext"
+import { useAppointments } from "@/contexts/AppointmentContext"
+import { usePrescriptions } from "@/contexts/PrescriptionContext"
+import { useDocuments } from "@/contexts/DocumentContext"
+import { useCarePlans } from "@/contexts/CarePlanContext"
 
 // Mock patient data with comprehensive information
 const MOCK_PATIENT = {
@@ -104,6 +115,157 @@ const MOCK_PATIENT = {
     pendingDocuments: 2,
     activePrescriptions: 3,
     unreadMessages: 1
+  },
+  // Enhanced data for tabbed sections
+  appointments: [
+    {
+      id: 1,
+      date: "2024-02-20",
+      time: "10:00 AM",
+      type: "Follow-up Consultation",
+      doctor: "Dr. Asif Ali",
+      status: "scheduled",
+      notes: "Review blood pressure medication effectiveness"
+    },
+    {
+      id: 2,
+      date: "2024-01-15",
+      time: "2:30 PM",
+      type: "Cardiology Consultation",
+      doctor: "Dr. Asif Ali",
+      status: "completed",
+      notes: "Initial consultation, prescribed Lisinopril"
+    },
+    {
+      id: 3,
+      date: "2024-03-05",
+      time: "9:00 AM",
+      type: "Lab Work",
+      doctor: "Dr. Asif Ali",
+      status: "scheduled",
+      notes: "CBC and Lipid Panel"
+    }
+  ],
+  prescriptions: [
+    {
+      id: 1,
+      medication: "Lisinopril",
+      dosage: "10mg",
+      frequency: "Once daily",
+      prescribedBy: "Dr. Asif Ali",
+      prescribedDate: "2024-01-15",
+      status: "active",
+      refills: 2,
+      pharmacy: "CVS Pharmacy"
+    },
+    {
+      id: 2,
+      medication: "Metformin",
+      dosage: "500mg",
+      frequency: "Twice daily",
+      prescribedBy: "Dr. Asif Ali",
+      prescribedDate: "2024-01-15",
+      status: "active",
+      refills: 1,
+      pharmacy: "CVS Pharmacy"
+    },
+    {
+      id: 3,
+      medication: "Aspirin",
+      dosage: "81mg",
+      frequency: "Once daily",
+      prescribedBy: "Dr. Asif Ali",
+      prescribedDate: "2024-01-10",
+      status: "active",
+      refills: 3,
+      pharmacy: "CVS Pharmacy"
+    }
+  ],
+  carePlans: [
+    {
+      id: 1,
+      type: "Cardiovascular Health",
+      status: "active",
+      progress: 75,
+      startDate: "2024-01-15",
+      goals: [
+        "Reduce blood pressure to target range",
+        "Improve cardiovascular fitness",
+        "Maintain healthy diet"
+      ],
+      nextReview: "2024-03-15"
+    },
+    {
+      id: 2,
+      type: "Diabetes Management",
+      status: "active",
+      progress: 60,
+      startDate: "2024-01-15",
+      goals: [
+        "Maintain blood glucose levels",
+        "Regular exercise routine",
+        "Weight management"
+      ],
+      nextReview: "2024-03-15"
+    }
+  ],
+  documents: [
+    {
+      id: 1,
+      name: "Lab Results - CBC",
+      type: "lab_results",
+      uploadedDate: "2024-01-12",
+      uploadedBy: "Dr. Asif Ali",
+      status: "reviewed"
+    },
+    {
+      id: 2,
+      name: "Lab Results - Lipid Panel",
+      type: "lab_results",
+      uploadedDate: "2024-01-12",
+      uploadedBy: "Dr. Asif Ali",
+      status: "reviewed"
+    },
+    {
+      id: 3,
+      name: "Insurance Card",
+      type: "insurance",
+      uploadedDate: "2024-01-10",
+      uploadedBy: "Patient",
+      status: "pending_review"
+    },
+    {
+      id: 4,
+      name: "Medical History Form",
+      type: "forms",
+      uploadedDate: "2024-01-08",
+      uploadedBy: "Patient",
+      status: "reviewed"
+    }
+  ],
+  billing: {
+    outstandingBalance: 150.00,
+    lastPayment: {
+      amount: 75.00,
+      date: "2024-01-10",
+      method: "Credit Card"
+    },
+    paymentHistory: [
+      {
+        id: 1,
+        amount: 75.00,
+        date: "2024-01-10",
+        method: "Credit Card",
+        description: "Consultation fee"
+      },
+      {
+        id: 2,
+        amount: 50.00,
+        date: "2023-12-15",
+        method: "Insurance",
+        description: "Lab work"
+      }
+    ]
   }
 }
 
@@ -111,6 +273,9 @@ export default function AdminPatientDetailPage() {
   const params = useParams()
   const router = useRouter()
   const patient = MOCK_PATIENT // In real app, fetch by ID
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState("overview")
 
   // State for modals
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false)
@@ -170,6 +335,27 @@ export default function AdminPatientDetailPage() {
     medications: [...patient.medicalHistory.medications]
   })
 
+  // Context integrations
+  const { messageThreads, addReplyToThread, markThreadAsRead } = useMessages()
+  const { getPatientAppointments, addAppointment, updateAppointment, deleteAppointment } = useAppointments()
+  const { getPatientPrescriptions, addPrescription, updatePrescription, deletePrescription } = usePrescriptions()
+  const { getPatientDocuments, addDocument, updateDocument, deleteDocument } = useDocuments()
+  const { getPatientCarePlans, addCarePlan, updateCarePlan, deleteCarePlan } = useCarePlans()
+  
+  // Filter data for this patient
+  const patientMessages = messageThreads.filter(thread => 
+    thread.patientId === patient.id.toString() || 
+    thread.patientName === patient.name
+  )
+  const patientAppointments = getPatientAppointments(patient.id)
+  const patientPrescriptions = getPatientPrescriptions(patient.id)
+  const patientDocuments = getPatientDocuments(patient.id)
+  const patientCarePlans = getPatientCarePlans(patient.id)
+
+  // Message thread view state
+  const [selectedThread, setSelectedThread] = useState<number | null>(null)
+  const [replyText, setReplyText] = useState("")
+
   if (!patient) {
     return (
       <div className="max-w-2xl mx-auto py-12 text-center">
@@ -201,8 +387,20 @@ export default function AdminPatientDetailPage() {
   }
 
   const handleScheduleAppointment = () => {
-    // In real app, this would create an appointment
-    console.log("Scheduling appointment for:", patient.name, appointmentData)
+    // Add appointment to shared context
+    addAppointment({
+      patientId: patient.id,
+      patientName: patient.name,
+      doctorId: 1, // Default to first doctor, in real app would be selected
+      doctorName: appointmentData.doctor,
+      date: appointmentData.date,
+      time: appointmentData.time,
+      type: appointmentData.type,
+      status: "scheduled",
+      notes: appointmentData.notes
+    })
+    
+    console.log("Appointment scheduled for:", patient.name, appointmentData)
     setIsAppointmentModalOpen(false)
     setAppointmentData({
       date: "",
@@ -211,8 +409,6 @@ export default function AdminPatientDetailPage() {
       notes: "",
       doctor: patient.assignedDoctor
     })
-    // You could navigate to appointments page with this patient pre-selected
-    // router.push(`/admin/appointments?patient=${patient.id}&action=create`)
   }
 
   const { addMessageToThread } = useMessages()
@@ -244,8 +440,22 @@ export default function AdminPatientDetailPage() {
   }
 
   const handleCreatePrescription = () => {
-    // In real app, this would create a prescription
-    console.log("Creating prescription for:", patient.name, prescriptionData)
+    // Add prescription to shared context
+    addPrescription({
+      patientId: patient.id,
+      patientName: patient.name,
+      medication: prescriptionData.medication,
+      dosage: prescriptionData.dosage,
+      frequency: prescriptionData.frequency,
+      duration: prescriptionData.duration,
+      status: "active",
+      prescribedBy: patient.assignedDoctor,
+      prescribedDate: new Date().toISOString().split('T')[0],
+      refills: 3,
+      notes: prescriptionData.notes
+    })
+    
+    console.log("Prescription created for:", patient.name, prescriptionData)
     setIsPrescriptionModalOpen(false)
     setPrescriptionData({
       medication: "",
@@ -254,8 +464,6 @@ export default function AdminPatientDetailPage() {
       duration: "",
       notes: ""
     })
-    // You could navigate to prescriptions page with this patient pre-selected
-    // router.push(`/admin/prescriptions?patient=${patient.id}&action=create`)
   }
 
   const handleUpdateContact = () => {
@@ -288,6 +496,75 @@ export default function AdminPatientDetailPage() {
     Object.assign(patient.medicalHistory, medicalData)
   }
 
+  // Message handling functions
+  const handleViewThread = (threadId: number) => {
+    setSelectedThread(threadId)
+    markThreadAsRead(threadId)
+  }
+
+  const handleReplyToThread = (threadId: number) => {
+    setSelectedThread(threadId)
+    // Focus on reply input
+  }
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp)
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  // Appointment handlers
+  const handleEditAppointment = (appointmentId: number) => {
+    // In real app, this would open an edit modal
+    console.log("Edit appointment:", appointmentId)
+  }
+
+  const handleDeleteAppointment = (appointmentId: number) => {
+    if (confirm("Are you sure you want to delete this appointment?")) {
+      deleteAppointment(appointmentId)
+    }
+  }
+
+  // Prescription handlers
+  const handleEditPrescription = (prescriptionId: number) => {
+    // In real app, this would open an edit modal
+    console.log("Edit prescription:", prescriptionId)
+  }
+
+  const handleDeletePrescription = (prescriptionId: number) => {
+    if (confirm("Are you sure you want to delete this prescription?")) {
+      deletePrescription(prescriptionId)
+    }
+  }
+
+  // Document handlers
+  const handleViewDocument = (documentId: number) => {
+    // In real app, this would open a document viewer
+    console.log("View document:", documentId)
+  }
+
+  const handleDeleteDocument = (documentId: number) => {
+    if (confirm("Are you sure you want to delete this document?")) {
+      deleteDocument(documentId)
+    }
+  }
+
+  // Care plan handlers
+  const handleEditCarePlan = (carePlanId: number) => {
+    // In real app, this would open an edit modal
+    console.log("Edit care plan:", carePlanId)
+  }
+
+  const handleDeleteCarePlan = (carePlanId: number) => {
+    if (confirm("Are you sure you want to delete this care plan?")) {
+      deleteCarePlan(carePlanId)
+    }
+  }
+
   return (
     <div>
       {/* Breadcrumb */}
@@ -316,48 +593,48 @@ export default function AdminPatientDetailPage() {
 
       {/* Patient Header */}
       <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row md:items-start gap-6">
-            <Avatar className="h-20 w-20">
-              <AvatarFallback className="text-lg">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col md:flex-row md:items-start gap-4 sm:gap-6">
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 mx-auto md:mx-0">
+              <AvatarFallback className="text-base sm:text-lg">
                 {patient.name.split(" ").map(n => n[0]).join("")}
               </AvatarFallback>
             </Avatar>
             
-          <div className="flex-1">
+            <div className="flex-1 text-center md:text-left">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl font-bold mb-2">{patient.name}</h1>
-                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1">
+                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">{patient.name}</h1>
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-sm text-muted-foreground mb-4">
+                    <div className="flex items-center justify-center sm:justify-start gap-1">
                       <User className="h-4 w-4" />
                       DOB: {patient.dob}
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center justify-center sm:justify-start gap-1">
                       <Mail className="h-4 w-4" />
-                      {patient.email}
+                      <span className="truncate">{patient.email}</span>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center justify-center sm:justify-start gap-1">
                       <Phone className="h-4 w-4" />
                       {patient.phone}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2">
                     <Badge variant={patient.status === "Active" ? "default" : "secondary"}>
                       {patient.status}
                     </Badge>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-muted-foreground text-center sm:text-left">
                       Assigned to {patient.assignedDoctor}
                     </span>
                   </div>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex flex-col gap-2 w-full sm:w-auto">
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={() => setIsAppointmentModalOpen(true)}
-                    className="w-full sm:w-auto"
+                    className="w-full"
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Schedule Appointment
@@ -366,7 +643,7 @@ export default function AdminPatientDetailPage() {
                     variant="outline" 
                     size="sm"
                     onClick={() => setIsMessageModalOpen(true)}
-                    className="w-full sm:w-auto"
+                    className="w-full"
                   >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Send Message
@@ -378,78 +655,92 @@ export default function AdminPatientDetailPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Quick Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5" />
-                Quick Summary
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{patient.quickStats.totalAppointments}</div>
-                  <div className="text-sm text-muted-foreground">Total Appointments</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-600">{patient.quickStats.pendingDocuments}</div>
-                  <div className="text-sm text-muted-foreground">Pending Documents</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">{patient.quickStats.activePrescriptions}</div>
-                  <div className="text-sm text-muted-foreground">Active Prescriptions</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-red-600">{patient.quickStats.unreadMessages}</div>
-                  <div className="text-sm text-muted-foreground">Unread Messages</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      {/* Tabbed Content */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1">
+          <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+          <TabsTrigger value="appointments" className="text-xs sm:text-sm">Appointments</TabsTrigger>
+          <TabsTrigger value="prescriptions" className="text-xs sm:text-sm">Prescriptions</TabsTrigger>
+          <TabsTrigger value="care-plans" className="text-xs sm:text-sm">Care Plans</TabsTrigger>
+          <TabsTrigger value="documents" className="text-xs sm:text-sm">Documents</TabsTrigger>
+          <TabsTrigger value="messages" className="text-xs sm:text-sm">Messages</TabsTrigger>
+          <TabsTrigger value="billing" className="text-xs sm:text-sm">Billing</TabsTrigger>
+        </TabsList>
 
-          {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                Recent Activity
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {patient.recentActivity.map((activity) => {
-                  const Icon = getActivityIcon(activity.type)
-                  return (
-                    <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg border">
-                      <Icon className={`h-5 w-5 mt-0.5 ${getActivityColor(activity.status)}`} />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-medium">{activity.title}</h4>
-                          <Badge variant={activity.status === "completed" ? "default" : "secondary"}>
-                            {activity.status}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-1">{activity.description}</p>
-                        <p className="text-xs text-muted-foreground mt-2">{activity.date}</p>
-                      </div>
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+              {/* Quick Summary */}
+              <Card>
+                <CardHeader className="pb-3 sm:pb-6">
+                  <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                    <Activity className="h-5 w-5" />
+                    Quick Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div className="text-center p-3 sm:p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20">
+                      <div className="text-xl sm:text-2xl font-bold text-blue-600">{patient.quickStats.totalAppointments}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Total Appointments</div>
                     </div>
-                  )
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                    <div className="text-center p-3 sm:p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20">
+                      <div className="text-xl sm:text-2xl font-bold text-yellow-600">{patient.quickStats.pendingDocuments}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Pending Documents</div>
+                    </div>
+                    <div className="text-center p-3 sm:p-4 rounded-lg bg-green-50 dark:bg-green-950/20">
+                      <div className="text-xl sm:text-2xl font-bold text-green-600">{patient.quickStats.activePrescriptions}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Active Prescriptions</div>
+                    </div>
+                    <div className="text-center p-3 sm:p-4 rounded-lg bg-red-50 dark:bg-red-950/20">
+                      <div className="text-xl sm:text-2xl font-bold text-red-600">{patient.quickStats.unreadMessages}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Unread Messages</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
+              {/* Recent Activity */}
+              <Card>
+                <CardHeader className="pb-3 sm:pb-6">
+                  <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                    <Clock className="h-5 w-5" />
+                    Recent Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="space-y-3 sm:space-y-4">
+                    {patient.recentActivity.map((activity) => {
+                      const Icon = getActivityIcon(activity.type)
+                      return (
+                        <div key={activity.id} className="flex items-start gap-3 p-3 sm:p-4 rounded-lg border">
+                          <Icon className={`h-5 w-5 mt-0.5 flex-shrink-0 ${getActivityColor(activity.status)}`} />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                              <h4 className="font-medium text-sm sm:text-base">{activity.title}</h4>
+                              <Badge variant={activity.status === "completed" ? "default" : "secondary"} className="w-fit">
+                                {activity.status}
+                              </Badge>
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{activity.description}</p>
+                            <p className="text-xs text-muted-foreground mt-2">{activity.date}</p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-4 sm:space-y-6">
           {/* Contact Information */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
                 <div className="flex items-center gap-2">
                   <User className="h-5 w-5" />
                   Contact Information
@@ -463,13 +754,13 @@ export default function AdminPatientDetailPage() {
                 </Button>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="pt-0 space-y-4">
               <div>
                 <div className="flex items-center gap-2 text-sm font-medium mb-1">
                   <MapPin className="h-4 w-4" />
                   Address
                 </div>
-                <p className="text-sm text-muted-foreground">{patient.address}</p>
+                <p className="text-sm text-muted-foreground break-words">{patient.address}</p>
               </div>
               
               <div>
@@ -487,8 +778,8 @@ export default function AdminPatientDetailPage() {
 
           {/* Insurance Information */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
                 <div className="flex items-center gap-2">
                   <Shield className="h-5 w-5" />
                   Insurance
@@ -502,20 +793,20 @@ export default function AdminPatientDetailPage() {
                 </Button>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="pt-0 space-y-3">
               <div>
                 <div className="text-sm font-medium">Provider</div>
-                <div className="text-sm text-muted-foreground">{patient.insurance.provider}</div>
+                <div className="text-sm text-muted-foreground break-words">{patient.insurance.provider}</div>
               </div>
               <div>
                 <div className="text-sm font-medium">Member ID</div>
-                <div className="text-sm text-muted-foreground">{patient.insurance.memberId}</div>
+                <div className="text-sm text-muted-foreground break-all">{patient.insurance.memberId}</div>
               </div>
               <div>
                 <div className="text-sm font-medium">Group</div>
-                <div className="text-sm text-muted-foreground">{patient.insurance.group}</div>
+                <div className="text-sm text-muted-foreground break-words">{patient.insurance.group}</div>
               </div>
-              <Badge variant={patient.insurance.status === "Active" ? "default" : "secondary"}>
+              <Badge variant={patient.insurance.status === "Active" ? "default" : "secondary"} className="w-fit">
                 {patient.insurance.status}
               </Badge>
             </CardContent>
@@ -523,8 +814,8 @@ export default function AdminPatientDetailPage() {
 
           {/* Medical Information */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
                 <div className="flex items-center gap-2">
                   <HeartPulse className="h-5 w-5" />
                   Medical Information
@@ -538,12 +829,12 @@ export default function AdminPatientDetailPage() {
                 </Button>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="pt-0 space-y-4">
               <div>
                 <div className="text-sm font-medium mb-2">Conditions</div>
-                <div className="space-y-1">
+                <div className="flex flex-wrap gap-1">
                   {patient.medicalHistory.conditions.map((condition, index) => (
-                    <Badge key={index} variant="outline" className="mr-1 mb-1">
+                    <Badge key={index} variant="outline" className="text-xs">
                       {condition}
                     </Badge>
                   ))}
@@ -552,9 +843,9 @@ export default function AdminPatientDetailPage() {
               
               <div>
                 <div className="text-sm font-medium mb-2">Allergies</div>
-                <div className="space-y-1">
+                <div className="flex flex-wrap gap-1">
                   {patient.medicalHistory.allergies.map((allergy, index) => (
-                    <Badge key={index} variant="destructive" className="mr-1 mb-1">
+                    <Badge key={index} variant="destructive" className="text-xs">
                       {allergy}
                     </Badge>
                   ))}
@@ -566,8 +857,8 @@ export default function AdminPatientDetailPage() {
                 <div className="space-y-1">
                   {patient.medicalHistory.medications.map((medication, index) => (
                     <div key={index} className="flex items-center gap-2 text-sm">
-                      <Pill className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">{medication}</span>
+                      <Pill className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <span className="text-muted-foreground break-words">{medication}</span>
                     </div>
                   ))}
                 </div>
@@ -577,56 +868,544 @@ export default function AdminPatientDetailPage() {
 
           {/* Quick Actions */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                 <Activity className="h-5 w-5" />
                 Quick Actions
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="pt-0 space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full justify-start"
-                onClick={() => setIsAppointmentModalOpen(true)}
+                className="w-full justify-start text-sm"
+                onClick={() => setActiveTab("appointments")}
               >
-                <Plus className="h-4 w-4 mr-2" />
                 <Calendar className="h-4 w-4 mr-2" />
-                Schedule Appointment
+                View Appointments
               </Button>
               <Button 
                 variant="outline" 
-                className="w-full justify-start"
-                onClick={() => setIsMessageModalOpen(true)}
+                className="w-full justify-start text-sm"
+                onClick={() => setActiveTab("messages")}
               >
-                <Send className="h-4 w-4 mr-2" />
                 <MessageSquare className="h-4 w-4 mr-2" />
-                Send Message
+                View Messages
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start text-sm"
+                onClick={() => setActiveTab("prescriptions")}
+              >
+                <Pill className="h-4 w-4 mr-2" />
+                View Prescriptions
               </Button>
               <Button 
                 variant="outline" 
                 className="w-full justify-start"
-                onClick={() => setIsPrescriptionModalOpen(true)}
+                onClick={() => setActiveTab("care-plans")}
               >
-                <Plus className="h-4 w-4 mr-2" />
-                <Pill className="h-4 w-4 mr-2" />
-                Create Prescription
+                <HeartPulse className="h-4 w-4 mr-2" />
+                View Care Plans
               </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <Link href={`/admin/documents/patient/${patient.id}`}>
-                  <FileText className="h-4 w-4 mr-2" />
-                  View Documents
-                </Link>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => setActiveTab("documents")}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                View Documents
               </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <Link href={`/admin/billing?patient=${patient.id}`}>
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  View Billing
-                </Link>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => setActiveTab("billing")}
+              >
+                <DollarSign className="h-4 w-4 mr-2" />
+                View Billing
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+        </TabsContent>
+
+        {/* Appointments Tab */}
+        <TabsContent value="appointments" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                  <Calendar className="h-5 w-5" />
+                  Appointments
+                </CardTitle>
+                <Button onClick={() => setIsAppointmentModalOpen(true)} className="w-full sm:w-auto">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Schedule Appointment
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              {patientAppointments.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Calendar className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>No appointments scheduled. Schedule an appointment to get started.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 sm:space-y-4">
+                  {patientAppointments.map((appointment) => (
+                    <div key={appointment.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="text-center flex-shrink-0">
+                          <div className="text-base sm:text-lg font-bold text-blue-600">
+                            {new Date(appointment.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </div>
+                          <div className="text-xs sm:text-sm text-muted-foreground">{appointment.time}</div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-sm sm:text-base">{appointment.type}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground">with {appointment.doctorName}</p>
+                          {appointment.notes && (
+                            <p className="text-xs sm:text-sm text-muted-foreground mt-1 break-words">{appointment.notes}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between sm:justify-end gap-2">
+                        <Badge variant={appointment.status === "scheduled" ? "default" : "secondary"} className="text-xs">
+                          {appointment.status}
+                        </Badge>
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEditAppointment(appointment.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleDeleteAppointment(appointment.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Prescriptions Tab */}
+        <TabsContent value="prescriptions" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                  <Pill className="h-5 w-5" />
+                  Prescriptions
+                </CardTitle>
+                <Button onClick={() => setIsPrescriptionModalOpen(true)} className="w-full sm:w-auto">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Prescription
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              {patientPrescriptions.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Pill className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>No prescriptions found. Add a prescription to get started.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 sm:space-y-4">
+                  {patientPrescriptions.map((prescription) => (
+                    <div key={prescription.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm sm:text-base">{prescription.medication}</h4>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                          {prescription.dosage} • {prescription.frequency}
+                        </p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                          Prescribed by {prescription.prescribedBy} on {prescription.prescribedDate}
+                        </p>
+                        {prescription.notes && (
+                          <p className="text-xs sm:text-sm text-muted-foreground mt-1 break-words">{prescription.notes}</p>
+                        )}
+                      </div>
+                      <div className="flex items-center justify-between sm:justify-end gap-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                          <Badge variant={prescription.status === "active" ? "default" : "secondary"} className="text-xs w-fit">
+                            {prescription.status}
+                          </Badge>
+                          <span className="text-xs sm:text-sm text-muted-foreground">
+                            {prescription.refills} refills left
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEditPrescription(prescription.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleDeletePrescription(prescription.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Care Plans Tab */}
+        <TabsContent value="care-plans" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <HeartPulse className="h-5 w-5" />
+                  Care Plans
+                </CardTitle>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Care Plan
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {patientCarePlans.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <HeartPulse className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>No care plans created. Create a care plan to get started.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {patientCarePlans.map((plan) => (
+                    <div key={plan.id} className="p-4 border rounded-lg">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium">{plan.type}</h4>
+                        <Badge variant={plan.status === "Active" ? "default" : "secondary"}>
+                          {plan.status}
+                        </Badge>
+                      </div>
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between text-sm mb-1">
+                          <span>Progress</span>
+                          <span>{plan.progress}%</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div 
+                            className="bg-primary h-2 rounded-full transition-all" 
+                            style={{ width: `${plan.progress}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <h5 className="text-sm font-medium mb-2">Goals:</h5>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          {plan.goals.slice(0, 3).map((goal, index) => (
+                            <li key={index} className="flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                              {goal}
+                            </li>
+                          ))}
+                          {plan.goals.length > 3 && (
+                            <li className="text-xs text-muted-foreground">
+                              +{plan.goals.length - 3} more goals
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                      <div className="mb-3">
+                        <h5 className="text-sm font-medium mb-2">Medications:</h5>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          {plan.medications.slice(0, 2).map((med, index) => (
+                            <li key={index} className="flex items-center gap-2">
+                              <Pill className="h-3 w-3" />
+                              {med.name} {med.dosage}
+                            </li>
+                          ))}
+                          {plan.medications.length > 2 && (
+                            <li className="text-xs text-muted-foreground">
+                              +{plan.medications.length - 2} more medications
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span>Last Updated: {plan.lastUpdated}</span>
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEditCarePlan(plan.id)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleDeleteCarePlan(plan.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Documents Tab */}
+        <TabsContent value="documents" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                  <FileText className="h-5 w-5" />
+                  Documents
+                </CardTitle>
+                <Button className="w-full sm:w-auto">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload Document
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              {patientDocuments.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>No documents uploaded. Upload a document to get started.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 sm:space-y-4">
+                  {patientDocuments.map((document) => (
+                    <div key={document.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-sm sm:text-base">{document.name}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
+                            Uploaded by {document.uploadedBy} on {document.date}
+                          </p>
+                          <p className="text-xs sm:text-sm text-muted-foreground capitalize">
+                            Type: {document.type}
+                          </p>
+                          {document.notes && (
+                            <p className="text-xs sm:text-sm text-muted-foreground mt-1 break-words">{document.notes}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between sm:justify-end gap-2">
+                        <Badge variant={document.status === "available" ? "default" : "secondary"} className="text-xs">
+                          {document.status}
+                        </Badge>
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleViewDocument(document.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleDeleteDocument(document.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Messages Tab */}
+        <TabsContent value="messages" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                  <MessageSquare className="h-5 w-5" />
+                  Messages
+                </CardTitle>
+                <Button onClick={() => setIsMessageModalOpen(true)} className="w-full sm:w-auto">
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Message
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              {patientMessages.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <MessageSquare className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>No messages yet. Send a message to start a conversation.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 sm:space-y-4">
+                  {patientMessages.map((thread) => (
+                    <div key={thread.id} className="border rounded-lg p-3 sm:p-4 hover:bg-muted/30 transition-colors">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0 mb-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+                            <h4 className="font-medium text-sm sm:text-base">{thread.subject}</h4>
+                            <Badge variant={thread.status === "unread" ? "default" : "secondary"} className="text-xs">
+                              {thread.status}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {thread.category}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {thread.priority}
+                            </Badge>
+                          </div>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
+                            Assigned to: {thread.assignedTo}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleViewThread(thread.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleReplyToThread(thread.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                          >
+                            <Reply className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      {/* Latest Message Preview */}
+                      {thread.messages.length > 0 && (
+                        <div className="bg-muted/20 rounded p-3">
+                          <div className="flex items-start gap-3">
+                            <Avatar className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0">
+                              <AvatarFallback className="text-xs">
+                                {thread.messages[thread.messages.length - 1].from === "patient" 
+                                  ? patient.name.split(" ").map(n => n[0]).join("")
+                                  : thread.assignedTo.split(" ").map(n => n[0]).join("")
+                                }
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+                                <span className="text-xs sm:text-sm font-medium">
+                                  {thread.messages[thread.messages.length - 1].sender}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  {formatTimestamp(thread.messages[thread.messages.length - 1].timestamp)}
+                                </span>
+                              </div>
+                              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                                {thread.messages[thread.messages.length - 1].text}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Billing Tab */}
+        <TabsContent value="billing" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <DollarSign className="h-5 w-5" />
+                Billing & Payments
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="space-y-4 sm:space-y-6">
+                {/* Outstanding Balance */}
+                <div className="p-3 sm:p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-medium mb-2 text-sm sm:text-base">Outstanding Balance</h4>
+                  <div className="text-xl sm:text-2xl font-bold text-red-600">
+                    ${patient.billing.outstandingBalance.toFixed(2)}
+                  </div>
+                  <Button className="mt-2 w-full sm:w-auto">
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    Record Payment
+                  </Button>
+                </div>
+
+                {/* Last Payment */}
+                <div>
+                  <h4 className="font-medium mb-3 text-sm sm:text-base">Last Payment</h4>
+                  <div className="p-3 sm:p-4 border rounded-lg">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                      <div>
+                        <p className="font-medium text-sm sm:text-base">${patient.billing.lastPayment.amount.toFixed(2)}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                          {patient.billing.lastPayment.date} • {patient.billing.lastPayment.method}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payment History */}
+                <div>
+                  <h4 className="font-medium mb-3 text-sm sm:text-base">Payment History</h4>
+                  <div className="space-y-2">
+                    {patient.billing.paymentHistory.map((payment) => (
+                      <div key={payment.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 border rounded-lg gap-2 sm:gap-0">
+                        <div>
+                          <p className="font-medium text-sm sm:text-base">${payment.amount.toFixed(2)}</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground break-words">{payment.description}</p>
+                        </div>
+                        <div className="text-left sm:text-right">
+                          <p className="text-xs sm:text-sm font-medium">{payment.date}</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">{payment.method}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Schedule Appointment Modal */}
       <Dialog open={isAppointmentModalOpen} onOpenChange={setIsAppointmentModalOpen}>
@@ -1145,6 +1924,98 @@ export default function AdminPatientDetailPage() {
               Update Medical Info
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Message Thread View Modal */}
+      <Dialog open={selectedThread !== null} onOpenChange={(open) => !open && setSelectedThread(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Message Thread</DialogTitle>
+          </DialogHeader>
+          
+          {selectedThread && (() => {
+            const thread = patientMessages.find(t => t.id === selectedThread)
+            if (!thread) return null
+            
+            return (
+              <div className="flex-1 flex flex-col min-h-0">
+                {/* Thread Header */}
+                <div className="border-b pb-4 mb-4">
+                  <h3 className="font-semibold text-lg">{thread.subject}</h3>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Badge variant={thread.status === "unread" ? "default" : "secondary"}>
+                      {thread.status}
+                    </Badge>
+                    <Badge variant="outline">{thread.category}</Badge>
+                    <Badge variant="outline">{thread.priority}</Badge>
+                    <span className="text-sm text-muted-foreground">
+                      Assigned to: {thread.assignedTo}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+                  {thread.messages.map((message) => (
+                    <div key={message.id} className={`flex gap-3 ${message.from === "admin" ? "justify-end" : "justify-start"}`}>
+                      <div className={`flex gap-3 max-w-[70%] ${message.from === "admin" ? "flex-row-reverse" : "flex-row"}`}>
+                        <Avatar className="h-8 w-8 flex-shrink-0">
+                          <AvatarFallback className="text-xs">
+                            {message.from === "patient" 
+                              ? patient.name.split(" ").map((n: string) => n[0]).join("")
+                              : thread.assignedTo.split(" ").map((n: string) => n[0]).join("")
+                            }
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className={`flex flex-col ${message.from === "admin" ? "items-end" : "items-start"}`}>
+                          <div className={`rounded-lg p-3 ${
+                            message.from === "admin" 
+                              ? "bg-primary text-primary-foreground" 
+                              : "bg-muted"
+                          }`}>
+                            <p className="text-sm">{message.text}</p>
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs text-muted-foreground">
+                              {message.sender}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {formatTimestamp(message.timestamp)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Reply Input */}
+                <div className="border-t pt-4">
+                  <div className="flex gap-2">
+                    <Textarea
+                      placeholder="Type your reply..."
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      className="flex-1"
+                      rows={3}
+                    />
+                    <Button 
+                      onClick={() => {
+                        if (replyText.trim()) {
+                          addReplyToThread(selectedThread, replyText.trim())
+                          setReplyText("")
+                        }
+                      }}
+                      disabled={!replyText.trim()}
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
         </DialogContent>
       </Dialog>
     </div>
