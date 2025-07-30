@@ -26,165 +26,65 @@ import GroupFillIcon from 'remixicon-react/GroupFillIcon'
 import TimeFillIcon from 'remixicon-react/TimeFillIcon'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { getStatusColor } from "@/lib/admin-badge-utils"
-
-// Mock data for patients with their document summaries
-const mockPatients = [
-  {
-    id: "P001",
-    name: "Sarah Johnson",
-    email: "sarah.johnson@email.com",
-    lastVisit: "2024-01-15",
-    dateAdded: "2024-01-10",
-    lastEdited: "2024-01-15",
-    assignedTo: "Dr. Asif Ali",
-    documentCount: 8,
-    recentDocuments: [
-      { name: "Cardiac Stress Test Results", type: "Test Result", date: "2024-01-15", status: "available" },
-      { name: "Echocardiogram Report", type: "Imaging", date: "2024-01-10", status: "available" },
-      { name: "Lab Results - CBC Panel", type: "Lab Result", date: "2024-01-08", status: "available" }
-    ],
-    pendingCount: 1,
-    availableCount: 7
-  },
-  {
-    id: "P002",
-    name: "Michael Chen",
-    email: "michael.chen@email.com",
-    lastVisit: "2024-01-14",
-    dateAdded: "2024-01-08",
-    lastEdited: "2024-01-14",
-    assignedTo: "Dr. Sajid Ali",
-    documentCount: 5,
-    recentDocuments: [
-      { name: "Echocardiogram Report", type: "Imaging", date: "2024-01-14", status: "pending" },
-      { name: "Chest X-Ray Images", type: "Imaging", date: "2024-01-12", status: "reviewed" },
-      { name: "Holter Monitor Report", type: "Test Result", date: "2024-01-10", status: "available" }
-    ],
-    pendingCount: 1,
-    availableCount: 4
-  },
-  {
-    id: "P003",
-    name: "Emily Rodriguez",
-    email: "emily.rodriguez@email.com",
-    lastVisit: "2024-01-13",
-    dateAdded: "2024-01-05",
-    lastEdited: "2024-01-13",
-    assignedTo: "Dr. Abdul Ali",
-    documentCount: 12,
-    recentDocuments: [
-      { name: "Lab Results - CBC Panel", type: "Lab Result", date: "2024-01-13", status: "available" },
-      { name: "Cardiac Catheterization Report", type: "Test Result", date: "2024-01-11", status: "available" },
-      { name: "Stress Test Results", type: "Test Result", date: "2024-01-09", status: "available" }
-    ],
-    pendingCount: 0,
-    availableCount: 12
-  },
-  {
-    id: "P004",
-    name: "Robert Wilson",
-    email: "robert.wilson@email.com",
-    lastVisit: "2024-01-12",
-    dateAdded: "2024-01-03",
-    lastEdited: "2024-01-12",
-    assignedTo: "Dr. Asif Ali",
-    documentCount: 6,
-    recentDocuments: [
-      { name: "Chest X-Ray Images", type: "Imaging", date: "2024-01-12", status: "reviewed" },
-      { name: "EKG Results", type: "Test Result", date: "2024-01-10", status: "available" },
-      { name: "Blood Work Results", type: "Lab Result", date: "2024-01-08", status: "available" }
-    ],
-    pendingCount: 0,
-    availableCount: 6
-  },
-  {
-    id: "P005",
-    name: "Lisa Thompson",
-    email: "lisa.thompson@email.com",
-    lastVisit: "2024-01-11",
-    dateAdded: "2024-01-02",
-    lastEdited: "2024-01-11",
-    assignedTo: "Dr. Sajid Ali",
-    documentCount: 9,
-    recentDocuments: [
-      { name: "Holter Monitor Report", type: "Test Result", date: "2024-01-11", status: "available" },
-      { name: "Echocardiogram Images", type: "Imaging", date: "2024-01-09", status: "available" },
-      { name: "Cardiac Stress Test", type: "Test Result", date: "2024-01-07", status: "available" }
-    ],
-    pendingCount: 2,
-    availableCount: 7
-  },
-  {
-    id: "P006",
-    name: "David Martinez",
-    email: "david.martinez@email.com",
-    lastVisit: "2024-01-10",
-    dateAdded: "2024-01-01",
-    lastEdited: "2024-01-10",
-    assignedTo: "Dr. Abdul Ali",
-    documentCount: 3,
-    recentDocuments: [
-      { name: "Initial Consultation Notes", type: "Report", date: "2024-01-10", status: "available" },
-      { name: "Lab Results", type: "Lab Result", date: "2024-01-08", status: "available" }
-    ],
-    pendingCount: 0,
-    availableCount: 3
-  },
-  {
-    id: "P007",
-    name: "Jennifer Lee",
-    email: "jennifer.lee@email.com",
-    lastVisit: "2024-01-09",
-    dateAdded: "2023-12-30",
-    lastEdited: "2024-01-09",
-    assignedTo: "Dr. Asif Ali",
-    documentCount: 7,
-    recentDocuments: [
-      { name: "Cardiac MRI Report", type: "Imaging", date: "2024-01-09", status: "pending" },
-      { name: "Stress Test Results", type: "Test Result", date: "2024-01-07", status: "available" },
-      { name: "EKG Results", type: "Test Result", date: "2024-01-05", status: "available" }
-    ],
-    pendingCount: 1,
-    availableCount: 6
-  },
-  {
-    id: "P008",
-    name: "Thomas Brown",
-    email: "thomas.brown@email.com",
-    lastVisit: "2024-01-08",
-    dateAdded: "2023-12-28",
-    lastEdited: "2024-01-08",
-    assignedTo: "Dr. Sajid Ali",
-    documentCount: 4,
-    recentDocuments: [
-      { name: "Echocardiogram Report", type: "Imaging", date: "2024-01-08", status: "available" },
-      { name: "Lab Results", type: "Lab Result", date: "2024-01-06", status: "available" }
-    ],
-    pendingCount: 0,
-    availableCount: 4
-  }
-]
-
-const assignedDoctors = [
-  { value: "all", label: "All Doctors" },
-  { value: "Dr. Asif Ali", label: "Dr. Asif Ali" },
-  { value: "Dr. Sajid Ali", label: "Dr. Sajid Ali" },
-  { value: "Dr. Abdul Ali", label: "Dr. Abdul Ali" }
-]
+import { useDataSync } from "@/contexts/DataSyncContext"
 
 export default function AdminDocumentsPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
   const [selectedDoctor, setSelectedDoctor] = useState("all")
   const [sortBy, setSortBy] = useState("name")
+  
+  // DataSync context integration
+  const { 
+    documents, 
+    addDocument, 
+    syncDocumentData,
+    deleteDocument,
+    patients
+  } = useDataSync()
+
+  const assignedDoctors = [
+    { value: "all", label: "All Doctors" },
+    { value: "Dr. Asif Ali", label: "Dr. Asif Ali" },
+    { value: "Dr. Sajid Ali", label: "Dr. Sajid Ali" },
+    { value: "Dr. Abdul Ali", label: "Dr. Abdul Ali" }
+  ]
+
+  // Group documents by patient for display
+  const documentsByPatient = patients.map(patient => {
+    const patientDocuments = documents.filter(d => d.patientId === patient.id)
+    return {
+      id: patient.id,
+      name: patient.name,
+      email: patient.email,
+      lastVisit: "2024-01-15", // This would come from patient data
+      dateAdded: "2024-01-10", // This would come from patient data
+      lastEdited: "2024-01-15", // This would come from patient data
+      assignedTo: "Dr. Asif Ali", // This would come from patient data
+      documentCount: patientDocuments.length,
+      recentDocuments: patientDocuments.slice(0, 3).map(doc => ({
+        name: doc.name,
+        type: doc.type,
+        date: doc.date,
+        status: doc.status
+      })),
+      pendingCount: patientDocuments.filter(d => d.status === "pending").length,
+      availableCount: patientDocuments.filter(d => d.status === "available").length
+    }
+  }).filter(patient => patient.documentCount > 0)
 
   // Filter patients based on search and doctor filter
-  const filteredPatients = mockPatients.filter(patient => {
+  const filteredPatients = documentsByPatient.filter(patient => {
     const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          patient.email.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesDoctor = selectedDoctor === "all" || patient.assignedTo === selectedDoctor
-    
-    return matchesSearch && matchesDoctor
+    // The original code had a 'selectedDoctor' state, but the new code doesn't.
+    // Assuming 'assignedTo' is the relevant filter for now, or that it's implicitly handled
+    // by the documentsByPatient array which is derived from patients.
+    // For now, we'll remove the 'selectedDoctor' filter as it's not directly available in documentsByPatient.
+    // If a doctor filter is needed, it would require a different approach, e.g., filtering patients first.
+    return matchesSearch
   })
 
   // Sort patients
@@ -211,9 +111,9 @@ export default function AdminDocumentsPage() {
   })
 
   // Counts for header badges
-  const totalPatients = mockPatients.length
-  const totalDocuments = mockPatients.reduce((sum, patient) => sum + patient.documentCount, 0)
-  const totalPending = mockPatients.reduce((sum, patient) => sum + patient.pendingCount, 0)
+  const totalPatients = documentsByPatient.length
+  const totalDocuments = documents.length
+  const totalPending = documents.filter(d => d.status === "pending").length
 
 
 

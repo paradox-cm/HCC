@@ -99,6 +99,202 @@ export interface MedicalHistory {
 
 export interface QuickStats {
   totalAppointments: number;
+  lastVisit: string;
+  outstandingBalance: number;
+  activePrescriptions: number;
+}
+
+// Billing & Insurance Types
+export interface BillingAccount {
+  id: string;
+  patientId: string;
+  patientName: string;
+  balance: number;
+  status: BillingStatus;
+  lastPayment?: string;
+  lastPaymentAmount?: number;
+  insurance?: InsuranceInfo;
+  paymentMethods?: PaymentMethod[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type BillingStatus = 'current' | 'overdue' | 'paid' | 'collections';
+
+export interface PaymentMethod {
+  id: string;
+  type: PaymentMethodType;
+  last4?: string;
+  expiryDate?: string;
+  isDefault: boolean;
+  isActive: boolean;
+}
+
+export type PaymentMethodType = 'credit_card' | 'debit_card' | 'bank_transfer' | 'cash' | 'check';
+
+export interface Transaction {
+  id: string;
+  patientId: string;
+  patientName: string;
+  amount: number;
+  type: TransactionType;
+  method: PaymentMethodType;
+  status: TransactionStatus;
+  description?: string;
+  transactionId?: string;
+  timestamp: string;
+  createdAt: string;
+}
+
+export type TransactionType = 'payment' | 'charge' | 'refund' | 'adjustment';
+export type TransactionStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
+
+export interface InsuranceClaim {
+  id: string;
+  patientId: string;
+  patientName: string;
+  insuranceProvider: string;
+  memberId: string;
+  groupNumber?: string;
+  amount: number;
+  status: ClaimStatus;
+  serviceDate: string;
+  serviceType: string;
+  submittedDate?: string;
+  responseDate?: string;
+  claimNumber?: string;
+  denialReason?: string;
+  retryCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ClaimStatus = 'pending' | 'submitted' | 'approved' | 'denied' | 'appealed';
+
+export interface InsuranceVerification {
+  id: string;
+  patientId: string;
+  provider: string;
+  memberId: string;
+  groupNumber?: string;
+  dateOfBirth: string;
+  status: VerificationStatus;
+  coverage?: CoverageInfo;
+  verifiedAt?: string;
+  createdAt: string;
+}
+
+export type VerificationStatus = 'pending' | 'verified' | 'failed' | 'expired';
+
+export interface CoverageInfo {
+  active: boolean;
+  effectiveDate: string;
+  expirationDate: string;
+  deductible: number;
+  copay: number;
+  coinsurance: number;
+  coverageType: string;
+  benefits: string[];
+  networkStatus: NetworkStatus;
+}
+
+export type NetworkStatus = 'in_network' | 'out_of_network' | 'unknown';
+
+// Automation Types
+export interface AutomatedBillingSettings {
+  enabled: boolean;
+  frequency: BillingFrequency;
+  reminderDays: number;
+  autoCharge: boolean;
+  paymentMethod: PaymentMethodType;
+  lastRun?: string;
+  nextRun?: string;
+  processedCount: number;
+}
+
+export type BillingFrequency = 'weekly' | 'monthly' | 'quarterly';
+
+export interface ClaimsAutomationSettings {
+  enabled: boolean;
+  autoSubmit: boolean;
+  followUpDays: number;
+  denialRetry: boolean;
+  maxRetries: number;
+  lastRun?: string;
+  nextRun?: string;
+  pendingClaims: number;
+  submittedToday: number;
+  approvedToday: number;
+  deniedToday: number;
+}
+
+export interface ApiIntegrationStatus {
+  insurance: IntegrationStatus;
+  payment: IntegrationStatus;
+  claims: IntegrationStatus;
+  lastCheck: string;
+}
+
+export interface IntegrationStatus {
+  status: 'connected' | 'disconnected' | 'error';
+  lastCheck: string;
+  responseTime: number;
+  errorMessage?: string;
+}
+
+// API Request/Response Types
+export interface InsuranceVerificationRequest {
+  provider: string;
+  memberId: string;
+  group?: string;
+  dateOfBirth: string;
+}
+
+export interface InsuranceVerificationResponse {
+  status: 'verifying' | 'verified' | 'error';
+  coverage?: CoverageInfo;
+  patient?: {
+    name: string;
+    memberId: string;
+    group: string;
+  };
+  message?: string;
+}
+
+export interface PaymentProcessingRequest {
+  amount: string;
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+  patientId: string;
+}
+
+export interface PaymentProcessingResponse {
+  status: 'processing' | 'success' | 'error';
+  transactionId?: string;
+  amount?: number;
+  method?: string;
+  timestamp?: string;
+  message?: string;
+}
+
+export interface ClaimSubmissionRequest {
+  patientId: string;
+  insuranceProvider: string;
+  memberId: string;
+  amount: number;
+  serviceDate: string;
+  serviceType: string;
+}
+
+export interface ClaimSubmissionResponse {
+  id: string;
+  status: 'submitted' | 'error';
+  submittedDate: string;
+  claimNumber: string;
+  message?: string;
+}
+  totalAppointments: number;
   pendingDocuments: number;
   activePrescriptions: number;
   unreadMessages: number;

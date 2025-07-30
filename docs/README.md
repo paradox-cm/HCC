@@ -1,207 +1,263 @@
-# HCC Admin Portal Documentation
+# HCC Healthcare Admin Portal
 
-Welcome to the comprehensive documentation for the HCC Admin Portal - a modern, scalable healthcare management system designed to streamline patient care coordination and administrative tasks.
+A comprehensive, HIPAA-compliant healthcare administration portal for Houston Cardiology Consultants (HCC). Built with Next.js, TypeScript, and modern UI components.
 
-## 📚 Documentation Overview
+## Current Version: 2.2.0
 
-This documentation suite provides everything you need to understand, use, and develop the HCC Admin Portal:
+### Latest Features (v2.2.0)
+- **DataSync Context System**: Centralized data management across all admin portal sections
+- **Cross-Section Data Synchronization**: Real-time data consistency between patient detail, appointments, messages, billing, and more
+- **Enhanced Billing & Insurance**: Complete billing management with insurance verification and claims automation
+- **Patient Analytics**: Advanced analytics dashboard with patient insights and trends
+- **Import/Export Functionality**: Bulk data import and export capabilities for all sections
+- **Responsive Design**: Optimized for all device sizes with mobile-first approach
 
-### 🏗️ [Architecture Documentation](./ADMIN_PORTAL_ARCHITECTURE.md)
-**For: Developers, System Administrators, Technical Stakeholders**
+### Previous Features (v2.1.0)
+- **Billing & Insurance Management**: Complete billing system with patient accounts, insurance verification, and automated claims
+- **Integration & Automation**: API integration, payment processing, and claims automation
+- **Advanced Reporting**: Financial reports, patient billing analytics, and insurance claims tracking
+- **Enhanced Patient Management**: Improved patient detail pages with comprehensive data views
 
-Comprehensive technical documentation covering:
-- System architecture and design principles
-- Technology stack and implementation details
-- Performance and scalability considerations
-- Security and compliance requirements
-- Future enhancement roadmap
+## Key Features
 
-### 💻 [Technical Implementation Guide](./TECHNICAL_IMPLEMENTATION.md)
-**For: Developers, Technical Leads**
+### 🏥 **Patient Management**
+- Comprehensive patient profiles with medical history
+- Real-time patient data synchronization across all sections
+- Advanced search and filtering capabilities
+- Patient analytics and insights dashboard
+- Bulk import/export functionality
 
-Detailed implementation patterns and code examples:
-- State management patterns
-- Component architecture
-- Performance optimization techniques
-- Testing strategies
-- Best practices and coding standards
+### 📅 **Appointment Management**
+- Calendar-based appointment scheduling
+- Real-time availability tracking
+- Automated reminders and notifications
+- Appointment history and analytics
+- Integration with patient data
 
-### 👥 [User Guide](./USER_GUIDE.md)
-**For: End Users, Administrators, Care Coordinators**
+### 💬 **Message Management**
+- Secure patient-provider communication
+- Message threading and categorization
+- Priority-based message handling
+- Real-time message synchronization
+- Archive and search functionality
 
-Step-by-step instructions for using the portal:
-- Getting started and navigation
-- Patient management workflows
-- Analytics and reporting features
-- Search and filtering techniques
-- Troubleshooting common issues
+### 💊 **Prescription Management**
+- Digital prescription creation and tracking
+- Refill management and pharmacy integration
+- Medication history and interactions
+- Prescription analytics and reporting
+- Integration with patient medical records
 
-## 🚀 Quick Start
+### 📋 **Care Plan Management**
+- Comprehensive care plan creation and tracking
+- Goal setting and progress monitoring
+- Medication and appointment integration
+- Care plan analytics and reporting
+- Patient outcome tracking
 
-### For End Users
-1. **Read the [User Guide](./USER_GUIDE.md)** to learn how to use the portal
-2. **Access the portal** at your organization's admin URL
-3. **Complete first-time setup** following the user guide
-4. **Contact support** if you need additional training
+### 📄 **Document Management**
+- Secure document upload and storage
+- Document categorization and tagging
+- Version control and audit trails
+- Document sharing and access controls
+- Integration with patient records
 
-### For Developers
-1. **Review the [Architecture Documentation](./ADMIN_PORTAL_ARCHITECTURE.md)** to understand the system design
-2. **Study the [Technical Implementation Guide](./TECHNICAL_IMPLEMENTATION.md)** for development patterns
-3. **Set up your development environment** following the technical guide
-4. **Start contributing** to the codebase
+### 💰 **Billing & Insurance**
+- Complete billing management system
+- Insurance verification and claims processing
+- Payment processing and tracking
+- Automated billing and claims submission
+- Financial reporting and analytics
+- Integration with patient accounts
 
-### For System Administrators
-1. **Review the [Architecture Documentation](./ADMIN_PORTAL_ARCHITECTURE.md)** for system requirements
-2. **Check security considerations** and compliance requirements
-3. **Plan deployment strategy** based on scalability guidelines
-4. **Monitor performance** using provided metrics
+### 🔄 **DataSync System**
+- **Centralized Data Management**: Single source of truth for all patient data
+- **Real-time Synchronization**: Changes in one section immediately reflect in others
+- **Cross-Section Data Flow**: Patient detail ↔ Appointments ↔ Messages ↔ Billing
+- **Consistent Data Types**: Unified interfaces across all sections
+- **Scalable Architecture**: Ready for backend API integration
 
-## 🎯 Key Features
-
-### Patient Management
-- **Comprehensive patient profiles** with tabbed interface
-- **Advanced search and filtering** across all patient data
-- **Bulk operations** for efficient data management
-- **Real-time updates** and synchronization
-
-### Analytics & Reporting
-- **Interactive analytics dashboard** with key metrics
-- **Distribution analysis** by doctor, insurance, demographics
-- **Trend analysis** and business intelligence
-- **Export capabilities** in multiple formats
-
-### User Experience
-- **Mobile-first responsive design** for all devices
-- **Intuitive navigation** with patient-centric workflows
-- **Saved filters** for common workflows
-- **Performance optimization** for large datasets
-
-### Administrative Tools
-- **Role-based access control** and permissions
-- **Audit logging** and compliance features
-- **System monitoring** and health checks
-- **Backup and recovery** procedures
-
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **Shadcn/ui** - High-quality React components
+- **Next.js 14**: React framework with App Router
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first CSS framework
+- **Shadcn/ui**: Modern component library
+- **Lucide React**: Icon library
+- **Remix Icons**: Additional icon set
 
-### State Management
-- **React Hooks** - Local state management
-- **Context API** - Global state management
-- **Local Storage** - Persistent data storage
+### Data Management
+- **DataSync Context**: Centralized state management
+- **React Context API**: Component state sharing
+- **Local Storage**: Client-side data persistence
+- **Mock Data**: Development and testing data
 
-### Performance
-- **Memoization** - Optimized computations
-- **Pagination** - Efficient data handling
-- **Real-time updates** - Live data synchronization
+### Development Tools
+- **ESLint**: Code linting
+- **Prettier**: Code formatting
+- **TypeScript**: Static type checking
+- **Next.js Dev Tools**: Development utilities
 
-## 📊 System Requirements
+## Getting Started
 
-### Browser Support
-- **Chrome** (latest)
-- **Firefox** (latest)
-- **Safari** (latest)
-- **Edge** (latest)
+### Prerequisites
+- Node.js 18+ 
+- pnpm (recommended) or npm
+- Git
 
-### Device Support
-- **Desktop** - Full functionality
-- **Tablet** - Responsive design
-- **Mobile** - Optimized interface
+### Installation
 
-### Network Requirements
-- **Broadband connection** recommended
-- **Minimum 1 Mbps** download speed
-- **Stable connection** for real-time features
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd hcc
+   ```
 
-## 🔒 Security & Compliance
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
-### Data Protection
-- **HIPAA compliance** for healthcare data
-- **Encryption** of sensitive information
-- **Access control** and authentication
-- **Audit logging** for compliance
+3. **Start the development server**
+   ```bash
+   pnpm dev
+   ```
 
-### Privacy
-- **Data minimization** principles
-- **User consent** management
-- **Secure data handling** procedures
-- **Regular security audits**
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-## 📈 Performance Metrics
+### Environment Setup
 
-### Current Performance
-- **Initial Load Time**: < 2 seconds
-- **Page Transitions**: < 500ms
-- **Search Response**: < 100ms
-- **Filter Application**: < 200ms
-- **Export Generation**: < 1 second
+Create a `.env.local` file in the root directory:
 
-### Scalability
-- **Supports 10,000+ patients** efficiently
-- **Handles 100+ concurrent users**
-- **Real-time updates** for all users
-- **Optimized for growth**
+```env
+# Development environment variables
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_NAME=HCC Admin Portal
+```
 
-## 🚀 Getting Help
+## Project Structure
 
-### Support Channels
-- **Technical Support**: tech-support@hcc.com
-- **User Support**: admin-support@hcc.com
-- **Emergency Contact**: (555) 123-4567
+```
+hcc/
+├── app/                    # Next.js App Router
+│   ├── (main)/            # Main application routes
+│   ├── admin/             # Admin portal routes
+│   ├── admin-login/       # Admin authentication
+│   └── api/               # API routes
+├── components/            # Reusable UI components
+│   ├── ui/               # Shadcn/ui components
+│   ├── layout/           # Layout components
+│   └── forms/            # Form components
+├── contexts/             # React Context providers
+│   ├── DataSyncContext.tsx    # Centralized data management
+│   ├── MessageContext.tsx     # Message management
+│   ├── AppointmentContext.tsx # Appointment management
+│   └── ...               # Other context providers
+├── lib/                  # Utility functions
+├── docs/                 # Documentation files
+└── public/              # Static assets
+```
 
-### Documentation Updates
-- **Version Control**: All documentation is version controlled
-- **Regular Updates**: Documentation updated with each release
-- **Feedback Welcome**: Submit documentation improvements
+## DataSync System Architecture
 
-### Training Resources
-- **Video Tutorials**: Available in the help section
-- **Live Training**: Monthly training sessions
-- **FAQ**: Common questions and answers
-- **Best Practices**: Workflow optimization guides
+### Context Provider Structure
+```typescript
+<DataSyncProvider>
+  <MessageProvider>
+    <AppointmentProvider>
+      <PrescriptionProvider>
+        <DocumentProvider>
+          <CarePlanProvider>
+            <AdminLayoutClient>{children}</AdminLayoutClient>
+          </CarePlanProvider>
+        </DocumentProvider>
+      </PrescriptionProvider>
+    </AppointmentProvider>
+  </MessageProvider>
+</DataSyncProvider>
+```
 
-## 🔄 Version History
+### Key Data Types
+- **Patient**: Complete patient information with all related data
+- **Appointment**: Appointment details with patient and doctor references
+- **MessageThread**: Message threads with patient and admin messages
+- **Prescription**: Prescription details with patient and medication info
+- **Document**: Document management with patient references
+- **CarePlan**: Care plan details with goals, medications, and appointments
+- **Transaction**: Billing transactions with patient references
+- **InsuranceClaim**: Insurance claims with patient and provider info
 
-### Current Version: 2.0.0
-- **Complete architecture redesign**
-- **Enhanced patient management**
-- **Advanced analytics dashboard**
-- **Mobile-first responsive design**
-- **Performance optimizations**
+### Synchronization Functions
+- **Sync Functions**: `syncPatientData`, `syncAppointmentData`, etc.
+- **Add Functions**: `addPatient`, `addAppointment`, `addMessageThread`, etc.
+- **Delete Functions**: `deletePatient`, `deleteAppointment`, `deleteMessageThread`, etc.
+- **Get Functions**: `getPatientAppointments`, `getPatientMessages`, etc.
+- **Update Related Data**: `updatePatientRelatedData`, `updateAppointmentRelatedData`
 
-### Previous Versions
-- **1.5.0**: Basic patient management
-- **1.0.0**: Initial release
+## Backend Integration Roadmap
 
-## 📝 Contributing
+### Phase 1: API Endpoint Mapping
+- Map DataSync functions to REST API endpoints
+- Implement API client for data operations
+- Add authentication and authorization
+- Replace mock data with real API calls
 
-### Documentation Contributions
-1. **Fork the repository**
-2. **Create a feature branch**
-3. **Make your changes**
-4. **Submit a pull request**
+### Phase 2: Database Schema
+- Design database tables matching DataSync types
+- Implement foreign key relationships
+- Add indexes for performance optimization
+- Set up data migration scripts
 
-### Code Contributions
-1. **Review the technical implementation guide**
-2. **Follow coding standards**
-3. **Write tests for new features**
-4. **Submit pull requests**
+### Phase 3: Real-time Updates
+- Implement WebSocket connections for live updates
+- Add optimistic updates for better UX
+- Handle offline/online synchronization
+- Implement conflict resolution strategies
 
-## 📄 License
+### Phase 4: Performance & Security
+- Implement data caching strategies
+- Add rate limiting and request throttling
+- Implement audit logging for data changes
+- Add data validation and sanitization
 
-This documentation and the HCC Admin Portal are proprietary software owned by HCC. All rights reserved.
+## Development Guidelines
+
+### Code Style
+- Use TypeScript for all new code
+- Follow ESLint and Prettier configurations
+- Use meaningful variable and function names
+- Add JSDoc comments for complex functions
+
+### Component Guidelines
+- Use functional components with hooks
+- Implement proper error boundaries
+- Follow the single responsibility principle
+- Use TypeScript interfaces for props
+
+### Data Management
+- Use DataSync context for all data operations
+- Implement proper error handling
+- Add loading states for async operations
+- Use optimistic updates where appropriate
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is proprietary software for Houston Cardiology Consultants.
+
+## Support
+
+For support and questions, please contact the development team or refer to the documentation in the `docs/` directory.
 
 ---
 
-## 🎉 Conclusion
-
-The HCC Admin Portal represents a modern, scalable, and user-friendly healthcare management solution. With comprehensive documentation, robust technical implementation, and intuitive user experience, it provides the foundation for efficient healthcare administration and improved patient care coordination.
-
-**Ready to get started?** Choose the appropriate documentation above based on your role and needs.
-
-For questions or feedback about this documentation, please contact the development team. 
+**Built with ❤️ for Houston Cardiology Consultants** 

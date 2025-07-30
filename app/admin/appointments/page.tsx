@@ -53,6 +53,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { useToast } from "@/hooks/use-toast"
 import { useRef } from "react"
 import { buttonVariants } from "@/components/ui/button"
+import { useDataSync } from "@/contexts/DataSyncContext"
 
 
 // CSS override for calendar width
@@ -374,24 +375,32 @@ function CustomCalendar({ appointments, onDayClick, selectedDate, setSelectedDat
 }
 
 export default function AdminAppointmentsPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [appointments, setAppointments] = useState<Appointment[]>(initialAppointments)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { toast } = useToast()
+  
+  // DataSync context integration
+  const { 
+    appointments, 
+    addAppointment, 
+    syncAppointmentData, 
+    deleteAppointment,
+    updateAppointmentRelatedData,
+    patients
+  } = useDataSync()
   
   // Local appointment management functions
-  const addAppointment = useCallback((appointment: Appointment) => {
-    setAppointments(prev => [...prev, { ...appointment, id: Date.now() }])
-  }, [])
+  const addAppointmentLocal = useCallback((appointment: Appointment) => {
+    addAppointment(appointment)
+  }, [addAppointment])
   
-  const updateAppointment = useCallback((id: number, updates: Partial<Appointment>) => {
-    setAppointments(prev => prev.map(appt => 
-      appt.id === id ? { ...appt, ...updates } : appt
-    ))
-  }, [])
+  const updateAppointmentLocal = useCallback((id: number, updates: Partial<Appointment>) => {
+    updateAppointmentRelatedData(id, updates)
+  }, [updateAppointmentRelatedData])
   
-  const deleteAppointment = useCallback((id: number) => {
-    setAppointments(prev => prev.filter(appt => appt.id !== id))
-  }, [])
+  const deleteAppointmentLocal = useCallback((id: number) => {
+    deleteAppointment(id)
+  }, [deleteAppointment])
   
   const [selected, setSelected] = useState<Appointment | null>(null)
   const [showDetails, setShowDetails] = useState(false)
@@ -413,7 +422,6 @@ export default function AdminAppointmentsPage() {
   const [doctorFilter, setDoctorFilter] = useState("all")
   const [dateRange, setDateRange] = useState<{ from: string; to: string }>({ from: "", to: "" })
   const [view, setView] = useState<'table' | 'calendar'>('calendar')
-  const { toast } = useToast()
   const [calendarDate, setCalendarDate] = useState(new Date(2025, 6, 1)) // July 2025
   const [calendarDayAppts, setCalendarDayAppts] = useState<Appointment[] | null>(null)
   const calendarRef = useRef<any>(null)
@@ -446,7 +454,7 @@ export default function AdminAppointmentsPage() {
 
   // Filtered appointments
   const filtered = appointments.filter(a => {
-    const patient = mockPatients.find(p => p.id === a.patientId)?.name.toLowerCase() || ""
+    const patient = patients.find(p => p.id === a.patientId)?.name.toLowerCase() || ""
     const doctor = mockDoctors.find(d => d.id === a.doctorId)?.name.toLowerCase() || ""
     const matchesSearch =
       patient.includes(filter.toLowerCase()) ||
@@ -465,7 +473,7 @@ export default function AdminAppointmentsPage() {
     const rows = [
       ["Patient", "Doctor", "Date/Time", "Status", "Notes"],
       ...filtered.map(appt => [
-        mockPatients.find(p => p.id === appt.patientId)?.name,
+        patients.find(p => p.id === appt.patientId)?.name,
         mockDoctors.find(d => d.id === appt.doctorId)?.name,
         format(appt.date, "yyyy-MM-dd HH:mm"),
         appt.status,
@@ -520,11 +528,11 @@ export default function AdminAppointmentsPage() {
       date: new Date(form.date)
     }
     if (form.id) {
-      updateAppointment(form.id, newAppt)
+      updateAppointmentLocal(form.id, newAppt)
     } else {
-      addAppointment({
+      addAppointmentLocal({
         patientId: newAppt.patientId,
-        patientName: mockPatients.find(p => p.id === newAppt.patientId)?.name || "",
+        patientName: patients.find(p => p.id === newAppt.patientId)?.name || "",
         doctorId: newAppt.doctorId,
         doctorName: mockDoctors.find(d => d.id === newAppt.doctorId)?.name || "",
         date: format(newAppt.date, "yyyy-MM-dd"),
@@ -537,10 +545,10 @@ export default function AdminAppointmentsPage() {
     setShowForm(false)
   }
   function handleStatusChange(id: number, status: string) {
-    updateAppointment(id, { status })
+    updateAppointmentLocal(id, { status })
   }
   function handleDelete(id: number) {
-    deleteAppointment(id)
+    deleteAppointmentLocal(id)
     setRemoveAppt(null)
   }
   function toggleSelect(id: number) {
@@ -551,11 +559,11 @@ export default function AdminAppointmentsPage() {
     else setSelectedIds(filtered.map(a => a.id))
   }
   function handleBulkDelete() {
-    selectedIds.forEach(id => deleteAppointment(id))
+    selectedIds.forEach(id => deleteAppointmentLocal(id))
     setSelectedIds([])
   }
   function handleBulkStatus(status: string) {
-    selectedIds.forEach(id => updateAppointment(id, { status }))
+    selectedIds.forEach(id => updateAppointmentLocal(id, { status }))
     setSelectedIds([])
   }
   function handleBulkReminder() {
@@ -587,7 +595,7 @@ export default function AdminAppointmentsPage() {
   function handleReschedule(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!rescheduleAppt) return
-    updateAppointment(rescheduleAppt.id, {
+    updateAppointmentLocal(rescheduleAppt.id, {
       date: new Date(rescheduleDate),
       status: "rescheduled",
       notes: (rescheduleAppt.notes ? rescheduleAppt.notes + "\n" : "") + `Rescheduled to ${format(new Date(rescheduleDate), "yyyy-MM-dd HH:mm")}`
@@ -599,7 +607,7 @@ export default function AdminAppointmentsPage() {
   function handleSendReminder(appt: Appointment) {
     setReminderAppt(appt)
     // Set default message based on appointment
-    const patientName = mockPatients.find(p => p.id === appt.patientId)?.name
+    const patientName = patients.find(p => p.id === appt.patientId)?.name
     const doctorName = mockDoctors.find(d => d.id === appt.doctorId)?.name
     const appointmentDate = format(appt.date, "EEEE, MMMM do, yyyy 'at' h:mm a")
     
@@ -719,7 +727,7 @@ export default function AdminAppointmentsPage() {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-36"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-36 h-10 sm:h-11 md:h-12"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
             {statusOptions.map(opt => (
@@ -728,7 +736,7 @@ export default function AdminAppointmentsPage() {
           </SelectContent>
         </Select>
         <Select value={doctorFilter} onValueChange={setDoctorFilter}>
-          <SelectTrigger className="w-full sm:w-36"><SelectValue placeholder="Doctor" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-36 h-10 sm:h-11 md:h-12"><SelectValue placeholder="Doctor" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Doctors</SelectItem>
             {mockDoctors.map(d => (
@@ -785,7 +793,7 @@ export default function AdminAppointmentsPage() {
                             onChange={() => toggleSelect(appt.id)} 
                           />
                         </td>
-                        <td className="py-2 px-3 font-medium">{mockPatients.find(p => p.id === appt.patientId)?.name}</td>
+                        <td className="py-2 px-3 font-medium">{patients.find(p => p.id === appt.patientId)?.name}</td>
                         <td className="py-2 px-3">{mockDoctors.find(d => d.id === appt.doctorId)?.name}</td>
                         <td className="py-2 px-3">{format(appt.date, "MMM dd, yyyy 'at' h:mm a")}</td>
                         <td className="py-2 px-3">
@@ -880,7 +888,7 @@ export default function AdminAppointmentsPage() {
                   <div className="text-center py-8 text-muted-foreground">No appointments found.</div>
                 )}
                 {filtered.map(appt => {
-                  const patient = mockPatients.find(p => p.id === appt.patientId);
+                  const patient = patients.find(p => p.id === appt.patientId);
                   const doctor = mockDoctors.find(d => d.id === appt.doctorId);
                   
                   return (
@@ -980,7 +988,7 @@ export default function AdminAppointmentsPage() {
                 <Select value={String(form.patientId)} onValueChange={v => setForm(f => ({ ...f, patientId: Number(v) }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    {mockPatients.map(p => (
+                    {patients.map(p => (
                       <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
                     ))}
                   </SelectContent>
@@ -1040,7 +1048,7 @@ export default function AdminAppointmentsPage() {
           </DialogHeader>
           {removeAppt && (
             <div className="space-y-4">
-              <div>Are you sure you want to remove this appointment for <b>{mockPatients.find(p => p.id === removeAppt.patientId)?.name}</b>?</div>
+              <div>Are you sure you want to remove this appointment for <b>{patients.find(p => p.id === removeAppt.patientId)?.name}</b>?</div>
               <DialogFooter>
                 <Button type="button" variant="destructive" className="w-full" onClick={() => handleDelete(removeAppt.id)}>Remove</Button>
                 <Button type="button" variant="ghost" className="w-full" onClick={() => setRemoveAppt(null)}>Cancel</Button>
@@ -1057,7 +1065,7 @@ export default function AdminAppointmentsPage() {
           </DialogHeader>
           {selected && (
             <div className="space-y-2">
-              <div><span className="font-medium">Patient:</span> {mockPatients.find(p => p.id === selected.patientId)?.name}</div>
+              <div><span className="font-medium">Patient:</span> {patients.find(p => p.id === selected.patientId)?.name}</div>
               <div><span className="font-medium">Doctor:</span> {mockDoctors.find(d => d.id === selected.doctorId)?.name}</div>
               <div><span className="font-medium">Date/Time:</span> {format(selected.date, "yyyy-MM-dd HH:mm")}</div>
               <div><span className="font-medium">Status:</span> {statusOptions.find(opt => opt.value === selected.status)?.label}</div>
@@ -1141,7 +1149,7 @@ export default function AdminAppointmentsPage() {
                 {calendarDayAppts
                   .sort((a, b) => a.date.getTime() - b.date.getTime())
                   .map(appt => {
-                    const patient = mockPatients.find(p => p.id === appt.patientId);
+                    const patient = patients.find(p => p.id === appt.patientId);
                     const doctor = mockDoctors.find(d => d.id === appt.doctorId);
                     
                     return (
@@ -1225,7 +1233,7 @@ export default function AdminAppointmentsPage() {
               <div className="bg-muted/30 rounded-lg p-4">
                 <h3 className="font-semibold mb-2">Appointment Details</h3>
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div><span className="font-medium">Patient:</span> {mockPatients.find(p => p.id === reminderAppt.patientId)?.name}</div>
+                  <div><span className="font-medium">Patient:</span> {patients.find(p => p.id === reminderAppt.patientId)?.name}</div>
                   <div><span className="font-medium">Doctor:</span> {mockDoctors.find(d => d.id === reminderAppt.doctorId)?.name}</div>
                   <div><span className="font-medium">Date:</span> {format(reminderAppt.date, "EEEE, MMMM do, yyyy")}</div>
                   <div><span className="font-medium">Time:</span> {format(reminderAppt.date, "h:mm a")}</div>
@@ -1291,7 +1299,7 @@ export default function AdminAppointmentsPage() {
                     placeholder="Enter your reminder message..."
                   />
                   <div className="text-xs text-muted-foreground mt-1">
-                    Available variables: {reminderAppt ? mockPatients.find(p => p.id === reminderAppt.patientId)?.name : 'patientName'}, {reminderAppt ? mockDoctors.find(d => d.id === reminderAppt.doctorId)?.name : 'doctorName'}, {reminderAppt ? format(reminderAppt.date, "EEEE, MMMM do, yyyy") : 'appointmentDate'}, {reminderAppt ? format(reminderAppt.date, "h:mm a") : 'appointmentTime'}
+                    Available variables: {reminderAppt ? patients.find(p => p.id === reminderAppt.patientId)?.name : 'patientName'}, {reminderAppt ? mockDoctors.find(d => d.id === reminderAppt.doctorId)?.name : 'doctorName'}, {reminderAppt ? format(reminderAppt.date, "EEEE, MMMM do, yyyy") : 'appointmentDate'}, {reminderAppt ? format(reminderAppt.date, "h:mm a") : 'appointmentTime'}
                   </div>
                 </div>
               </div>
@@ -1310,7 +1318,7 @@ export default function AdminAppointmentsPage() {
                     const timing = reminderForm.sendNow ? 'now' : `scheduled for ${reminderForm.scheduledTime}`
                     toast({ 
                       title: "Reminder sent!", 
-                      description: `${method} reminder sent ${timing} for ${mockPatients.find(p => p.id === reminderAppt.patientId)?.name}` 
+                      description: `${method} reminder sent ${timing} for ${patients.find(p => p.id === reminderAppt.patientId)?.name}` 
                     })
                     setReminderAppt(null)
                   }}

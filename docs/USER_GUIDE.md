@@ -4,10 +4,11 @@
 1. [Getting Started](#getting-started)
 2. [Navigation](#navigation)
 3. [Patient Management](#patient-management)
-4. [Analytics & Reporting](#analytics--reporting)
-5. [Search & Filtering](#search--filtering)
-6. [Export & Data Management](#export--data-management)
-7. [Troubleshooting](#troubleshooting)
+4. [Billing & Insurance Management](#billing--insurance-management)
+5. [Analytics & Reporting](#analytics--reporting)
+6. [Search & Filtering](#search--filtering)
+7. [Export & Data Management](#export--data-management)
+8. [Troubleshooting](#troubleshooting)
 
 ## Getting Started
 
@@ -69,12 +70,14 @@ The primary navigation focuses on patient care workflows:
   - Archive system
 
 #### Billing & Insurance
-- **Purpose**: Financial management
+- **Purpose**: Financial management and insurance integration
 - **Key Features**:
-  - Patient billing
-  - Insurance verification
-  - Payment tracking
-  - Financial reports
+  - Patient account management
+  - Insurance verification API
+  - Payment processing integration
+  - Automated billing cycles
+  - Claims automation
+  - Financial reporting and analytics
 
 ### Secondary Navigation (Admin Tools)
 
@@ -173,6 +176,127 @@ Access administrative tools through the dropdown menu:
    - **Export Selected**: Export patient data
 3. **Confirm the action** in the dialog that appears
 4. **Monitor progress** and view results
+
+## Billing & Insurance Management
+
+### Overview
+
+The Billing & Insurance section provides comprehensive financial management capabilities with integrated insurance verification and automated processing.
+
+### Patient Account Management
+
+#### Viewing Patient Accounts
+1. **Navigate to Billing & Insurance** section
+2. **Select "Patient Accounts"** tab
+3. **View patient list** with balance information
+4. **Click on a patient** to view detailed account
+
+#### Account Details
+- **Current Balance**: Outstanding amount owed
+- **Payment History**: Complete transaction history
+- **Insurance Information**: Coverage details and status
+- **Payment Methods**: Saved payment information
+
+#### Processing Payments
+1. **Select a patient** from the account list
+2. **Click "Process Payment"** button
+3. **Enter payment details**:
+   - Amount to pay
+   - Payment method (credit card, cash, check)
+   - Payment notes
+4. **Submit payment** and receive confirmation
+
+### Insurance Verification
+
+#### Real-Time Verification
+1. **Navigate to Integrations** tab
+2. **Click "Verify Insurance"** button
+3. **Enter patient information**:
+   - Insurance provider
+   - Member ID
+   - Group number (if applicable)
+   - Date of birth
+4. **Submit verification** request
+5. **View results** including:
+   - Coverage status
+   - Effective dates
+   - Deductible and copay information
+   - Covered benefits
+
+#### Verification Results
+- **Active Coverage**: Patient has valid insurance
+- **Coverage Details**: Specific benefits and limitations
+- **Cost Sharing**: Deductible, copay, and coinsurance
+- **Network Status**: In-network vs out-of-network
+
+### Automated Billing
+
+#### Setting Up Automated Billing
+1. **Navigate to Integrations** tab
+2. **Locate "Automated Billing"** section
+3. **Enable automated billing** using the toggle switch
+4. **Configure settings**:
+   - **Billing Frequency**: Weekly, monthly, or quarterly
+   - **Reminder Days**: Days before due date to send reminders
+   - **Auto-charge**: Enable automatic charging of saved payment methods
+
+#### Monitoring Automation
+- **Status Indicator**: Shows if automation is active
+- **Next Run Date**: When the next billing cycle will execute
+- **Last Processed**: Number of accounts processed in last run
+- **Success Rate**: Percentage of successful transactions
+
+### Claims Automation
+
+#### Setting Up Claims Automation
+1. **Navigate to Integrations** tab
+2. **Locate "Claims Automation"** section
+3. **Enable claims automation** using the toggle switch
+4. **Configure settings**:
+   - **Auto-submit**: Automatically submit new claims
+   - **Follow-up Days**: Days to wait before following up on claims
+   - **Denial Retry**: Automatically retry denied claims
+
+#### Claims Monitoring
+- **Pending Claims**: Number of claims awaiting processing
+- **Submitted Today**: Claims submitted in the current day
+- **Approved Today**: Claims approved today
+- **Denied Today**: Claims denied today
+
+### Financial Reporting
+
+#### Generating Reports
+1. **Navigate to Reports** tab
+2. **Select report type**:
+   - Patient billing data
+   - Transaction history
+   - Insurance claims
+   - Financial summary
+3. **Set date range** for the report
+4. **Choose export format**: CSV or PDF
+5. **Generate and download** report
+
+#### Report Types
+- **Patient Billing Data**: Individual patient account information
+- **Transaction History**: Complete payment and charge history
+- **Insurance Claims**: Claims submitted and their status
+- **Financial Summary**: Overall financial performance metrics
+
+### Integration Monitoring
+
+#### API Connection Status
+1. **Navigate to Integrations** tab
+2. **View connection status** for:
+   - Insurance Providers API
+   - Payment Processing API
+   - Claims Submission API
+3. **Test connections** using refresh buttons
+4. **Monitor performance** and error rates
+
+#### Troubleshooting Connections
+- **Connection Issues**: Check API credentials and endpoints
+- **Performance Problems**: Monitor response times and error rates
+- **Security Alerts**: Review authentication and encryption settings
 
 ## Analytics & Reporting
 

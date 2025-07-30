@@ -45,6 +45,271 @@
 }
 ```
 
+## Billing & Insurance Endpoints
+
+### POST /api/insurance/verify
+**Description:** Verify insurance coverage in real-time
+**Headers:** `Authorization: Bearer <token>`
+**Request Body:**
+```json
+{
+  "provider": "Aetna",
+  "memberId": "AET123456789",
+  "group": "HCC-2024",
+  "dateOfBirth": "1985-04-12"
+}
+```
+**Response:**
+```json
+{
+  "status": "verified",
+  "coverage": {
+    "active": true,
+    "effectiveDate": "2024-01-01",
+    "expirationDate": "2024-12-31",
+    "deductible": 500,
+    "copay": 25,
+    "coverageType": "PPO",
+    "benefits": ["Cardiology", "Preventive Care", "Lab Tests"]
+  },
+  "patient": {
+    "name": "John Doe",
+    "memberId": "AET123456789",
+    "group": "HCC-2024"
+  }
+}
+```
+
+### POST /api/payments/process
+**Description:** Process payment for patient account
+**Headers:** `Authorization: Bearer <token>`
+**Request Body:**
+```json
+{
+  "amount": "150.00",
+  "cardNumber": "4111111111111111",
+  "expiryDate": "12/25",
+  "cvv": "123",
+  "patientId": "uuid"
+}
+```
+**Response:**
+```json
+{
+  "status": "success",
+  "transactionId": "txn_abc123def456",
+  "amount": 150.00,
+  "method": "credit_card",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "patientId": "uuid"
+}
+```
+
+### GET /api/billing/patients
+**Description:** Get patient billing accounts with balances
+**Headers:** `Authorization: Bearer <token>`
+**Query Parameters:**
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 20)
+- `status` (string): Filter by account status (current, overdue, paid)
+
+**Response:**
+```json
+{
+  "patients": [
+    {
+      "id": "uuid",
+      "name": "Sarah Johnson",
+      "balance": 150.00,
+      "status": "overdue",
+      "lastPayment": "2024-01-01T10:30:00Z",
+      "insurance": {
+        "provider": "Aetna",
+        "memberId": "AET123456789",
+        "active": true
+      }
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "totalPages": 8
+  }
+}
+```
+
+### GET /api/billing/transactions
+**Description:** Get transaction history
+**Headers:** `Authorization: Bearer <token>`
+**Query Parameters:**
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 20)
+- `patientId` (string): Filter by patient ID
+- `dateFrom` (string): Filter from date (ISO format)
+- `dateTo` (string): Filter to date (ISO format)
+
+**Response:**
+```json
+{
+  "transactions": [
+    {
+      "id": "uuid",
+      "patientId": "uuid",
+      "patientName": "Sarah Johnson",
+      "amount": 150.00,
+      "type": "payment",
+      "method": "credit_card",
+      "status": "completed",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "transactionId": "txn_abc123def456"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "totalPages": 8
+  }
+}
+```
+
+### GET /api/claims
+**Description:** Get insurance claims
+**Headers:** `Authorization: Bearer <token>`
+**Query Parameters:**
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 20)
+- `status` (string): Filter by claim status (pending, submitted, approved, denied)
+- `patientId` (string): Filter by patient ID
+
+**Response:**
+```json
+{
+  "claims": [
+    {
+      "id": "uuid",
+      "patientId": "uuid",
+      "patientName": "Sarah Johnson",
+      "insuranceProvider": "Aetna",
+      "memberId": "AET123456789",
+      "amount": 500.00,
+      "status": "submitted",
+      "submittedDate": "2024-01-15T10:30:00Z",
+      "responseDate": null
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "totalPages": 8
+  }
+}
+```
+
+### POST /api/claims/submit
+**Description:** Submit new insurance claim
+**Headers:** `Authorization: Bearer <token>`
+**Request Body:**
+```json
+{
+  "patientId": "uuid",
+  "insuranceProvider": "Aetna",
+  "memberId": "AET123456789",
+  "amount": 500.00,
+  "serviceDate": "2024-01-15",
+  "serviceType": "consultation"
+}
+```
+**Response:**
+```json
+{
+  "id": "uuid",
+  "status": "submitted",
+  "submittedDate": "2024-01-15T10:30:00Z",
+  "claimNumber": "CLM20240115001"
+}
+```
+
+### GET /api/integrations/status
+**Description:** Get API integration status
+**Headers:** `Authorization: Bearer <token>`
+**Response:**
+```json
+{
+  "insurance": {
+    "status": "connected",
+    "lastCheck": "2024-01-15T10:30:00Z",
+    "responseTime": 250
+  },
+  "payment": {
+    "status": "connected",
+    "lastCheck": "2024-01-15T10:30:00Z",
+    "responseTime": 150
+  },
+  "claims": {
+    "status": "connected",
+    "lastCheck": "2024-01-15T10:30:00Z",
+    "responseTime": 300
+  }
+}
+```
+
+### POST /api/automation/billing/configure
+**Description:** Configure automated billing settings
+**Headers:** `Authorization: Bearer <token>`
+**Request Body:**
+```json
+{
+  "enabled": true,
+  "frequency": "monthly",
+  "reminderDays": 7,
+  "autoCharge": false,
+  "paymentMethod": "credit_card"
+}
+```
+**Response:**
+```json
+{
+  "status": "configured",
+  "settings": {
+    "enabled": true,
+    "frequency": "monthly",
+    "reminderDays": 7,
+    "autoCharge": false,
+    "paymentMethod": "credit_card"
+  }
+}
+```
+
+### POST /api/automation/claims/configure
+**Description:** Configure claims automation settings
+**Headers:** `Authorization: Bearer <token>`
+**Request Body:**
+```json
+{
+  "enabled": true,
+  "autoSubmit": true,
+  "followUpDays": 30,
+  "denialRetry": true,
+  "maxRetries": 3
+}
+```
+**Response:**
+```json
+{
+  "status": "configured",
+  "settings": {
+    "enabled": true,
+    "autoSubmit": true,
+    "followUpDays": 30,
+    "denialRetry": true,
+    "maxRetries": 3
+  }
+}
+```
+
 ## Patient Endpoints
 
 ### GET /api/patients

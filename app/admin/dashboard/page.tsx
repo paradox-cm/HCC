@@ -268,6 +268,11 @@ export default function AdminDashboardPage() {
             <User3FillIcon className="h-5 w-5" /> Add New Patient
           </Button>
         </Link>
+        <Link href="/admin/patients?analytics=1">
+          <Button className="w-full sm:min-w-[160px] shadow font-semibold flex items-center gap-2">
+            <BarChart2FillIcon className="h-5 w-5" /> Patient Analytics
+          </Button>
+        </Link>
         <Link href="/admin/appointments?add=1">
           <Button className="w-full sm:min-w-[160px] shadow font-semibold flex items-center gap-2">
             <Calendar2FillIcon className="h-5 w-5" /> Schedule Appointment

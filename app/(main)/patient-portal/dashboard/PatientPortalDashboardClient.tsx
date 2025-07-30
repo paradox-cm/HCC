@@ -385,9 +385,6 @@ export default function PatientPortalDashboardClient() {
                   <Link href="/patient-portal/dashboard/documents">View All Documents →</Link>
                 </Button>
               </div>
-              <Button asChild size="sm" variant="outline" className="w-full mt-3">
-                <Link href="/patient-portal/dashboard/documents?upload=1"> <UploadFillIcon className="mr-2 h-4 w-4" /> Upload Document</Link>
-              </Button>
             </div>
           </MobileCard>
 

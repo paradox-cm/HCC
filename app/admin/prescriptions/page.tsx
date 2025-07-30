@@ -12,6 +12,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { User } from "lucide-react"
+import { useDataSync } from "@/contexts/DataSyncContext"
+
+type PrescriptionForm = {
+  id?: number;
+  patientId: string;
+  patientName: string;
+  medication: string;
+  dosage: string;
+  instructions: string;
+  status: string;
+  prescribedBy: string;
+  refills: number;
+  canRefill: boolean;
+  pharmacy: string;
+};
 
 const MOCK_PRESCRIPTIONS = [
   {
@@ -164,30 +179,26 @@ const statusOptions = [
 ]
 
 export default function AdminPrescriptionsPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [prescriptions, setPrescriptions] = useState(MOCK_PRESCRIPTIONS)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [expandedPatients, setExpandedPatients] = useState<Set<string>>(new Set())
+  const [showModal, setShowModal] = useState(false)
+  const [viewModal, setViewModal] = useState(false)
+  const [selectedPrescription, setSelectedPrescription] = useState<any>(null)
+  
+  // DataSync context integration
+  const { 
+    prescriptions, 
+    addPrescription, 
+    syncPrescriptionData,
+    deletePrescription,
+    patients
+  } = useDataSync()
+
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
-  const [showModal, setShowModal] = useState(false)
-  const [showViewModal, setShowViewModal] = useState(false)
-  const [editRx, setEditRx] = useState<any>(null)
-  const [viewRx, setViewRx] = useState<any>(null)
-  type PrescriptionForm = {
-    id?: number;
-    patientId: string;
-    patientName: string;
-    medication: string;
-    dosage: string;
-    instructions: string;
-    status: string;
-    prescribedBy: string;
-    refills: number;
-    canRefill: boolean;
-    pharmacy: string;
-  };
-  
   const [form, setForm] = useState<PrescriptionForm>({
+    id: undefined,
     patientId: "",
     patientName: "",
     medication: "",
@@ -200,12 +211,26 @@ export default function AdminPrescriptionsPage() {
     pharmacy: "CVS Pharmacy"
   });
 
-  const [expandedPatients, setExpandedPatients] = useState<Set<string>>(new Set())
+  // Group prescriptions by patient for display
+  const prescriptionsByPatient = patients.map(patient => {
+    const patientPrescriptions = prescriptions.filter(p => p.patientId === patient.id)
+    return {
+      id: patient.id,
+      patientId: patient.id,
+      patientName: patient.name,
+      patientEmail: patient.email,
+      prescriptions: patientPrescriptions
+    }
+  }).filter(patient => patient.prescriptions.length > 0)
 
-  const filtered = prescriptions.filter(patient => {
+  const filtered = prescriptionsByPatient.filter(patient => {
     const matchesSearch = patient.patientName.toLowerCase().includes(search.toLowerCase()) ||
-                         patient.prescriptions.some(rx => rx.medication.toLowerCase().includes(search.toLowerCase()))
-    const matchesStatus = statusFilter === "all" || patient.prescriptions.some(rx => rx.status === statusFilter)
+                         patient.patientEmail.toLowerCase().includes(search.toLowerCase()) ||
+                         patient.prescriptions.some(rx => 
+                           rx.medication.toLowerCase().includes(search.toLowerCase())
+                         )
+    const matchesStatus = statusFilter === "all" || 
+                         patient.prescriptions.some(rx => rx.status.toLowerCase() === statusFilter.toLowerCase())
     return matchesSearch && matchesStatus
   })
 
@@ -236,9 +261,10 @@ export default function AdminPrescriptionsPage() {
         canRefill: rx.canRefill,
         pharmacy: rx.pharmacy
       })
-      setEditRx(rx)
+      setSelectedPrescription(rx)
     } else {
       setForm({
+        id: undefined,
         patientId: "",
         patientName: "",
         medication: "",
@@ -247,16 +273,17 @@ export default function AdminPrescriptionsPage() {
         status: "Active",
         prescribedBy: "Dr. Asif Ali",
         refills: 3,
+        canRefill: true,
         pharmacy: "CVS Pharmacy"
       })
-      setEditRx(null)
+      setSelectedPrescription(null)
     }
     setShowModal(true)
   }
 
   function handleViewModal(rx: any) {
-    setViewRx(rx)
-    setShowViewModal(true)
+    setSelectedPrescription(rx)
+    setViewModal(true)
   }
 
   function handleSave(e: React.FormEvent) {
@@ -279,23 +306,26 @@ export default function AdminPrescriptionsPage() {
 
     if (typeof form.id === 'number') {
       // Edit existing prescription
-      setPrescriptions(prev => prev.map(patient => ({
-        ...patient,
-        prescriptions: patient.prescriptions.map(rx => 
-          rx.id === form.id ? { ...newPrescription, id: form.id } : rx
-        )
-      })))
+      syncPrescriptionData(form.id, newPrescription)
     } else {
-      // Add new prescription to first patient (in real app, you'd select the patient)
-      setPrescriptions(prev => prev.map((patient, index) => 
-        index === 0 ? {
-          ...patient,
-          prescriptions: [newPrescription, ...patient.prescriptions]
-        } : patient
-      ))
+      // Add new prescription
+      addPrescription({
+        patientId: form.patientId,
+        patientName: form.patientName,
+        medication: form.medication,
+        dosage: form.dosage,
+        instructions: form.instructions,
+        status: form.status,
+        prescribedBy: form.prescribedBy,
+        refills: form.refills,
+        canRefill: form.canRefill,
+        pharmacy: form.pharmacy,
+        lastUpdated: new Date().toISOString().slice(0, 10)
+      })
     }
     
     setForm({
+      id: undefined,
       patientId: "",
       patientName: "",
       medication: "",
@@ -311,25 +341,11 @@ export default function AdminPrescriptionsPage() {
   }
 
   function handleDelete(id: number) {
-    setPrescriptions(prev => prev.map(patient => ({
-      ...patient,
-      prescriptions: patient.prescriptions.filter(rx => rx.id !== id)
-    })))
+    deletePrescription(id)
   }
 
   function handleMarkFilled(id: number, unmark: boolean) {
-    setPrescriptions(prev => prev.map(patient => ({
-      ...patient,
-      prescriptions: patient.prescriptions.map(rx =>
-        rx.id === id
-          ? {
-              ...rx,
-              status: unmark ? "Active" : "Filled",
-              lastUpdated: new Date().toISOString().slice(0, 10),
-            }
-          : rx
-      )
-    })))
+    syncPrescriptionData(id, { status: unmark ? "Active" : "Filled", lastUpdated: new Date().toISOString().slice(0, 10) })
   }
 
   // Open modal if ?add=1 is present
@@ -406,7 +422,11 @@ export default function AdminPrescriptionsPage() {
                   
                   return (
                     <>
-                      <tr key={patient.patientId} className="border-b hover:bg-accent/50 transition-colors cursor-pointer" onClick={() => togglePatientExpansion(patient.patientId)}>
+                      <tr key={patient.patientId} className={`border-b transition-colors cursor-pointer ${
+                        isExpanded 
+                          ? "bg-blue-50 dark:bg-blue-950/20" 
+                          : "hover:bg-accent/50"
+                      }`} onClick={() => togglePatientExpansion(patient.patientId)}>
                         <td className="py-2 px-3 font-medium">
                           <div className="flex items-center gap-2">
                             <ChevronDown className={`h-4 w-4 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -440,7 +460,7 @@ export default function AdminPrescriptionsPage() {
                         </td>
                       </tr>
                       {isExpanded && patient.prescriptions.map(rx => (
-                        <tr key={rx.id} className="border-b bg-muted/30">
+                        <tr key={rx.id} className="border-b bg-blue-100/50 dark:bg-blue-950/30 hover:bg-blue-200/50 dark:hover:bg-blue-950/40 transition-colors">
                           <td className="py-2 px-3 pl-8">
                             <div className="flex items-center gap-2">
                               <div className="w-2 h-2 bg-primary rounded-full"></div>
@@ -522,7 +542,11 @@ export default function AdminPrescriptionsPage() {
           const isExpanded = expandedPatients.has(patient.patientId)
           
           return (
-            <Card key={patient.patientId} className="p-4">
+            <Card key={patient.patientId} className={`p-4 transition-colors ${
+              isExpanded 
+                ? "bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800" 
+                : ""
+            }`}>
               <div className="space-y-3">
                 <div 
                   className="flex items-start justify-between cursor-pointer"
@@ -548,7 +572,7 @@ export default function AdminPrescriptionsPage() {
                 {isExpanded && (
                   <div className="space-y-3 pt-3 border-t">
                     {patient.prescriptions.map(rx => (
-                      <Card key={rx.id} className="p-3 bg-muted/30">
+                      <Card key={rx.id} className="p-3 bg-blue-100/50 dark:bg-blue-950/30 border-blue-200/50 dark:border-blue-800/50">
                         <div className="space-y-2">
                           <div className="flex items-start justify-between">
                             <div>
@@ -703,7 +727,7 @@ export default function AdminPrescriptionsPage() {
       </Dialog>
 
       {/* View Modal */}
-      <Dialog open={showViewModal} onOpenChange={setShowViewModal}>
+      <Dialog open={viewModal} onOpenChange={setViewModal}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Prescription Details</DialogTitle>
@@ -711,56 +735,56 @@ export default function AdminPrescriptionsPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Patient Name</label>
-              <p className="text-sm font-medium">{viewRx?.patientName}</p>
-              {viewRx?.patientEmail && (
-                <p className="text-xs text-muted-foreground">{viewRx.patientEmail}</p>
+              <p className="text-sm font-medium">{selectedPrescription?.patientName}</p>
+              {selectedPrescription?.patientEmail && (
+                <p className="text-xs text-muted-foreground">{selectedPrescription.patientEmail}</p>
               )}
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Medication</label>
-              <p className="text-sm font-medium">{viewRx?.medication}</p>
+              <p className="text-sm font-medium">{selectedPrescription?.medication}</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Dosage</label>
-              <p className="text-sm font-medium">{viewRx?.dosage}</p>
+              <p className="text-sm font-medium">{selectedPrescription?.dosage}</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Prescribed By</label>
-              <p className="text-sm font-medium">{viewRx?.prescribedBy}</p>
+              <p className="text-sm font-medium">{selectedPrescription?.prescribedBy}</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Pharmacy</label>
-              <p className="text-sm font-medium">{viewRx?.pharmacy}</p>
+              <p className="text-sm font-medium">{selectedPrescription?.pharmacy}</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Refills</label>
-              <p className="text-sm font-medium">{viewRx?.refills} refills remaining</p>
+              <p className="text-sm font-medium">{selectedPrescription?.refills} refills remaining</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Can Refill</label>
-              <p className="text-sm font-medium">{viewRx?.canRefill ? "Yes" : "No"}</p>
+              <p className="text-sm font-medium">{selectedPrescription?.canRefill ? "Yes" : "No"}</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Instructions</label>
-              <p className="text-sm">{viewRx?.instructions}</p>
+              <p className="text-sm">{selectedPrescription?.instructions}</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Status</label>
               <p className={`text-sm font-medium ${
-                viewRx?.status === "Active" ? "text-blue-600" :
-                viewRx?.status === "Filled" ? "text-green-600" :
+                selectedPrescription?.status === "Active" ? "text-blue-600" :
+                selectedPrescription?.status === "Filled" ? "text-green-600" :
                 "text-muted-foreground"
-              }`}>{viewRx?.status}</p>
+              }`}>{selectedPrescription?.status}</p>
             </div>
             <div>
               <label className="block text-xs font-medium mb-1 text-muted-foreground">Last Updated</label>
-              <p className="text-sm">{viewRx?.lastUpdated}</p>
+              <p className="text-sm">{selectedPrescription?.lastUpdated}</p>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setShowViewModal(false)}>Close</Button>
+              <Button variant="outline" onClick={() => setViewModal(false)}>Close</Button>
               <Button onClick={() => {
-                setShowViewModal(false)
-                handleOpenModal(viewRx)
+                setViewModal(false)
+                handleOpenModal(selectedPrescription)
               }}>Edit Prescription</Button>
             </DialogFooter>
           </div>

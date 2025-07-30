@@ -19,6 +19,7 @@ import CapsuleFillIcon from 'remixicon-react/CapsuleFillIcon'
 import User3FillIcon from 'remixicon-react/User3FillIcon'
 import CheckboxCircleFillIcon from 'remixicon-react/CheckboxCircleFillIcon'
 import CloseCircleFillIcon from 'remixicon-react/CloseCircleFillIcon'
+import { useDataSync } from "@/contexts/DataSyncContext"
 
 // Mock data for care plans
 const MOCK_CARE_PLANS = [
@@ -125,16 +126,20 @@ const CARE_PLAN_TYPES = [
 ]
 
 export default function AdminCarePlansPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [carePlans, setCarePlans] = useState(MOCK_CARE_PLANS)
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [typeFilter, setTypeFilter] = useState("all")
-  const [addOpen, setAddOpen] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingPlan, setEditingPlan] = useState<any>(null)
   const [viewPlan, setViewPlan] = useState<any>(null)
-  const [editPlan, setEditPlan] = useState<any>(null)
   const [removePlan, setRemovePlan] = useState<any>(null)
+  const [addError, setAddError] = useState("")
+  const [editError, setEditError] = useState("")
+  
+  // Add plan form state
   const [newPlan, setNewPlan] = useState({
     patientId: "",
     type: "",
@@ -143,20 +148,29 @@ export default function AdminCarePlansPage() {
     medications: [{ name: "", dosage: "", frequency: "" }],
     appointments: [{ type: "", doctor: "", date: "", time: "" }]
   })
+  
+  // Edit plan form state
   const [editPlanData, setEditPlanData] = useState<any>(null)
-  const [addError, setAddError] = useState("")
-  const [editError, setEditError] = useState("")
+  
+  // DataSync context integration
+  const { 
+    carePlans, 
+    addCarePlan, 
+    syncCarePlanData,
+    deleteCarePlan,
+    patients
+  } = useDataSync()
 
   // Open modal if ?add=1 is present
   useEffect(() => {
     if (searchParams?.get("add") === "1") {
-      setAddOpen(true);
+      setShowAddModal(true);
     }
   }, [searchParams]);
 
   // When modal closes, remove ?add=1 from URL
   function handleAddOpenChange(open: boolean) {
-    setAddOpen(open);
+    setShowAddModal(open);
     if (!open && searchParams?.get("add") === "1") {
       const params = new URLSearchParams(Array.from(searchParams.entries()));
       params.delete("add");
@@ -180,24 +194,24 @@ export default function AdminCarePlansPage() {
       return
     }
     
-    const patient = MOCK_PATIENTS.find(p => p.id === parseInt(newPlan.patientId))
+    const patient = patients.find(p => p.id === newPlan.patientId)
     const plan = {
       id: Date.now(),
       patientName: patient?.name || "",
-      patientId: parseInt(newPlan.patientId),
+      patientId: newPlan.patientId,
       type: newPlan.type,
       status: "Active",
       createdDate: new Date().toISOString().split('T')[0],
       lastUpdated: new Date().toISOString().split('T')[0],
       summary: newPlan.summary,
-      goals: newPlan.goals.filter(g => g.trim()),
-      medications: newPlan.medications.filter(m => m.name.trim()),
-      appointments: newPlan.appointments.filter(a => a.type.trim()),
+      goals: newPlan.goals.filter((g: string) => g.trim()),
+      medications: newPlan.medications.filter((m: any) => m.name.trim()),
+      appointments: newPlan.appointments.filter((a: any) => a.type.trim()),
       progress: 0
     }
     
-    setCarePlans(p => [plan, ...p])
-    setAddOpen(false)
+    addCarePlan(plan)
+    setShowAddModal(false)
     setNewPlan({
       patientId: "",
       type: "",
@@ -210,7 +224,7 @@ export default function AdminCarePlansPage() {
   }
 
   function handleRemove(id: number) {
-    setCarePlans(p => p.filter(plan => plan.id !== id))
+    deleteCarePlan(id)
     setRemovePlan(null)
   }
 
@@ -264,7 +278,7 @@ export default function AdminCarePlansPage() {
       medications: [...plan.medications],
       appointments: [...plan.appointments]
     })
-    setEditPlan(plan)
+    setEditingPlan(plan)
   }
 
   function handleEditSubmit(e: React.FormEvent) {
@@ -274,18 +288,16 @@ export default function AdminCarePlansPage() {
       return
     }
     
-    setCarePlans(p => p.map(plan => 
-      plan.id === editPlanData.id 
-        ? { 
-            ...editPlanData, 
-            lastUpdated: new Date().toISOString().split('T')[0],
-            goals: editPlanData.goals.filter((g: string) => g.trim()),
-            medications: editPlanData.medications.filter((m: any) => m.name.trim()),
-            appointments: editPlanData.appointments.filter((a: any) => a.type.trim())
-          }
-        : plan
-    ))
-    setEditPlan(null)
+    const updatedPlan = {
+      ...editPlanData, 
+      lastUpdated: new Date().toISOString().split('T')[0],
+      goals: editPlanData.goals.filter((g: string) => g.trim()),
+      medications: editPlanData.medications.filter((m: any) => m.name.trim()),
+      appointments: editPlanData.appointments.filter((a: any) => a.type.trim())
+    }
+    
+    syncCarePlanData(editPlanData.id, updatedPlan)
+    setShowEditModal(false)
     setEditPlanData(null)
     setEditError("")
   }
@@ -334,11 +346,15 @@ export default function AdminCarePlansPage() {
 
   // Progress tracking functions
   function updateProgress(planId: number, newProgress: number) {
-    setCarePlans(p => p.map(plan => 
-      plan.id === planId 
-        ? { ...plan, progress: Math.max(0, Math.min(100, newProgress)), lastUpdated: new Date().toISOString().split('T')[0] }
-        : plan
-    ))
+    const plan = carePlans.find(p => p.id === planId)
+    if (plan) {
+      const updatedPlan = {
+        ...plan, 
+        progress: Math.max(0, Math.min(100, newProgress)), 
+        lastUpdated: new Date().toISOString().split('T')[0] 
+      }
+      syncCarePlanData(planId, updatedPlan)
+    }
   }
 
   function calculateProgress(plan: any) {
@@ -463,28 +479,28 @@ export default function AdminCarePlansPage() {
         )}
         {filtered.map(plan => (
           <Card key={plan.id} className="p-4">
-            <div className="space-y-3">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-semibold text-base">{plan.patientName}</h3>
-                  <p className="text-sm text-muted-foreground">{plan.type}</p>
+            <div className="space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-base truncate">{plan.patientName}</h3>
+                  <p className="text-sm text-muted-foreground truncate">{plan.type}</p>
                 </div>
-                <Badge variant={plan.status === "Active" ? "default" : "secondary"}>
+                <Badge variant={plan.status === "Active" ? "default" : "secondary"} className="flex-shrink-0">
                   {plan.status}
                 </Badge>
               </div>
               
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Progress:</span>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Progress:</span>
                   <div className="flex items-center gap-2">
-                    <div className="w-16 bg-muted rounded-full h-2">
+                    <div className="w-20 bg-muted rounded-full h-2">
                       <div 
                         className="bg-primary h-2 rounded-full transition-all" 
                         style={{ width: `${plan.progress}%` }}
                       />
                     </div>
-                    <span className="text-xs">{plan.progress}%</span>
+                    <span className="text-xs font-medium">{plan.progress}%</span>
                   </div>
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -493,19 +509,19 @@ export default function AdminCarePlansPage() {
               </div>
               
               <div className="grid grid-cols-2 gap-2 pt-2">
-                <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)} className="w-full">
-                  <Eye className="h-4 w-4 mr-1" /> View
+                <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)} className="w-full text-xs">
+                  <Eye className="h-3 w-3 mr-1" /> View
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleEdit(plan)} className="w-full">
-                  <Edit className="h-4 w-4 mr-1" /> Edit
+                <Button size="sm" variant="outline" onClick={() => handleEdit(plan)} className="w-full text-xs">
+                  <Edit className="h-3 w-3 mr-1" /> Edit
                 </Button>
-                <Button asChild size="sm" variant="outline" className="w-full">
+                <Button asChild size="sm" variant="outline" className="w-full text-xs">
                   <Link href={`/admin/patients/${plan.patientId}`}>
-                    <User className="h-4 w-4 mr-1" /> Patient
+                    <User className="h-3 w-3 mr-1" /> Patient
                   </Link>
                 </Button>
-                <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)} className="w-full">
-                  <Trash2 className="h-4 w-4" />
+                <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)} className="w-full text-xs">
+                  <Trash2 className="h-3 w-3" />
                 </Button>
               </div>
             </div>
@@ -514,18 +530,18 @@ export default function AdminCarePlansPage() {
       </div>
 
       {/* Desktop: Table Layout */}
-      <Card className="hidden sm:block">
+      <Card className="hidden lg:block">
         <CardContent className="p-0 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
+            <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted text-muted-foreground">
-                  <th className="py-3 px-4 text-left font-semibold">Patient</th>
-                  <th className="py-3 px-4 text-left font-semibold">Type</th>
-                  <th className="py-3 px-4 text-left font-semibold">Status</th>
-                  <th className="py-3 px-4 text-left font-semibold">Progress</th>
-                  <th className="py-3 px-4 text-left font-semibold">Last Updated</th>
-                  <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[20%]">Patient</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[15%]">Type</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[12%]">Status</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[15%]">Progress</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[15%]">Last Updated</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[23%]">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -534,40 +550,106 @@ export default function AdminCarePlansPage() {
                 )}
                 {filtered.map(plan => (
                   <tr key={plan.id} className="border-b hover:bg-accent/50 transition-colors">
-                    <td className="py-3 px-4 font-medium">{plan.patientName}</td>
-                    <td className="py-3 px-4">{plan.type}</td>
-                    <td className="py-3 px-4">
-                      <Badge variant={plan.status === "Active" ? "default" : "secondary"}>
+                    <td className="py-3 px-3 font-medium truncate">{plan.patientName}</td>
+                    <td className="py-3 px-3 truncate">{plan.type}</td>
+                    <td className="py-3 px-3">
+                      <Badge variant={plan.status === "Active" ? "default" : "secondary"} className="whitespace-nowrap">
                         {plan.status}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 bg-muted rounded-full h-2">
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-16 bg-muted rounded-full h-2 flex-shrink-0">
                           <div 
                             className="bg-primary h-2 rounded-full transition-all" 
                             style={{ width: `${plan.progress}%` }}
                           />
                         </div>
-                        <span className="text-xs">{plan.progress}%</span>
+                        <span className="text-xs whitespace-nowrap">{plan.progress}%</span>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-muted-foreground">{plan.lastUpdated}</td>
-                    <td className="py-3 px-4 flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)}>
-                        <Eye className="h-4 w-4 mr-1" /> View
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(plan)}>
-                        <Edit className="h-4 w-4 mr-1" /> Edit
-                      </Button>
-                      <Button asChild size="sm" variant="outline">
-                        <Link href={`/admin/patients/${plan.patientId}`}>
-                          <User className="h-4 w-4 mr-1" /> Patient
-                        </Link>
-                      </Button>
-                      <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                    <td className="py-3 px-3 text-muted-foreground truncate">{plan.lastUpdated}</td>
+                    <td className="py-3 px-3">
+                      <div className="flex gap-1 flex-wrap">
+                        <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)} className="text-xs px-2 py-1 h-8">
+                          <Eye className="h-3 w-3 mr-1" /> View
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleEdit(plan)} className="text-xs px-2 py-1 h-8">
+                          <Edit className="h-3 w-3 mr-1" /> Edit
+                        </Button>
+                        <Button asChild size="sm" variant="outline" className="text-xs px-2 py-1 h-8">
+                          <Link href={`/admin/patients/${plan.patientId}`}>
+                            <User className="h-3 w-3 mr-1" /> Patient
+                          </Link>
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)} className="text-xs px-2 py-1 h-8">
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tablet: Compact Table Layout */}
+      <Card className="hidden sm:block lg:hidden">
+        <CardContent className="p-0 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-muted text-muted-foreground">
+                  <th className="py-3 px-3 text-left font-semibold w-[30%]">Patient</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[20%]">Type</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[15%]">Status</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[20%]">Progress</th>
+                  <th className="py-3 px-3 text-left font-semibold w-[15%]">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.length === 0 && (
+                  <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">No care plans found.</td></tr>
+                )}
+                {filtered.map(plan => (
+                  <tr key={plan.id} className="border-b hover:bg-accent/50 transition-colors">
+                    <td className="py-3 px-3 font-medium truncate">{plan.patientName}</td>
+                    <td className="py-3 px-3 truncate">{plan.type}</td>
+                    <td className="py-3 px-3">
+                      <Badge variant={plan.status === "Active" ? "default" : "secondary"} className="whitespace-nowrap">
+                        {plan.status}
+                      </Badge>
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-12 bg-muted rounded-full h-2 flex-shrink-0">
+                          <div 
+                            className="bg-primary h-2 rounded-full transition-all" 
+                            style={{ width: `${plan.progress}%` }}
+                          />
+                        </div>
+                        <span className="text-xs whitespace-nowrap">{plan.progress}%</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="flex gap-1 flex-wrap">
+                        <Button size="sm" variant="outline" onClick={() => setViewPlan(plan)} className="text-xs px-2 py-1 h-8">
+                          <Eye className="h-3 w-3" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleEdit(plan)} className="text-xs px-2 py-1 h-8">
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button asChild size="sm" variant="outline" className="text-xs px-2 py-1 h-8">
+                          <Link href={`/admin/patients/${plan.patientId}`}>
+                            <User className="h-3 w-3" />
+                          </Link>
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => setRemovePlan(plan)} className="text-xs px-2 py-1 h-8">
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -578,7 +660,7 @@ export default function AdminCarePlansPage() {
       </Card>
 
       {/* Create Care Plan Modal */}
-      <Dialog open={addOpen} onOpenChange={handleAddOpenChange}>
+      <Dialog open={showAddModal} onOpenChange={handleAddOpenChange}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create New Care Plan</DialogTitle>
@@ -820,7 +902,7 @@ export default function AdminCarePlansPage() {
       </Dialog>
 
       {/* Edit Care Plan Modal */}
-      <Dialog open={!!editPlan} onOpenChange={v => { if (!v) { setEditPlan(null); setEditPlanData(null); } }}>
+      <Dialog open={!!editingPlan} onOpenChange={v => { if (!v) { setEditingPlan(null); setEditPlanData(null); } }}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Care Plan</DialogTitle>

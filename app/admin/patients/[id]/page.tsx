@@ -39,13 +39,15 @@ import {
   Archive,
   Download,
   Upload,
-  Reply
+  Reply,
+  BarChart3
 } from "lucide-react"
 import { useMessages } from "@/contexts/MessageContext"
 import { useAppointments } from "@/contexts/AppointmentContext"
 import { usePrescriptions } from "@/contexts/PrescriptionContext"
 import { useDocuments } from "@/contexts/DocumentContext"
 import { useCarePlans } from "@/contexts/CarePlanContext"
+import { useDataSync } from "@/contexts/DataSyncContext"
 
 // Mock patient data with comprehensive information
 const MOCK_PATIENT = {
@@ -312,6 +314,7 @@ export default function AdminPatientDetailPage() {
 
   const [contactData, setContactData] = useState({
     name: patient.name,
+    dob: patient.dob,
     email: patient.email,
     phone: patient.phone,
     address: patient.address,
@@ -326,7 +329,9 @@ export default function AdminPatientDetailPage() {
     provider: patient.insurance.provider,
     memberId: patient.insurance.memberId,
     group: patient.insurance.group,
-    status: patient.insurance.status
+    status: patient.insurance.status,
+    assignedDoctor: patient.assignedDoctor,
+    patientStatus: patient.status
   })
 
   const [medicalData, setMedicalData] = useState({
@@ -335,6 +340,8 @@ export default function AdminPatientDetailPage() {
     medications: [...patient.medicalHistory.medications]
   })
 
+
+
   // Context integrations
   const { messageThreads, addReplyToThread, markThreadAsRead } = useMessages()
   const { getPatientAppointments, addAppointment, updateAppointment, deleteAppointment } = useAppointments()
@@ -342,15 +349,32 @@ export default function AdminPatientDetailPage() {
   const { getPatientDocuments, addDocument, updateDocument, deleteDocument } = useDocuments()
   const { getPatientCarePlans, addCarePlan, updateCarePlan, deleteCarePlan } = useCarePlans()
   
-  // Filter data for this patient
+  // New DataSync context integration
+  const { 
+    patients, 
+    syncPatientData, 
+    addMessageThread, 
+    addTransaction,
+    updatePatientRelatedData,
+    updateAppointmentRelatedData,
+    getPatientAppointments: getPatientAppointmentsSync,
+    getPatientPrescriptions: getPatientPrescriptionsSync,
+    getPatientDocuments: getPatientDocumentsSync,
+    getPatientCarePlans: getPatientCarePlansSync
+  } = useDataSync()
+  
+  // Get current patient from DataSync context
+  const currentPatient = patients.find(p => p.id.toString() === params.id) || patient
+  
+  // Filter data for this patient using DataSync context
   const patientMessages = messageThreads.filter(thread => 
-    thread.patientId === patient.id.toString() || 
-    thread.patientName === patient.name
+    thread.patientId === currentPatient.id.toString() || 
+    thread.patientName === currentPatient.name
   )
-  const patientAppointments = getPatientAppointments(patient.id)
-  const patientPrescriptions = getPatientPrescriptions(patient.id)
-  const patientDocuments = getPatientDocuments(patient.id)
-  const patientCarePlans = getPatientCarePlans(patient.id)
+  const patientAppointments = getPatientAppointmentsSync(currentPatient.id)
+  const patientPrescriptions = getPatientPrescriptionsSync(currentPatient.id)
+  const patientDocuments = getPatientDocumentsSync(currentPatient.id)
+  const patientCarePlans = getPatientCarePlansSync(currentPatient.id)
 
   // Message thread view state
   const [selectedThread, setSelectedThread] = useState<number | null>(null)
@@ -387,10 +411,10 @@ export default function AdminPatientDetailPage() {
   }
 
   const handleScheduleAppointment = () => {
-    // Add appointment to shared context
+    // Add appointment using DataSync context
     addAppointment({
-      patientId: patient.id,
-      patientName: patient.name,
+      patientId: currentPatient.id,
+      patientName: currentPatient.name,
       doctorId: 1, // Default to first doctor, in real app would be selected
       doctorName: appointmentData.doctor,
       date: appointmentData.date,
@@ -400,32 +424,46 @@ export default function AdminPatientDetailPage() {
       notes: appointmentData.notes
     })
     
-    console.log("Appointment scheduled for:", patient.name, appointmentData)
+    // Update patient's next appointment
+    updatePatientRelatedData(currentPatient.id, { nextAppointment: appointmentData.date })
+    
+    console.log("Appointment scheduled for:", currentPatient.name, appointmentData)
     setIsAppointmentModalOpen(false)
     setAppointmentData({
       date: "",
       time: "",
       type: "",
       notes: "",
-      doctor: patient.assignedDoctor
+      doctor: currentPatient.assignedDoctor
     })
   }
 
   const { addMessageToThread } = useMessages()
 
   const handleSendMessage = () => {
-    // Add message to shared context
-    addMessageToThread(
-      `P${patient.id.toString().padStart(3, '0')}`, // Format patient ID as P001, P002, etc.
-      patient.name,
-      patient.email,
-      messageData.subject,
-      messageData.message,
-      messageData.category,
-      messageData.priority
-    )
+    // Add message using DataSync context
+    addMessageThread({
+      patientId: currentPatient.id.toString(),
+      patientName: currentPatient.name,
+      patientEmail: currentPatient.email,
+      subject: messageData.subject,
+      category: messageData.category,
+      priority: messageData.priority,
+      status: "unread",
+      assignedTo: messageData.assignedTo,
+      messages: [
+        {
+          id: 1,
+          from: "admin",
+          sender: messageData.assignedTo,
+          text: messageData.message,
+          timestamp: new Date().toISOString()
+        }
+      ],
+      lastMessageTime: new Date().toISOString()
+    })
     
-    console.log("Message sent to:", patient.name, messageData)
+    console.log("Message sent to:", currentPatient.name, messageData)
     setIsMessageModalOpen(false)
     setMessageData({
       subject: "",
@@ -467,34 +505,52 @@ export default function AdminPatientDetailPage() {
   }
 
   const handleUpdateContact = () => {
-    // In real app, this would update patient contact information
-    console.log("Updating contact info for:", patient.name, contactData)
-    setIsContactEditModalOpen(false)
-    // Update the patient object with new data
-    Object.assign(patient, {
+    // Update patient contact information using DataSync context
+    updatePatientRelatedData(currentPatient.id, {
       name: contactData.name,
+      dob: contactData.dob,
       email: contactData.email,
       phone: contactData.phone,
       address: contactData.address,
       emergencyContact: contactData.emergencyContact
     })
+    
+    console.log("Updating contact info for:", currentPatient.name, contactData)
+    setIsContactEditModalOpen(false)
   }
 
   const handleUpdateInsurance = () => {
-    // In real app, this would update patient insurance information
-    console.log("Updating insurance info for:", patient.name, insuranceData)
+    // Update patient insurance information using DataSync context
+    updatePatientRelatedData(currentPatient.id, {
+      insurance: {
+        provider: insuranceData.provider,
+        memberId: insuranceData.memberId,
+        group: insuranceData.group,
+        status: insuranceData.status
+      },
+      assignedDoctor: insuranceData.assignedDoctor,
+      status: insuranceData.patientStatus
+    })
+    
+    console.log("Updating insurance info for:", currentPatient.name, insuranceData)
     setIsInsuranceEditModalOpen(false)
-    // Update the patient object with new data
-    Object.assign(patient.insurance, insuranceData)
   }
 
   const handleUpdateMedical = () => {
-    // In real app, this would update patient medical information
-    console.log("Updating medical info for:", patient.name, medicalData)
+    // Update patient medical information using DataSync context
+    updatePatientRelatedData(currentPatient.id, {
+      medicalHistory: {
+        conditions: medicalData.conditions.filter(c => c.trim() !== ''),
+        allergies: medicalData.allergies.filter(a => a.trim() !== ''),
+        medications: medicalData.medications.filter(m => m.trim() !== '')
+      }
+    })
+    
+    console.log("Updating medical info for:", currentPatient.name, medicalData)
     setIsMedicalEditModalOpen(false)
-    // Update the patient object with new data
-    Object.assign(patient.medicalHistory, medicalData)
   }
+
+
 
   // Message handling functions
   const handleViewThread = (threadId: number) => {
@@ -575,20 +631,15 @@ export default function AdminPatientDetailPage() {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-auto p-0 text-sm text-muted-foreground hover:text-foreground hover:underline"
+          className="h-auto p-0 text-sm text-muted-foreground hover:underline"
           onClick={() => router.push("/admin/patients")}
         >
           Patients
         </Button>
         <span className="mx-2 text-sm text-muted-foreground">/</span>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="h-auto p-0 font-semibold text-sm hover:underline"
-          onClick={() => router.push(`/admin/patients/${patient.id}`)}
-        >
+        <span className="font-semibold text-sm">
           {patient.name}
-        </Button>
+        </span>
       </div>
 
       {/* Patient Header */}
@@ -672,31 +723,81 @@ export default function AdminPatientDetailPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-              {/* Quick Summary */}
+              {/* Patient Stats */}
               <Card>
                 <CardHeader className="pb-3 sm:pb-6">
                   <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                    <Activity className="h-5 w-5" />
-                    Quick Summary
+                    <BarChart3 className="h-5 w-5" />
+                    Patient Stats
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div className="text-center p-3 sm:p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20">
-                      <div className="text-xl sm:text-2xl font-bold text-blue-600">{patient.quickStats.totalAppointments}</div>
-                      <div className="text-xs sm:text-sm text-muted-foreground">Total Appointments</div>
-                    </div>
-                    <div className="text-center p-3 sm:p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20">
-                      <div className="text-xl sm:text-2xl font-bold text-yellow-600">{patient.quickStats.pendingDocuments}</div>
-                      <div className="text-xs sm:text-sm text-muted-foreground">Pending Documents</div>
-                    </div>
-                    <div className="text-center p-3 sm:p-4 rounded-lg bg-green-50 dark:bg-green-950/20">
-                      <div className="text-xl sm:text-2xl font-bold text-green-600">{patient.quickStats.activePrescriptions}</div>
-                      <div className="text-xs sm:text-sm text-muted-foreground">Active Prescriptions</div>
-                    </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    {/* Outstanding Balance */}
                     <div className="text-center p-3 sm:p-4 rounded-lg bg-red-50 dark:bg-red-950/20">
-                      <div className="text-xl sm:text-2xl font-bold text-red-600">{patient.quickStats.unreadMessages}</div>
-                      <div className="text-xs sm:text-sm text-muted-foreground">Unread Messages</div>
+                      <div className="text-xl sm:text-2xl font-bold text-red-600">
+                        ${patient.outstandingBalance.toFixed(2)}
+                      </div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Outstanding Balance</div>
+                    </div>
+                    
+                    {/* Next Appointment */}
+                    <div className="text-center p-3 sm:p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20">
+                      <div className="text-lg sm:text-xl font-bold text-blue-600">
+                        {patient.nextAppointment ? new Date(patient.nextAppointment).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'None'}
+                      </div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Next Appointment</div>
+                    </div>
+                    
+                    {/* Last Visit */}
+                    <div className="text-center p-3 sm:p-4 rounded-lg bg-green-50 dark:bg-green-950/20">
+                      <div className="text-lg sm:text-xl font-bold text-green-600">
+                        {patient.lastVisit ? new Date(patient.lastVisit).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Never'}
+                      </div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Last Visit</div>
+                    </div>
+                    
+                    {/* Medical Conditions */}
+                    <div className="text-center p-3 sm:p-4 rounded-lg bg-purple-50 dark:bg-purple-950/20">
+                      <div className="text-xl sm:text-2xl font-bold text-purple-600">
+                        {patient.medicalHistory.conditions.length}
+                      </div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Medical Conditions</div>
+                    </div>
+                  </div>
+                  
+                  {/* Additional Stats Row */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-3 sm:mt-4">
+                    {/* Active Prescriptions */}
+                    <div className="text-center p-2 sm:p-3 rounded-lg bg-orange-50 dark:bg-orange-950/20">
+                      <div className="text-lg sm:text-xl font-bold text-orange-600">
+                        {patient.quickStats.activePrescriptions}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Active Prescriptions</div>
+                    </div>
+                    
+                    {/* Pending Documents */}
+                    <div className="text-center p-2 sm:p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950/20">
+                      <div className="text-lg sm:text-xl font-bold text-yellow-600">
+                        {patient.quickStats.pendingDocuments}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Pending Documents</div>
+                    </div>
+                    
+                    {/* Unread Messages */}
+                    <div className="text-center p-2 sm:p-3 rounded-lg bg-indigo-50 dark:bg-indigo-950/20">
+                      <div className="text-lg sm:text-xl font-bold text-indigo-600">
+                        {patient.quickStats.unreadMessages}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Unread Messages</div>
+                    </div>
+                    
+                    {/* Total Appointments */}
+                    <div className="text-center p-2 sm:p-3 rounded-lg bg-cyan-50 dark:bg-cyan-950/20">
+                      <div className="text-lg sm:text-xl font-bold text-cyan-600">
+                        {patient.quickStats.totalAppointments}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Total Appointments</div>
                     </div>
                   </div>
                 </CardContent>
@@ -757,6 +858,19 @@ export default function AdminPatientDetailPage() {
             <CardContent className="pt-0 space-y-4">
               <div>
                 <div className="flex items-center gap-2 text-sm font-medium mb-1">
+                  <User className="h-4 w-4" />
+                  Basic Information
+                </div>
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div><span className="font-medium">Name:</span> {patient.name}</div>
+                  <div><span className="font-medium">DOB:</span> {patient.dob}</div>
+                  <div><span className="font-medium">Email:</span> {patient.email}</div>
+                  <div><span className="font-medium">Phone:</span> {patient.phone}</div>
+                </div>
+              </div>
+              
+              <div>
+                <div className="flex items-center gap-2 text-sm font-medium mb-1">
                   <MapPin className="h-4 w-4" />
                   Address
                 </div>
@@ -806,9 +920,18 @@ export default function AdminPatientDetailPage() {
                 <div className="text-sm font-medium">Group</div>
                 <div className="text-sm text-muted-foreground break-words">{patient.insurance.group}</div>
               </div>
-              <Badge variant={patient.insurance.status === "Active" ? "default" : "secondary"} className="w-fit">
-                {patient.insurance.status}
-              </Badge>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant={patient.insurance.status === "Active" ? "default" : "secondary"} className="w-fit">
+                  Insurance: {patient.insurance.status}
+                </Badge>
+                <Badge variant={patient.status === "Active" ? "default" : "secondary"} className="w-fit">
+                  Patient: {patient.status}
+                </Badge>
+              </div>
+              <div>
+                <div className="text-sm font-medium">Assigned Doctor</div>
+                <div className="text-sm text-muted-foreground">{patient.assignedDoctor}</div>
+              </div>
             </CardContent>
           </Card>
 
@@ -866,65 +989,7 @@ export default function AdminPatientDetailPage() {
             </CardContent>
           </Card>
 
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader className="pb-3 sm:pb-6">
-              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                <Activity className="h-5 w-5" />
-                Quick Actions
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0 space-y-2">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm"
-                onClick={() => setActiveTab("appointments")}
-              >
-                <Calendar className="h-4 w-4 mr-2" />
-                View Appointments
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm"
-                onClick={() => setActiveTab("messages")}
-              >
-                <MessageSquare className="h-4 w-4 mr-2" />
-                View Messages
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm"
-                onClick={() => setActiveTab("prescriptions")}
-              >
-                <Pill className="h-4 w-4 mr-2" />
-                View Prescriptions
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={() => setActiveTab("care-plans")}
-              >
-                <HeartPulse className="h-4 w-4 mr-2" />
-                View Care Plans
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={() => setActiveTab("documents")}
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                View Documents
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={() => setActiveTab("billing")}
-              >
-                <DollarSign className="h-4 w-4 mr-2" />
-                View Billing
-              </Button>
-            </CardContent>
-          </Card>
+
         </div>
       </div>
         </TabsContent>
@@ -1646,6 +1711,18 @@ export default function AdminPatientDetailPage() {
                 />
               </div>
               <div>
+                <Label htmlFor="contact-dob">Date of Birth</Label>
+                <Input
+                  id="contact-dob"
+                  type="date"
+                  value={contactData.dob}
+                  onChange={(e) => setContactData(prev => ({ ...prev, dob: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
                 <Label htmlFor="contact-email">Email</Label>
                 <Input
                   id="contact-email"
@@ -1655,15 +1732,15 @@ export default function AdminPatientDetailPage() {
                   className="mt-1"
                 />
               </div>
-            </div>
-            <div>
-              <Label htmlFor="contact-phone">Phone</Label>
-              <Input
-                id="contact-phone"
-                value={contactData.phone}
-                onChange={(e) => setContactData(prev => ({ ...prev, phone: e.target.value }))}
-                className="mt-1"
-              />
+              <div>
+                <Label htmlFor="contact-phone">Phone</Label>
+                <Input
+                  id="contact-phone"
+                  value={contactData.phone}
+                  onChange={(e) => setContactData(prev => ({ ...prev, phone: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
             </div>
             <div>
               <Label htmlFor="contact-address">Address</Label>
@@ -1767,7 +1844,7 @@ export default function AdminPatientDetailPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="insurance-status">Status</Label>
+                <Label htmlFor="insurance-status">Insurance Status</Label>
                 <Select value={insuranceData.status} onValueChange={(value) => setInsuranceData(prev => ({ ...prev, status: value }))}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -1776,6 +1853,33 @@ export default function AdminPatientDetailPage() {
                     <SelectItem value="Active">Active</SelectItem>
                     <SelectItem value="Inactive">Inactive</SelectItem>
                     <SelectItem value="Pending">Pending</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="insurance-doctor">Assigned Doctor</Label>
+                <Select value={insuranceData.assignedDoctor} onValueChange={(value) => setInsuranceData(prev => ({ ...prev, assignedDoctor: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Dr. Asif Ali">Dr. Asif Ali</SelectItem>
+                    <SelectItem value="Dr. Sajid Ali">Dr. Sajid Ali</SelectItem>
+                    <SelectItem value="Dr. Abdul Ali">Dr. Abdul Ali</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="insurance-patient-status">Patient Status</Label>
+                <Select value={insuranceData.patientStatus} onValueChange={(value) => setInsuranceData(prev => ({ ...prev, patientStatus: value }))}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">Inactive</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -2018,6 +2122,8 @@ export default function AdminPatientDetailPage() {
           })()}
         </DialogContent>
       </Dialog>
+
+
     </div>
   )
 } 

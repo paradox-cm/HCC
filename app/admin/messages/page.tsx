@@ -33,6 +33,7 @@ import { Separator } from "@/components/ui/separator"
 import { getPriorityColor, getMessageStatusColor, badgeColors } from "@/lib/admin-badge-utils"
 import Message2FillIcon from 'remixicon-react/Message2FillIcon'
 import { useMessages } from "@/contexts/MessageContext"
+import { useDataSync } from "@/contexts/DataSyncContext"
 
 
 
@@ -503,17 +504,7 @@ const statuses = [
 
 export default function AdminMessagesPage() {
   const searchParams = useSearchParams()
-  const { 
-    messageThreads, 
-    addMessageToThread, 
-    addReplyToThread, 
-    markThreadAsRead, 
-    archiveThread, 
-    deleteThread, 
-    restoreThread,
-    updateThreadCategory,
-    updateThreadPriority
-  } = useMessages()
+  const [view, setView] = useState<'list' | 'thread'>('list')
   const [selectedThread, setSelectedThread] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -536,6 +527,27 @@ export default function AdminMessagesPage() {
   const [patientSearchTerm, setPatientSearchTerm] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const chatContainerRef = useRef<HTMLDivElement>(null)
+
+  // DataSync context integration
+  const { 
+    messageThreads, 
+    addMessageThread, 
+    syncMessageData,
+    deleteMessageThread,
+    patients
+  } = useDataSync()
+  
+  // Legacy message context functions (for compatibility)
+  const { 
+    addMessageToThread, 
+    addReplyToThread, 
+    markThreadAsRead, 
+    archiveThread, 
+    deleteThread, 
+    restoreThread,
+    updateThreadCategory,
+    updateThreadPriority
+  } = useMessages()
 
   const filteredThreads = messageThreads.filter(thread => {
     const matchesSearch = thread.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -720,7 +732,7 @@ export default function AdminMessagesPage() {
               />
             </div>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="h-10 min-h-[40px]">
+              <SelectTrigger className="h-10 sm:h-11 md:h-12">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -732,7 +744,7 @@ export default function AdminMessagesPage() {
               </SelectContent>
             </Select>
             <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-              <SelectTrigger className="h-10 min-h-[40px]">
+              <SelectTrigger className="h-10 sm:h-11 md:h-12">
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
               <SelectContent>
@@ -744,7 +756,7 @@ export default function AdminMessagesPage() {
               </SelectContent>
             </Select>
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="h-10 min-h-[40px]">
+              <SelectTrigger className="h-10 sm:h-11 md:h-12">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -771,20 +783,23 @@ export default function AdminMessagesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 flex-1 min-h-0 overflow-hidden">
-              <div className="overflow-y-auto" style={{ height: 'calc(100vh - 260px)' }}>
+              <div className="overflow-y-auto pb-4" style={{ height: 'calc(100vh - 300px)' }}>
                 {filteredThreads.length === 0 ? (
                   <div className="p-6 text-center text-muted-foreground">
                     No conversations found
                   </div>
                 ) : (
-                  filteredThreads.map((thread) => {
+                  filteredThreads.map((thread, index) => {
                     const latestMessage = thread.messages[thread.messages.length - 1]
+                    const isLast = index === filteredThreads.length - 1
                     return (
                       <div
                         key={thread.id}
                         className={`p-4 border-b cursor-pointer hover:bg-muted/50 transition-colors ${
                           selectedThread?.id === thread.id ? "bg-muted" : ""
-                        } ${thread.status === "unread" ? "border-l-4 border-l-blue-500" : ""}`}
+                        } ${thread.status === "unread" ? "border-l-4 border-l-blue-500" : ""} ${
+                          isLast ? "pb-8" : ""
+                        }`}
                         onClick={() => {
                           setSelectedThread(thread)
                           handleMarkAsRead(thread.id)
@@ -955,14 +970,16 @@ export default function AdminMessagesPage() {
               </CardHeader>
               <CardContent className="flex-1 min-h-0 flex flex-col p-0">
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4" ref={chatContainerRef}>
-                  {selectedThread.messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`flex gap-3 ${
-                        message.from === "admin" ? "flex-row-reverse" : "flex-row"
-                      }`}
-                    >
+                <div className="flex-1 overflow-y-auto p-4 pb-8 space-y-4" ref={chatContainerRef}>
+                  {selectedThread.messages.map((message, index) => {
+                    const isLast = index === selectedThread.messages.length - 1
+                    return (
+                                          <div
+                        key={message.id}
+                        className={`flex gap-3 ${
+                          message.from === "admin" ? "flex-row-reverse" : "flex-row"
+                        } ${isLast ? "pb-4" : ""}`}
+                      >
                       {message.from === "patient" && (
                         <div className="flex-shrink-0">
                           <Avatar className="w-7 h-7">
@@ -988,7 +1005,8 @@ export default function AdminMessagesPage() {
                         </div>
                       )}
                     </div>
-                  ))}
+                  )
+                })}
                 </div>
 
                 {/* Reply Input - Mobile optimized */}

@@ -1,6 +1,7 @@
 import "../globals.css";
 import type { Metadata } from "next"
 import AdminLayoutClient from "./AdminLayoutClient"
+import { DataSyncProvider } from "@/contexts/DataSyncContext"
 import { MessageProvider } from "@/contexts/MessageContext"
 import { AppointmentProvider } from "@/contexts/AppointmentContext"
 import { PrescriptionProvider } from "@/contexts/PrescriptionContext"
@@ -17,16 +18,18 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <MessageProvider>
-      <AppointmentProvider>
-        <PrescriptionProvider>
-          <DocumentProvider>
-            <CarePlanProvider>
-              <AdminLayoutClient>{children}</AdminLayoutClient>
-            </CarePlanProvider>
-          </DocumentProvider>
-        </PrescriptionProvider>
-      </AppointmentProvider>
-    </MessageProvider>
+    <DataSyncProvider>
+      <MessageProvider>
+        <AppointmentProvider>
+          <PrescriptionProvider>
+            <DocumentProvider>
+              <CarePlanProvider>
+                <AdminLayoutClient>{children}</AdminLayoutClient>
+              </CarePlanProvider>
+            </DocumentProvider>
+          </PrescriptionProvider>
+        </AppointmentProvider>
+      </MessageProvider>
+    </DataSyncProvider>
   )
 } 
