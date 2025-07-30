@@ -488,7 +488,7 @@ export default function AdminPatientsPage() {
           <Button
             variant="outline"
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 h-10 sm:h-11 md:h-12"
           >
             <FilterIcon className="h-4 w-4" />
             Filters
@@ -499,13 +499,13 @@ export default function AdminPatientsPage() {
             )}
           </Button>
           {hasActiveFilters && (
-            <Button variant="ghost" onClick={clearFilters} className="flex items-center gap-2">
+            <Button variant="ghost" onClick={clearFilters} className="flex items-center gap-2 h-10 sm:h-11 md:h-12">
               <XIcon className="h-4 w-4" />
               Clear
             </Button>
           )}
           {hasActiveFilters && (
-            <Button variant="outline" onClick={() => setShowSaveFilterDialog(true)} className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => setShowSaveFilterDialog(true)} className="flex items-center gap-2 h-10 sm:h-11 md:h-12">
               <FilterIcon className="h-4 w-4" />
               Save Filter
             </Button>
