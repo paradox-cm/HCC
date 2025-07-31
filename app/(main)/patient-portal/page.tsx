@@ -46,9 +46,6 @@ export default function PatientPortalPage() {
               <Button variant="outline" className="w-full bg-transparent" asChild>
                 <Link href="/patient-portal/register">Register for Access</Link>
               </Button>
-              <p className="text-xs text-muted-foreground text-center pt-2">
-                For this wireframe, click "Login" to proceed without credentials.
-              </p>
             </div>
           </CardContent>
         </Card>

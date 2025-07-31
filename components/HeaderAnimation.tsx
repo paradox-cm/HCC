@@ -44,7 +44,7 @@ export function HeaderAnimation({
 
       // Theme-aware colors for pulse-wave
       const isDark = resolvedTheme === 'dark'
-      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      const grayColor = isDark ? '#232323' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
       
       // Wave configuration - four lines
       const waves = [
@@ -134,7 +134,7 @@ export function HeaderAnimation({
 
       // Theme-aware colors for floating-geometric
       const isDark = resolvedTheme === 'dark'
-      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      const grayColor = isDark ? '#232323' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
       
       // Rectangle configuration - aligned to proper grid
       const gridSize = 120 // Base grid unit
@@ -171,9 +171,9 @@ export function HeaderAnimation({
 
         // Draw each rectangle
         rectangles.forEach((rect, index) => {
-          // Calculate dynamic properties - monotonic growth only
-          const growthProgress = Math.abs(Math.sin(time * 0.055 + index * 0.5)) // 10% faster animation
-          const growthScale = 1 + growthProgress * 0.25 // Scale from 1.0 to 1.25 (25% growth)
+                  // Calculate dynamic properties - monotonic growth only
+        const growthProgress = Math.abs(Math.sin(time * 0.0605 + index * 0.5)) // 10% faster animation (0.055 * 1.1 = 0.0605)
+        const growthScale = 1 + growthProgress * 0.25 // Scale from 1.0 to 1.25 (25% growth)
           const currentSize = rect.baseSize * rect.growthRate
           const rectWidth = currentSize * 16 / 9  // 16:9 aspect ratio
           const rectHeight = currentSize
@@ -227,7 +227,7 @@ export function HeaderAnimation({
       // Simplified stroke configuration - just two layers
       // Theme-aware colors for gradient-flow
       const isDark = resolvedTheme === 'dark'
-      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      const grayColor = isDark ? '#232323' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
       
       const strokes = [
         { 
@@ -626,7 +626,7 @@ export function HeaderAnimation({
       
       // Theme-aware colors for gray scheme
       const isDark = resolvedTheme === 'dark'
-      const grayColor = isDark ? '#374151' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
+      const grayColor = isDark ? '#232323' : '#e5e7eb' // Dark gray for dark mode, very light gray for light mode
       const colors = ['#dc2626', '#b91c1c', '#991b1b', grayColor] // Crimson, red, dark red, theme-aware gray
       
       for (let i = 0; i < numLines; i++) {

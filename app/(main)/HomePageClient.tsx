@@ -51,11 +51,11 @@ export default function HomePageClient() {
       {/* Quick Access Cards */}
       <SectionWrapper>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <QuickAccessCard icon={CalendarFillIcon} title="Schedule Visit" description="New Patient" href="/appointments" />
+          <QuickAccessCard icon={CalendarFillIcon} title="Schedule Visit" description="Book Appointment" href="/appointments" />
           <QuickAccessCard
             icon={HandHeartFillIcon}
             title="Manage Your Care"
-            description="Existing Patient"
+            description="Patient Portal"
             href="/patient-portal"
           />
           <QuickAccessCard icon={CapsuleFillIcon} title="Request Prescription" description="Manage Prescriptions" href="/patient-portal/dashboard/prescriptions?new=1" />

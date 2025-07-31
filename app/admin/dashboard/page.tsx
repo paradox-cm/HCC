@@ -162,10 +162,41 @@ export default function AdminDashboardPage() {
     setShowSearchResults(false)
   }
 
+  const [currentDateTime, setCurrentDateTime] = useState("")
+
+  // Update current date and time
+  useEffect(() => {
+    const updateDateTime = () => {
+      const now = new Date()
+      const date = now.toLocaleDateString('en-US', { 
+        weekday: 'short', 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      })
+      const time = now.toLocaleTimeString('en-US', { 
+        hour12: false, 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      })
+      setCurrentDateTime(`${date} ${time}`)
+    }
+
+    updateDateTime()
+    const interval = setInterval(updateDateTime, 1000) // Update every second
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-4 pt-16 sm:pt-0">Welcome, Admin</h1>
-      <p className="text-muted-foreground mb-8">Manage all aspects of the patient portal from this dashboard.</p>
+      <div className="flex justify-between items-center mb-4 pt-16 sm:pt-0">
+        <h1 className="text-3xl font-bold">Welcome, Admin</h1>
+        <div className="text-sm lg:text-base xl:text-lg text-muted-foreground font-mono">
+          {currentDateTime}
+        </div>
+      </div>
+      <p className="text-muted-foreground mb-8">Manage all aspects of Houston Cardiology Consultants patient portal.</p>
       
       {/* Patient Search Bar */}
       <div className="mb-8">

@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
-import { HeaderAnimation } from "@/components/HeaderAnimation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import CalendarFillIcon from 'remixicon-react/CalendarFillIcon';
@@ -214,12 +213,97 @@ export default function PatientPortalDashboardClient() {
     <>
       {/* Mobile-optimized header */}
       <SectionWrapper className="bg-muted/20 pt-6 pb-4 relative overflow-hidden">
-        <HeaderAnimation 
-          type="vanishing-point" 
-          intensity="medium" 
-          colorScheme="gray" 
-          responsive={true}
-        />
+        {/* Spectrum animation background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 spectrum-gradient-primary" 
+               style={{
+                 animation: 'spectrumMove 26.49s ease-in-out infinite',
+                 backgroundSize: '200% 100%',
+               }}
+          />
+          <div className="absolute inset-0 spectrum-gradient-secondary"
+               style={{
+                 animation: 'spectrumMove 39.75s ease-in-out infinite reverse',
+                 backgroundSize: '200% 100%',
+               }}
+          />
+        </div>
+        
+        {/* Theme-aware gradient styles */}
+        <style jsx>{`
+          .spectrum-gradient-primary {
+            background: radial-gradient(circle at 50% 50%, 
+              hsl(0, 45%, 75%, 0.25) 0%, 
+              hsl(0, 35%, 65%, 0.2) 25%, 
+              hsl(0, 25%, 55%, 0.15) 50%, 
+              hsl(0, 0%, 100%, 0.12) 75%, 
+              hsl(0, 20%, 50%, 0.15) 90%, 
+              hsl(0, 45%, 75%, 0.25) 100%
+            );
+          }
+          
+          .spectrum-gradient-secondary {
+            background: radial-gradient(circle at 50% 50%, 
+              hsl(0, 0%, 100%, 0.2) 0%, 
+              hsl(0, 30%, 70%, 0.18) 30%, 
+              hsl(0, 0%, 100%, 0.22) 60%, 
+              hsl(0, 40%, 80%, 0.18) 85%, 
+              hsl(0, 0%, 100%, 0.2) 100%
+            );
+          }
+          
+          :global(.dark) .spectrum-gradient-primary {
+            background: radial-gradient(circle at 50% 50%, 
+              hsl(0, 75%, 55%, 0.25) 0%, 
+              hsl(0, 60%, 45%, 0.2) 25%, 
+              hsl(0, 45%, 35%, 0.15) 50%, 
+              hsl(0, 0%, 7%, 0.12) 75%, 
+              hsl(0, 40%, 30%, 0.15) 90%, 
+              hsl(0, 75%, 55%, 0.25) 100%
+            );
+          }
+          
+          :global(.dark) .spectrum-gradient-secondary {
+            background: radial-gradient(circle at 50% 50%, 
+              hsl(0, 0%, 7%, 0.2) 0%, 
+              hsl(0, 55%, 50%, 0.18) 30%, 
+              hsl(0, 0%, 7%, 0.22) 60%, 
+              hsl(0, 65%, 60%, 0.18) 85%, 
+              hsl(0, 0%, 7%, 0.2) 100%
+            );
+          }
+        `}</style>
+        
+        {/* Add CSS animation keyframes for spectrum movement */}
+        <style jsx>{`
+          @keyframes spectrumMove {
+            0% {
+              background-position: 0% 50%;
+              opacity: 0.6;
+            }
+            20% {
+              background-position: 50% 50%;
+              opacity: 0.8;
+            }
+            40% {
+              background-position: 100% 50%;
+              opacity: 0.7;
+            }
+            60% {
+              background-position: 150% 50%;
+              opacity: 0.75;
+            }
+            80% {
+              background-position: 200% 50%;
+              opacity: 0.65;
+            }
+            100% {
+              background-position: 0% 50%;
+              opacity: 0.6;
+            }
+          }
+        `}</style>
+        
         <div className="flex items-start justify-between mb-1 gap-3 flex-wrap relative z-10">
           {/* Left: Avatar, name/date */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
