@@ -820,37 +820,37 @@ function ServiceCard({
   isMobile?: boolean
 }) {
   // Get the appropriate icon for each service
-  const getServiceIcon = (serviceName: string) => {
+  const getServiceIcon = (serviceName: string, size: string = "h-6 w-6") => {
     switch (serviceName) {
       // Diagnostics
       case "EKG / ECG":
       case "Nuclear Stress Test":
       case "Pacemaker Services":
-        return <HeartPulseFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <HeartPulseFillIcon className={`${size} text-muted-foreground`} />
       case "Echocardiogram":
       case "Doppler Ultrasound":
       case "Cardiac CT":
       case "Cardiac PET/CT":
       case "AAA Screening":
       case "Telemedicine":
-        return <ScanFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <ScanFillIcon className={`${size} text-muted-foreground`} />
       case "ABI (Ankle-Brachial Index)":
-        return <StethoscopeFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <StethoscopeFillIcon className={`${size} text-muted-foreground`} />
       case "Vein Ablation":
-        return <PulseFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <PulseFillIcon className={`${size} text-muted-foreground`} />
       case "EECP Therapy":
-        return <HeartsFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <HeartsFillIcon className={`${size} text-muted-foreground`} />
       case "Intensive Cardiac Rehab":
-        return <EmpathizeFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <EmpathizeFillIcon className={`${size} text-muted-foreground`} />
       case "Preventive Heart Evaluations":
-        return <UserHeartFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <UserHeartFillIcon className={`${size} text-muted-foreground`} />
       case "Lifestyle & Risk Assessments":
       case "Preoperative Clearances":
-        return <ShieldCheckFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <ShieldCheckFillIcon className={`${size} text-muted-foreground`} />
       case "Concierge Cardiology":
-        return <HandHeartFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <HandHeartFillIcon className={`${size} text-muted-foreground`} />
       default:
-        return <StethoscopeFillIcon className="h-6 w-6 text-muted-foreground" />
+        return <StethoscopeFillIcon className={`${size} text-muted-foreground`} />
     }
   }
   // Parse the detailed description to extract key information for hover state
@@ -887,7 +887,7 @@ function ServiceCard({
         style={isMobile ? { minHeight: 0, height: 'auto' } : {}}
         onClick={isMobile ? onExpand : undefined}
       >
-        <CardContent className="p-6 flex flex-col h-full relative">
+        <CardContent className="p-4 flex flex-col h-full relative">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold mb-4">{name}</h3>
             {isMobile && (
@@ -896,11 +896,11 @@ function ServiceCard({
               </button>
             )}
           </div>
-          <p className="text-muted-foreground leading-relaxed flex-grow">{defaultDescription}</p>
+          <p className="text-muted-foreground leading-relaxed flex-grow pb-12">{defaultDescription}</p>
           
           {/* Service Icon - Bottom Left */}
           <div className="absolute bottom-4 left-4">
-            {getServiceIcon(name)}
+            {getServiceIcon(name, isMobile ? "h-6 w-6" : "h-10 w-10")}
           </div>
         </CardContent>
       </div>

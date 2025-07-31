@@ -511,8 +511,8 @@ export function HeaderAnimation({
         // Clear canvas efficiently
         ctx.clearRect(0, 0, width, height)
 
-        // Create new ripple every 1.2 seconds (0.8s expansion + 0.4s gap) - faster heartbeat
-        if (time - lastPulseTime >= 1.2) {
+        // Create new ripple every 1.6 seconds (1.0s expansion + 0.6s gap) - calm heartbeat
+        if (time - lastPulseTime >= 1.6) {
           ripples.push({
             x: centerX,
             y: centerY,
