@@ -435,7 +435,7 @@ export default function ServicesPageClient() {
       {services.map((serviceCategory) => (
         <SectionWrapper
           key={serviceCategory.category}
-          className="py-4 md:py-8 mb-0 mt-0 relative z-0 !bg-transparent"
+          className="py-4 md:py-8 mb-8 mt-0 relative z-0 !bg-transparent"
         >
           <div
             ref={el => { sectionRefs.current[serviceCategory.category] = el; }}
@@ -820,37 +820,37 @@ function ServiceCard({
   isMobile?: boolean
 }) {
   // Get the appropriate icon for each service
-  const getServiceIcon = (serviceName: string, size: string = "h-6 w-6") => {
+  const getServiceIcon = (serviceName: string, size: string = "h-6 w-6", color: string = "text-muted-foreground") => {
     switch (serviceName) {
       // Diagnostics
       case "EKG / ECG":
       case "Nuclear Stress Test":
       case "Pacemaker Services":
-        return <HeartPulseFillIcon className={`${size} text-muted-foreground`} />
+        return <HeartPulseFillIcon className={`${size} ${color}`} />
       case "Echocardiogram":
       case "Doppler Ultrasound":
       case "Cardiac CT":
       case "Cardiac PET/CT":
       case "AAA Screening":
       case "Telemedicine":
-        return <ScanFillIcon className={`${size} text-muted-foreground`} />
+        return <ScanFillIcon className={`${size} ${color}`} />
       case "ABI (Ankle-Brachial Index)":
-        return <StethoscopeFillIcon className={`${size} text-muted-foreground`} />
+        return <StethoscopeFillIcon className={`${size} ${color}`} />
       case "Vein Ablation":
-        return <PulseFillIcon className={`${size} text-muted-foreground`} />
+        return <PulseFillIcon className={`${size} ${color}`} />
       case "EECP Therapy":
-        return <HeartsFillIcon className={`${size} text-muted-foreground`} />
+        return <HeartsFillIcon className={`${size} ${color}`} />
       case "Intensive Cardiac Rehab":
-        return <EmpathizeFillIcon className={`${size} text-muted-foreground`} />
+        return <EmpathizeFillIcon className={`${size} ${color}`} />
       case "Preventive Heart Evaluations":
-        return <UserHeartFillIcon className={`${size} text-muted-foreground`} />
+        return <UserHeartFillIcon className={`${size} ${color}`} />
       case "Lifestyle & Risk Assessments":
       case "Preoperative Clearances":
-        return <ShieldCheckFillIcon className={`${size} text-muted-foreground`} />
+        return <ShieldCheckFillIcon className={`${size} ${color}`} />
       case "Concierge Cardiology":
-        return <HandHeartFillIcon className={`${size} text-muted-foreground`} />
+        return <HandHeartFillIcon className={`${size} ${color}`} />
       default:
-        return <StethoscopeFillIcon className={`${size} text-muted-foreground`} />
+        return <StethoscopeFillIcon className={`${size} ${color}`} />
     }
   }
   // Parse the detailed description to extract key information for hover state
@@ -877,7 +877,7 @@ function ServiceCard({
 
   // Responsive: mobile = accordion, md+ = hover/expand
   return (
-    <Card className={"overflow-hidden transition-all duration-300 flex flex-col group z-10 hover:z-20 " + (expanded ? "shadow-lg -translate-y-1" : "") + " " + (isMobile ? "cursor-pointer" : "hover:shadow-lg hover:-translate-y-1")}> 
+    <Card className={"overflow-hidden transition-all duration-300 flex flex-col group z-10 hover:z-30 " + (expanded ? "shadow-lg -translate-y-1" : "") + " " + (isMobile ? "cursor-pointer" : "hover:shadow-lg hover:-translate-y-1")}> 
       {/* Mobile: Accordion */}
       <div
         className={
@@ -899,8 +899,8 @@ function ServiceCard({
           <p className="text-muted-foreground leading-relaxed flex-grow pb-12">{defaultDescription}</p>
           
           {/* Service Icon - Bottom Left */}
-          <div className="absolute bottom-4 left-4">
-            {getServiceIcon(name, isMobile ? "h-6 w-6" : "h-10 w-10")}
+          <div className={`absolute bottom-4 left-4 ${isMobile && expanded ? 'hidden' : ''}`}>
+            {getServiceIcon(name, isMobile ? "h-6 w-6" : "h-10 w-10", "text-[#242424]")}
           </div>
         </CardContent>
       </div>
@@ -954,7 +954,7 @@ function ServiceCard({
             {/* Image placeholder - full width */}
             <div className="w-full h-32 bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center flex-shrink-0 mb-4 rounded-lg">
               <div className="text-red-600">
-                {React.cloneElement(getServiceIcon(name), { className: "h-8 w-8" })}
+                {React.cloneElement(getServiceIcon(name), { className: "h-10 w-10" })}
               </div>
             </div>
             {/* Main description */}

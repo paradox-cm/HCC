@@ -155,14 +155,14 @@ export function Footer() {
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full border"
+            className="rounded-full border border-[#D6D8DA] dark:border-[#1F1F1F]"
             aria-label="Scroll to top"
             onClick={handleScrollTop}
           >
             <ArrowUpLineIcon className="h-5 w-5" />
           </Button>
         </div>
-        <div className="mt-12 border-t pt-8 w-full">
+        <div className="mt-12 border-t border-[#D6D8DA] dark:border-[#1F1F1F] pt-8 w-full">
           {/* Mobile: Chat buttons above, then theme/copyright below. Desktop: side by side. */}
           <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between w-full gap-6 md:gap-0">
             {/* Left: Theme dropdown */}
