@@ -262,7 +262,7 @@ export default function HomePageClient() {
       <SectionWrapper>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <QuickAccessCard icon={CalendarFillIcon} title="Schedule Visit" description="Book Appointment" href="/appointments" />
-          <QuickAccessCard icon={CapsuleFillIcon} title="Request Prescription" description="Request a Renewal" href="/appointments#prescription-renewal" />
+          <QuickAccessCard icon={CapsuleFillIcon} title="Request Prescription" description="Request a Renewal" href="/appointments?form=prescription" />
           <QuickAccessCard icon={VideoFillIcon} title="Watch Videos" description="Learn About Heart Health" href="/learn" />
           <QuickAccessCard
             icon={HandHeartFillIcon}
