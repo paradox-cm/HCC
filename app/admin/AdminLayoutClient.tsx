@@ -483,7 +483,9 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       {/* Support Modal */}
       <Dialog open={supportOpen} onOpenChange={setSupportOpen}>
         <DialogContent>
-          <DialogTitle className="text-lg font-bold mb-2">Send a message to support</DialogTitle>
+          <DialogHeader>
+            <DialogTitle>Send a message to support</DialogTitle>
+          </DialogHeader>
           {supportSent ? (
             <div className="text-green-600 text-sm">Your message has been sent! Support will contact you soon.</div>
           ) : (
