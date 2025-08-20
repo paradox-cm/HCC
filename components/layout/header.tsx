@@ -89,7 +89,7 @@ export function Header() {
             <Link 
               key={link.href} 
               href={link.href} 
-              className={`transition-colors hover:text-primary font-medium relative pb-2 ${
+              className={`transition-colors hover:text-primary font-medium relative py-2 ${
                 pathname === link.href ? 'border-b-2 border-b-red-500' : ''
               }`}
             >

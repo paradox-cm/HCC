@@ -93,10 +93,17 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "grid-move": {
+          "0%": { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "48px 48px" },
+        },
+
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "grid-move": "grid-move 20s linear infinite",
+
       },
     },
   },

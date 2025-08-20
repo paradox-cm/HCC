@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AlertTriangle, Heart, Clock, Info, User, Phone, Mail, Calendar, ArrowLeft, ArrowRight, MapPin, FileText, CreditCard } from "lucide-react"
+import { AlertTriangle, Heart, Clock, Info, User, Phone, Mail, Calendar, ArrowLeft, ArrowRight, MapPin, FileText, CreditCard, Stethoscope } from "lucide-react"
 
 interface ComprehensiveTriageFormProps {
   onComplete: (formData: any) => void

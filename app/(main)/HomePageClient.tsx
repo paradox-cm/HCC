@@ -235,6 +235,15 @@ export default function HomePageClient() {
                       />
                     </div>
                   </CarouselItem>
+                  <CarouselItem>
+                    <div className="h-64 lg:h-96 rounded-lg overflow-hidden">
+                      <img
+                        src="/images/HHC-Home5.png"
+                        alt="Comprehensive Cardiac Care Services"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </CarouselItem>
                 </CarouselContent>
               </Carousel>
               
@@ -397,10 +406,31 @@ function ServiceCard({ title, description, image, href }: { title: string; descr
 }
 
 function LocationPreview({ name, address, mapPlaceholder }: { name: string; address: string; mapPlaceholder?: boolean }) {
+  // Determine which image to use based on the location name
+  const getLocationImage = (locationName: string) => {
+    if (locationName.includes("Long Point") || locationName.includes("Spring Branch")) {
+      return "/images/HCC-Spring.png"
+    } else if (locationName.includes("Tidwell") || locationName.includes("Heights")) {
+      return "/images/HCC-Heights.png"
+    }
+    return null
+  }
+
+  const locationImage = getLocationImage(name)
+
   return (
     <Card>
       <CardContent className="p-6">
-        {mapPlaceholder && <div className="h-40 w-full rounded-md bg-muted mb-4">{/* Map Thumbnail */}</div>}
+        {locationImage && (
+          <div className="h-40 w-full rounded-md overflow-hidden mb-4">
+            <img 
+              src={locationImage} 
+              alt={`${name} location`} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        {mapPlaceholder && !locationImage && <div className="h-40 w-full rounded-md bg-muted mb-4">{/* Map Thumbnail */}</div>}
         <h3 className="font-semibold">{name}</h3>
         <p className="text-muted-foreground">{address}</p>
         <Button variant="link" className="p-0 h-auto mt-2" asChild>

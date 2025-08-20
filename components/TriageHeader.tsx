@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { ChevronDown, Heart, UserPlus, User, AlertTriangle, MessageCircle, FileText, Calendar, CreditCard, HelpCircle, ArrowLeft, RotateCcw } from "lucide-react"
+import { ChevronDown, Heart, UserPlus, User, AlertTriangle, MessageCircle, FileText, Calendar, CreditCard, HelpCircle, ArrowLeft, RotateCcw, Stethoscope } from "lucide-react"
 import Link from "next/link"
 import { DoctorCard } from "./DoctorCard"
 import { ComprehensiveTriageForm } from "./ComprehensiveTriageForm"
@@ -26,6 +26,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false)
   const [whatsAppContext, setWhatsAppContext] = useState("")
   const [showScrollArrow, setShowScrollArrow] = useState(true)
+  const [show911Confirmation, setShow911Confirmation] = useState(false)
 
   // Handle scroll to hide/show arrow
   useEffect(() => {
@@ -68,22 +69,163 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
   return (
     <>
       {/* Main Triage Header */}
-      <section className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-blue-950/20 dark:via-background dark:to-green-950/20 relative overflow-hidden -mt-20">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-green-500 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-500 rounded-full blur-3xl"></div>
+      <section className="min-h-screen flex flex-col justify-center items-center bg-white dark:bg-background relative overflow-hidden -mt-20">
+
+        {/* Animated Grid Border */}
+        <div className="absolute inset-0 opacity-10">
+          <div 
+            className="absolute inset-0 animate-grid-move"
+            style={{
+              backgroundImage: `
+                linear-gradient(90deg, transparent 45px, rgba(59, 130, 246, 0.3) 46px, rgba(59, 130, 246, 0.3) 51px, transparent 52px),
+                linear-gradient(0deg, transparent 45px, rgba(59, 130, 246, 0.3) 46px, rgba(59, 130, 246, 0.3) 51px, transparent 52px)
+              `,
+              backgroundSize: '48px 48px'
+            }}
+          />
         </div>
 
         <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Animated EKG Line */}
+          <div className="flex justify-center mb-8 opacity-30">
+            <svg viewBox="0 0 330 112" width="100%" style={{ maxWidth: "600px" }} height="80px">
+              <defs>
+                <linearGradient id="linearGradiantStroke" x1="0%" y1="0%" x2="10%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(239, 68, 68, 0.25)" />
+                  <stop offset="75%" stopColor="#ef4444" />
+
+                  <animate
+                    attributeName="x1"
+                    begin="0.25s"
+                    calcMode="spline"
+                    dur="2.50s"
+                    from="0%"
+                    keySplines="
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47"
+                    keyTimes="
+                      0.00;
+                      0.22;
+                      0.33;
+                      0.55;
+                      0.66;
+                      0.88;
+                      1.00"
+                    repeatCount="indefinite"
+                    to="100%"
+                  />
+                  <animate
+                    attributeName="x2"
+                    begin="0.00s"
+                    calcMode="spline"
+                    dur="2.50s"
+                    from="25%"
+                    keySplines="
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47"
+                    keyTimes="
+                      0.00;
+                      0.22;
+                      0.33;
+                      0.55;
+                      0.66;
+                      0.88;
+                      1.00"
+                    repeatCount="indefinite"
+                    to="100%"
+                  />
+                </linearGradient>
+              </defs>
+
+              <g transform="translate(0, 78)">
+                <path
+                  d="
+                    M 0,0
+                    L 100,0
+                    C 108,-15 112,-15 120,0
+                    L 135,0 L 140,20 L 145,-75 L 150,30 L 155,0 L 170,-2
+                    C 175,-5 180,-20 185,-20
+                    L 200,-20
+                    C 200,-20 205,-20, 215,0
+                    L220,0
+                    C 225,-5, 230,-10 235,0
+                    L330,0"
+                  fill="none"
+                  stroke="url(#linearGradiantStroke)"
+                  strokeDasharray="200,600"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="4px"
+                >
+                  <animate
+                    attributeName="stroke-dashoffset"
+                    calcMode="spline"
+                    dur="2.50s"
+                    from="1000"
+                    keySplines="
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47"
+                    keyTimes="
+                      0.00;
+                      0.22;
+                      0.33;
+                      0.55;
+                      0.66;
+                      0.88;
+                      1.00"
+                    repeatCount="indefinite"
+                    to="200"
+                  />
+                </path>
+                <circle cx="0" cy="0" r="3" fill="transparent">
+                  <animate
+                    attributeName="cx"
+                    calcMode="spline"
+                    dur="2.50s"
+                    from="0"
+                    keySplines="
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47;
+                      0.63 0.10 0.18 0.47"
+                    keyTimes="
+                      0.00;
+                      0.22;
+                      0.33;
+                      0.55;
+                      0.66;
+                      0.88;
+                      1.00"
+                    repeatCount="indefinite"
+                    to="330"
+                  />
+                </circle>
+              </g>
+            </svg>
+          </div>
+
+          {/* Main Headline */}
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             How can we help you today?
           </h1>
           
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
+          <p className="text-muted-foreground md:text-xl/relaxed mb-12 max-w-3xl mx-auto">
             Select the option that matches your need—we'll guide you to the right care or information immediately.
           </p>
 
@@ -91,8 +233,10 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             {/* New Patient */}
             <Button 
+              size="lg"
+              variant="outline"
               onClick={() => handleStepChange("new-patient")}
-              className="w-full sm:w-auto h-14 px-8 text-lg bg-blue-600 hover:bg-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full sm:w-auto bg-white dark:bg-black hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 dark:hover:border-blue-600 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <UserPlus className="mr-3 h-6 w-6" />
               I'm a New Patient
@@ -100,8 +244,10 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
             {/* Existing Patient */}
             <Button 
+              size="lg"
+              variant="outline"
               onClick={() => handleStepChange("existing-patient")}
-              className="w-full sm:w-auto h-14 px-8 text-lg bg-green-600 hover:bg-green-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full sm:w-auto bg-white dark:bg-black hover:bg-green-600 hover:text-white hover:border-green-600 dark:hover:bg-green-600 dark:hover:border-green-600 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <User className="mr-3 h-6 w-6" />
               I'm an Existing Patient
@@ -109,8 +255,10 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
             {/* Emergency */}
             <Button 
+              size="lg"
+              variant="outline"
               onClick={() => handleStepChange("emergency")}
-              className="w-full sm:w-auto h-14 px-8 text-lg bg-red-600 hover:bg-red-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full sm:w-auto bg-white dark:bg-black hover:bg-red-600 hover:text-white hover:border-red-600 dark:hover:bg-red-600 dark:hover:border-red-600 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <AlertTriangle className="mr-3 h-6 w-6" />
               I have an emergency
@@ -153,7 +301,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             <div className="space-y-3">
               <Button 
                 asChild 
-                className="w-full bg-green-600 hover:bg-green-700 h-16 text-xl"
+                className="w-full bg-green-600 hover:bg-green-700 h-14 text-base"
               >
                 <a href="tel:713-464-4140">
                   📞 Call Spring Branch: 713-464-4140
@@ -161,20 +309,60 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
               </Button>
               <Button 
                 asChild 
-                className="w-full bg-green-600 hover:bg-green-700 h-16 text-xl"
+                className="w-full bg-green-600 hover:bg-green-700 h-14 text-base"
               >
                 <a href="tel:713-464-4242">
                   📞 Call Heights: 713-464-4242
                 </a>
               </Button>
+              <Button 
+                onClick={() => setShow911Confirmation(true)}
+                className="w-full bg-red-600 hover:bg-red-700 h-14 text-base"
+              >
+                🚨 Call 911
+              </Button>
             </div>
             <Button 
-              variant="outline" 
+              variant="ghost" 
               onClick={() => handleStepChange("initial")}
-              className="w-full h-16 text-xl"
+              className="w-full text-sm text-muted-foreground hover:text-foreground"
             >
               Back to Options
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* 911 Confirmation Dialog */}
+      <Dialog open={show911Confirmation} onOpenChange={setShow911Confirmation}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="h-6 w-6" />
+              Call 911?
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-gray-600 dark:text-gray-300">
+              Are you sure you want to call 911? This will dial emergency services immediately.
+            </p>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                onClick={() => setShow911Confirmation(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                asChild
+                className="flex-1 bg-red-600 hover:bg-red-700"
+              >
+                <a href="tel:911">
+                  Call 911
+                </a>
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -191,50 +379,50 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
           <div className="space-y-3">
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               asChild
             >
               <Link href="/prescription-request">
-                <FileText className="mr-3 h-6 w-6" />
+                <FileText className="mr-3 h-5 w-5" />
                 Request a Medication Refill
               </Link>
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               asChild
             >
               <Link href="/appointments?form=existing-patient">
-                <Calendar className="mr-3 h-6 w-6" />
+                <Calendar className="mr-3 h-5 w-5" />
                 Schedule a Follow-up Appointment
               </Link>
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               onClick={() => handleWhatsApp("Billing or insurance questions")}
             >
-              <CreditCard className="mr-3 h-6 w-6" />
+              <CreditCard className="mr-3 h-5 w-5" />
               Billing or Insurance Questions
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               onClick={() => handleWhatsApp("Request medical records")}
             >
-              <FileText className="mr-3 h-6 w-6" />
+              <FileText className="mr-3 h-5 w-5" />
               Request Medical Records
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               onClick={() => handleWhatsApp("Other assistance needed")}
             >
-              <MessageCircle className="mr-3 h-6 w-6" />
+              <MessageCircle className="mr-3 h-5 w-5" />
               Other Questions
             </Button>
           </div>
@@ -253,39 +441,39 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
           <div className="space-y-3">
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               asChild
             >
               <Link href="/appointments">
-                <Calendar className="mr-3 h-6 w-6" />
+                <Calendar className="mr-3 h-5 w-5" />
                 Schedule My First Visit
               </Link>
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               onClick={() => handleStepChange("symptom-triage")}
             >
-              <Heart className="mr-3 h-6 w-6" />
+              <Heart className="mr-3 h-5 w-5" />
               I have a heart-related concern
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               onClick={() => handleNavigateToFAQ()}
             >
-              <HelpCircle className="mr-3 h-6 w-6" />
+              <HelpCircle className="mr-3 h-5 w-5" />
               See Frequently Asked Questions
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-16 text-xl"
+              className="w-full justify-start h-14 text-base"
               onClick={() => handleWhatsApp("New patient inquiry")}
             >
-              <MessageCircle className="mr-3 h-6 w-6" />
+              <MessageCircle className="mr-3 h-5 w-5" />
               Text us a Question Now
             </Button>
           </div>
@@ -297,31 +485,11 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <DialogTitle className="flex items-center gap-3 text-xl">
-                  <Heart className="h-7 w-7 text-red-600" />
-                  <span className="leading-tight">Cardiac Care Appointment</span>
-                </DialogTitle>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={handleBack}
-                  >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={handleStartOver}
-                  >
-                    <RotateCcw className="mr-2 h-4 w-4" />
-                    Start Over
-                  </Button>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground -mt-2">
+              <DialogTitle className="flex items-center gap-3 text-xl">
+                <Stethoscope className="h-7 w-7 text-red-600" />
+                <span className="leading-tight">Cardiac Care Appointment</span>
+              </DialogTitle>
+              <p className="text-sm text-muted-foreground">
                 Complete assessment and appointment booking in one streamlined process
               </p>
             </div>
