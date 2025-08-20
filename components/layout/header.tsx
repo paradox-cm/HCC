@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import MenuFillIcon from 'remixicon-react/MenuFillIcon';
@@ -38,6 +39,10 @@ const navLinks = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname();
+
+  // Check if current page matches any nav link
+  const isActivePage = navLinks.some(link => pathname === link.href);
 
   // Responsive font size for HCC text and custom nav breakpoint
   if (typeof window !== 'undefined') {
@@ -81,7 +86,13 @@ export function Header() {
 
         <nav className="hidden nav-desktop:flex items-center gap-6 text-sm">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="transition-colors hover:text-primary font-medium">
+            <Link 
+              key={link.href} 
+              href={link.href} 
+              className={`transition-colors hover:text-primary font-medium relative pb-2 ${
+                pathname === link.href ? 'border-b-2 border-b-red-500' : ''
+              }`}
+            >
               {link.label}
             </Link>
           ))}
@@ -105,9 +116,6 @@ export function Header() {
               <SelectItem value="vi">VI</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" asChild>
-            <Link href="/patient-portal">Patient Portal</Link>
-          </Button>
           <Button asChild>
             <Link href="/appointments">
               <CalendarFillIcon className="h-5 w-5 mr-2" />
@@ -157,16 +165,15 @@ export function Header() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="mobile-nav-link text-base font-medium transition-colors hover:text-primary py-1.5 px-2 rounded-md hover:bg-accent"
+                      className={`mobile-nav-link text-base font-medium transition-colors hover:text-primary py-1.5 px-2 rounded-md hover:bg-accent ${
+                        pathname === link.href ? 'border-l-2 border-l-red-500 bg-accent/50' : ''
+                      }`}
                       onClick={() => setIsOpen(false)}
                     >
                       {link.label}
                     </Link>
                   ))}
                 </div>
-                <Button asChild variant="outline" size="sm" className="w-full py-3">
-                  <Link href="/patient-portal" onClick={() => setIsOpen(false)}>Patient Portal</Link>
-                </Button>
                 <Button asChild size="sm" className="w-full py-3">
                   <Link href="/appointments" onClick={() => setIsOpen(false)}>
                     <CalendarFillIcon className="h-4 w-4 mr-2" />

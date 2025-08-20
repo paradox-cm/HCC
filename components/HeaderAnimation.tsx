@@ -8,16 +8,23 @@ interface HeaderAnimationProps {
   intensity?: 'low' | 'medium' | 'high'
   colorScheme?: 'blue' | 'red' | 'green' | 'gray'
   responsive?: boolean
+  randomStart?: boolean
+  speedMultiplier?: number
 }
 
 export function HeaderAnimation({ 
   type = 'pulse-wave', 
   intensity = 'medium', 
   colorScheme = 'red',
-  responsive = true 
+  responsive = true,
+  randomStart = false,
+  speedMultiplier = 1.0
 }: HeaderAnimationProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { resolvedTheme } = useTheme()
+
+  // Generate random starting offset when randomStart is true
+  const randomOffset = randomStart ? Math.random() * Math.PI * 2 : 0
 
   useEffect(() => {
     if (type === 'pulse-wave') {
@@ -261,9 +268,9 @@ export function HeaderAnimation({
 
         // Draw each stroke layer
         strokes.forEach((stroke, index) => {
-          // Calculate current rotation and scaling
-          const currentRotation = stroke.angle + time * stroke.rotationSpeed
-          const breathingScale = stroke.scale * (1 + Math.sin(time * 0.05 + index) * 0.05) // Much slower and subtler
+          // Calculate current rotation and scaling with random offset and speed multiplier
+          const currentRotation = stroke.angle + (time * stroke.rotationSpeed * speedMultiplier) + randomOffset
+          const breathingScale = stroke.scale * (1 + Math.sin(time * 0.05 * speedMultiplier + index + randomOffset) * 0.05) // Much slower and subtler
           
           // Calculate center point
           const centerX = width / 2
@@ -287,7 +294,7 @@ export function HeaderAnimation({
           ctx.restore()
         })
 
-        time += 0.003 // Slower overall animation
+        time += 0.003 * speedMultiplier // Apply speed multiplier
         animationId = requestAnimationFrame(animate)
       }
 
@@ -707,7 +714,7 @@ export function HeaderAnimation({
         cancelAnimationFrame(animationId)
       }
     }
-  }, [type, intensity, colorScheme, responsive, resolvedTheme])
+  }, [type, intensity, colorScheme, responsive, resolvedTheme, randomStart, speedMultiplier])
 
   return (
     <canvas

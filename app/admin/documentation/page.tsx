@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -25,6 +26,7 @@ import {
   Database,
   Server
 } from "lucide-react"
+import IntegrationContent from "./IntegrationContent"
 
 export default function DocumentationPage() {
   const [activeTab, setActiveTab] = useState("overview")
@@ -2552,6 +2554,13 @@ useEffect(() => {
           </div>
         </div>
       )
+    },
+    {
+      id: "integration",
+      title: "eClinicalWorks & Healow Integration",
+      icon: Database,
+      description: "Comprehensive analysis of eClinicalWorks EMR and Healow app integration",
+      content: <IntegrationContent />
     }
   ]
 
@@ -2605,7 +2614,7 @@ useEffect(() => {
       {/* Documentation Content */}
       <div className="min-h-[600px]">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             {documentationSections.map((section) => (
               <TabsTrigger key={section.id} value={section.id} className="text-xs">
                 {section.title.split(' ')[0]}

@@ -12,41 +12,242 @@ import VideoFillIcon from 'remixicon-react/VideoFillIcon';
 import Link from "next/link"
 import { DoctorProfileCard } from "@/components/doctor-profile-card"
 import { HeaderAnimation } from "@/components/HeaderAnimation"
-import { useEffect, useState } from "react"
+import { TriageHeader } from "@/components/TriageHeader"
+import { useEffect, useState, useRef, useCallback } from "react"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel"
+
+// AnimatedProgressDots component
+function AnimatedProgressDots({ 
+  totalSlides, 
+  currentSlide, 
+  autoPlayInterval = 5000,
+  onSlideChange 
+}: { 
+  totalSlides: number
+  currentSlide: number
+  autoPlayInterval?: number
+  onSlideChange: (index: number) => void
+}) {
+  const [progress, setProgress] = useState(0)
+  const animationRef = useRef<number>()
+
+  const animateProgress = useCallback(() => {
+    const startTime = Date.now()
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const newProgress = Math.min((elapsed / autoPlayInterval) * 100, 100)
+      
+      setProgress(newProgress)
+      
+      if (newProgress < 100) {
+        animationRef.current = requestAnimationFrame(animate)
+      }
+    }
+    
+    animationRef.current = requestAnimationFrame(animate)
+  }, [autoPlayInterval])
+
+  useEffect(() => {
+    setProgress(0)
+    animateProgress()
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [currentSlide, animateProgress])
+
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [])
+
+  const handleDotClick = (index: number) => {
+    onSlideChange(index)
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent, index: number) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onSlideChange(index)
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-1 sm:gap-2 mt-4">
+      {Array.from({ length: totalSlides }).map((_, index) => (
+        <button
+          key={index}
+          onClick={() => handleDotClick(index)}
+          onKeyDown={(e) => handleKeyDown(e, index)}
+          className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full"
+          aria-label={`Go to slide ${index + 1}`}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="relative">
+            {index === currentSlide ? (
+              <div className="w-6 h-2.5 bg-primary/30 rounded-[0.625rem] overflow-hidden">
+                <div 
+                  className="h-full bg-primary transition-all duration-75 ease-linear"
+                  style={{ 
+                    width: `${Math.max(10, Math.min(24, progress * 0.24))}px` 
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="w-2.5 h-2.5 bg-primary/30 rounded-full" />
+            )}
+          </div>
+        </button>
+      ))}
+    </div>
+  )
+}
 
 export default function HomePageClient() {
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [api, setApi] = useState<CarouselApi>()
+  const [current, setCurrent] = useState(0)
+  const [count, setCount] = useState(0)
+
+  const handleScrollToContent = () => {
+    contentRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+
+  useEffect(() => {
+    if (!api) {
+      return
+    }
+
+    setCount(api.scrollSnapList().length)
+    setCurrent(api.selectedScrollSnap() + 1)
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1)
+    })
+  }, [api])
+
+  const scrollTo = useCallback((index: number) => {
+    api?.scrollTo(index)
+  }, [api])
+
+  // Auto-play functionality
+  useEffect(() => {
+    if (!api) return
+
+    const interval = setInterval(() => {
+      api.scrollNext()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [api])
+
   return (
     <>
       <CookieBanner />
-      {/* Hero Section */}
-      <SectionWrapper className="bg-muted/20 relative overflow-hidden">
-        <HeaderAnimation 
-          type="pulse-wave" 
-          intensity="medium" 
-          colorScheme="red" 
-          responsive={true}
-        />
-        <div className="flex flex-col items-center gap-8 text-center relative z-10">
-          <div className="space-y-4 text-center flex flex-col justify-center">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl fade-in-up">Your Journey Starts Here</h1>
-            <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed mx-auto">
-              At Houston Cardiology Consultants, we provide personalized care and cutting-edge medical expertise to
-              guide you on a transformative journey toward optimal heart health.
-            </p>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center pt-4">
-              <Button asChild size="lg">
-                <Link href="/appointments">Book Appointment</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/about-us">Learn More</Link>
-              </Button>
+      
+      {/* New Triage Header */}
+      <TriageHeader onScrollToContent={handleScrollToContent} />
+      
+      {/* Original Hero Section - Now Second Section */}
+      <div ref={contentRef}>
+        <SectionWrapper className="bg-muted/20 relative overflow-hidden">
+          <HeaderAnimation 
+            type="pulse-wave" 
+            intensity="medium" 
+            colorScheme="red" 
+            responsive={true}
+          />
+          <div className="flex flex-col items-center gap-8 text-center relative z-10">
+            <div className="space-y-4 text-center flex flex-col justify-center">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl fade-in-up">Your Journey Starts Here</h1>
+              <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed mx-auto">
+                At Houston Cardiology Consultants, we provide personalized care and cutting-edge medical expertise to
+                guide you on a transformative journey toward optimal heart health.
+              </p>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center pt-4">
+                <Button asChild size="lg">
+                  <Link href="/appointments">Book Appointment</Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <Link href="/about-us">Learn More</Link>
+                </Button>
+              </div>
+            </div>
+            <div className="w-full max-w-4xl mx-auto relative z-20">
+              <Carousel
+                setApi={setApi}
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  <CarouselItem>
+                    <div className="h-64 lg:h-96 rounded-lg overflow-hidden">
+                      <img
+                        src="/images/HHC-Home1.png"
+                        alt="Houston Cardiology Consultants - Heart Care Excellence"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </CarouselItem>
+                  <CarouselItem>
+                    <div className="h-64 lg:h-96 rounded-lg overflow-hidden">
+                      <img
+                        src="/images/HHC-Home2.png"
+                        alt="Advanced Cardiac Diagnostics and Treatment"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </CarouselItem>
+                  <CarouselItem>
+                    <div className="h-64 lg:h-96 rounded-lg overflow-hidden">
+                      <img
+                        src="/images/HHC-Home3.png"
+                        alt="Compassionate Care from Expert Cardiologists"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </CarouselItem>
+                  <CarouselItem>
+                    <div className="h-64 lg:h-96 rounded-lg overflow-hidden">
+                      <img
+                        src="/images/HHC-Home4.png"
+                        alt="State-of-the-Art Cardiac Facilities"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </CarouselItem>
+                </CarouselContent>
+              </Carousel>
+              
+              <AnimatedProgressDots
+                totalSlides={count}
+                currentSlide={current - 1}
+                autoPlayInterval={5000}
+                onSlideChange={scrollTo}
+              />
             </div>
           </div>
-          <div className="h-64 w-full rounded-lg bg-muted lg:h-96 relative z-20">
-            {/* Placeholder for an engaging image or video */}
-          </div>
-        </div>
-      </SectionWrapper>
+        </SectionWrapper>
+      </div>
 
       {/* Quick Access Cards */}
       <SectionWrapper>
