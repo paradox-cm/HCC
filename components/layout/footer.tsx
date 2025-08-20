@@ -23,7 +23,6 @@ const linkCategories = [
       { href: "/services", label: "Services" },
       { href: "/learn", label: "Learn" },
       { href: "/billing-and-insurance", label: "Billing & Insurance" },
-      { href: "/patient-portal", label: "Patient Portal" },
     ],
   },
   {

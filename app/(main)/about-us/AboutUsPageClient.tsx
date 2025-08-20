@@ -322,7 +322,7 @@ export default function AboutUsPageClient() {
                 <Link href="/testimonials">View Testimonials</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/learn">Visit Learn Page</Link>
+                <Link href="/testimonials/share">Share your story</Link>
               </Button>
             </div>
           </div>

@@ -570,7 +570,7 @@ export default function TestimonialsPageClient() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild>
-              <Link href="/appointments">Schedule Appointment</Link>
+              <Link href="/testimonials/share">Share Your Story</Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/contact">Contact Us</Link>

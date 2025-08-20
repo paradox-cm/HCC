@@ -123,10 +123,16 @@ export default function HomePageClient() {
   const [count, setCount] = useState(0)
 
   const handleScrollToContent = () => {
-    contentRef.current?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    })
+    if (contentRef.current) {
+      const element = contentRef.current
+      const elementPosition = element.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - 100 // Account for header height + some padding
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
+    }
   }
 
   useEffect(() => {
