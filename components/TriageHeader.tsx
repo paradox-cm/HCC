@@ -482,7 +482,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* Symptom Triage Modal */}
       <Dialog open={currentStep === "symptom-triage"} onOpenChange={() => setCurrentStep("new-patient")}>
-        <DialogContent className="w-[calc(100vw-2rem)] max-w-2xl mx-auto max-h-[95vh] sm:max-h-[85vh] flex flex-col">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-2xl mx-auto max-h-[calc(100vh-2rem)] sm:max-h-[85vh] flex flex-col sm:translate-y-[-50%] sm:top-[50%] top-4 translate-y-0 pt-4 pb-4">
           <DialogHeader className="flex-shrink-0">
             <div className="flex flex-col gap-4">
               <DialogTitle className="flex items-center gap-3 text-lg sm:text-xl">
