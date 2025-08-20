@@ -220,7 +220,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
           {/* Main Headline */}
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             How can we help you today?
           </h1>
           
@@ -272,19 +272,19 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
         }`}>
           <button
             onClick={onScrollToContent}
-            className="animate-bounce p-3 rounded-full border-2 border-gray-400 dark:border-gray-500 bg-transparent hover:border-gray-600 dark:hover:border-gray-300 transition-all duration-500"
+            className="animate-bounce p-1.5 sm:p-3 rounded-full border-2 border-gray-400 dark:border-gray-500 bg-transparent hover:border-gray-600 dark:hover:border-gray-300 transition-all duration-500"
             style={{ animationDuration: '3s' }}
           >
-            <ChevronDown className="h-8 w-8 text-gray-600 dark:text-gray-300" />
+            <ChevronDown className="h-4 w-4 sm:h-8 sm:w-8 text-gray-600 dark:text-gray-300" />
           </button>
         </div>
       </section>
 
       {/* Emergency Modal */}
       <Dialog open={currentStep === "emergency"} onOpenChange={() => setCurrentStep("initial")}>
-        <DialogContent className="max-w-md mx-4 sm:mx-auto">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-md mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
+            <DialogTitle className="flex items-center gap-2 text-red-600 text-lg sm:text-xl">
               <AlertTriangle className="h-6 w-6" />
               Emergency Information
             </DialogTitle>
@@ -301,7 +301,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             <div className="space-y-3">
               <Button 
                 asChild 
-                className="w-full bg-green-600 hover:bg-green-700 h-14 text-base"
+                className="w-full bg-green-600 hover:bg-green-700 h-14 text-sm sm:text-base"
               >
                 <a href="tel:713-464-4140">
                   📞 Call Spring Branch: 713-464-4140
@@ -309,7 +309,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
               </Button>
               <Button 
                 asChild 
-                className="w-full bg-green-600 hover:bg-green-700 h-14 text-base"
+                className="w-full bg-green-600 hover:bg-green-700 h-14 text-sm sm:text-base"
               >
                 <a href="tel:713-464-4242">
                   📞 Call Heights: 713-464-4242
@@ -317,7 +317,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
               </Button>
               <Button 
                 onClick={() => setShow911Confirmation(true)}
-                className="w-full bg-red-600 hover:bg-red-700 h-14 text-base"
+                className="w-full bg-red-600 hover:bg-red-700 h-14 text-sm sm:text-base"
               >
                 🚨 Call 911
               </Button>
@@ -335,9 +335,9 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* 911 Confirmation Dialog */}
       <Dialog open={show911Confirmation} onOpenChange={setShow911Confirmation}>
-        <DialogContent className="max-w-sm mx-4 sm:mx-auto">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-sm mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
+            <DialogTitle className="flex items-center gap-2 text-red-600 text-lg sm:text-xl">
               <AlertTriangle className="h-6 w-6" />
               Call 911?
             </DialogTitle>
@@ -369,9 +369,9 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* Existing Patient Modal */}
       <Dialog open={currentStep === "existing-patient"} onOpenChange={() => setCurrentStep("initial")}>
-        <DialogContent className="max-w-lg mx-4 sm:mx-auto">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-lg mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
               <User className="h-6 w-6 text-green-600" />
               What do you need help with today?
             </DialogTitle>
@@ -379,7 +379,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
           <div className="space-y-3">
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               asChild
             >
               <Link href="/prescription-request">
@@ -390,7 +390,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               asChild
             >
               <Link href="/appointments?form=existing-patient">
@@ -401,7 +401,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               onClick={() => handleWhatsApp("Billing or insurance questions")}
             >
               <CreditCard className="mr-3 h-5 w-5" />
@@ -410,7 +410,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               onClick={() => handleWhatsApp("Request medical records")}
             >
               <FileText className="mr-3 h-5 w-5" />
@@ -419,7 +419,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               onClick={() => handleWhatsApp("Other assistance needed")}
             >
               <MessageCircle className="mr-3 h-5 w-5" />
@@ -431,9 +431,9 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* New Patient Modal */}
       <Dialog open={currentStep === "new-patient"} onOpenChange={() => setCurrentStep("initial")}>
-        <DialogContent className="max-w-lg mx-4 sm:mx-auto">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-lg mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
               <UserPlus className="h-6 w-6 text-blue-600" />
               Welcome! What brings you to HCC today?
             </DialogTitle>
@@ -441,7 +441,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
           <div className="space-y-3">
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               asChild
             >
               <Link href="/appointments">
@@ -452,16 +452,16 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               onClick={() => handleStepChange("symptom-triage")}
             >
               <Heart className="mr-3 h-5 w-5" />
-              I have a heart-related concern
+              Schedule Cardiac Consultation
             </Button>
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               onClick={() => handleNavigateToFAQ()}
             >
               <HelpCircle className="mr-3 h-5 w-5" />
@@ -470,7 +470,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             
             <Button 
               variant="outline" 
-              className="w-full justify-start h-14 text-base"
+              className="w-full justify-start h-14 text-sm sm:text-base"
               onClick={() => handleWhatsApp("New patient inquiry")}
             >
               <MessageCircle className="mr-3 h-5 w-5" />
@@ -482,10 +482,10 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* Symptom Triage Modal */}
       <Dialog open={currentStep === "symptom-triage"} onOpenChange={() => setCurrentStep("new-patient")}>
-        <DialogContent className="max-w-2xl mx-4 sm:mx-auto max-h-[90vh] sm:max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-2xl mx-auto max-h-[95vh] sm:max-h-[85vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <div className="flex flex-col gap-4">
-              <DialogTitle className="flex items-center gap-3 text-xl">
+              <DialogTitle className="flex items-center gap-3 text-lg sm:text-xl">
                 <Stethoscope className="h-7 w-7 text-red-600" />
                 <span className="leading-tight">Cardiac Care Appointment</span>
               </DialogTitle>
@@ -494,15 +494,17 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
               </p>
             </div>
           </DialogHeader>
-          <ComprehensiveTriageForm
-            onComplete={(formData) => {
-              setSymptomContext(JSON.stringify(formData))
-              // Show success message and close modal
-              alert("Thank you! Your appointment request has been submitted. We will contact you within 1 business day to confirm your appointment.")
-              setCurrentStep("initial")
-            }}
-            onBack={handleBack}
-          />
+          <div className="flex-1 overflow-y-auto min-h-0">
+            <ComprehensiveTriageForm
+              onComplete={(formData) => {
+                setSymptomContext(JSON.stringify(formData))
+                // Show success message and close modal
+                alert("Thank you! Your appointment request has been submitted. We will contact you within 1 business day to confirm your appointment.")
+                setCurrentStep("initial")
+              }}
+              onBack={handleBack}
+            />
+          </div>
         </DialogContent>
       </Dialog>
 
