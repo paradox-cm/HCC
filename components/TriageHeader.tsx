@@ -282,7 +282,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* Emergency Modal */}
       <Dialog open={currentStep === "emergency"} onOpenChange={() => setCurrentStep("initial")}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md mx-4 sm:mx-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
               <AlertTriangle className="h-6 w-6" />
@@ -335,7 +335,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* 911 Confirmation Dialog */}
       <Dialog open={show911Confirmation} onOpenChange={setShow911Confirmation}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-sm mx-4 sm:mx-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
               <AlertTriangle className="h-6 w-6" />
@@ -369,7 +369,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* Existing Patient Modal */}
       <Dialog open={currentStep === "existing-patient"} onOpenChange={() => setCurrentStep("initial")}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg mx-4 sm:mx-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <User className="h-6 w-6 text-green-600" />
@@ -431,7 +431,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* New Patient Modal */}
       <Dialog open={currentStep === "new-patient"} onOpenChange={() => setCurrentStep("initial")}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg mx-4 sm:mx-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UserPlus className="h-6 w-6 text-blue-600" />
@@ -482,7 +482,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
 
       {/* Symptom Triage Modal */}
       <Dialog open={currentStep === "symptom-triage"} onOpenChange={() => setCurrentStep("new-patient")}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl mx-4 sm:mx-auto max-h-[90vh] sm:max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex flex-col gap-4">
               <DialogTitle className="flex items-center gap-3 text-xl">

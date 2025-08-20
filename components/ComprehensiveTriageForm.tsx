@@ -178,10 +178,10 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
     
     return (
       <div className="flex items-center justify-center mb-6">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto max-w-full px-2">
           {steps.map((step, index) => (
-            <div key={step} className="flex items-center">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+            <div key={step} className="flex items-center flex-shrink-0">
+              <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                 index <= currentIndex 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
@@ -189,7 +189,7 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
                 {index + 1}
               </div>
               {index < steps.length - 1 && (
-                <div className={`w-8 h-1 mx-1 ${
+                <div className={`w-4 h-1 sm:w-8 mx-1 ${
                   index < currentIndex ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                 }`} />
               )}
@@ -228,25 +228,25 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
           Check all that apply to help us understand your needs.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3">
           {commonSymptoms.map((symptom) => (
             <div key={symptom.id} className="flex items-start space-x-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
               <Checkbox
                 id={symptom.id}
                 checked={selectedSymptoms.includes(symptom.id)}
                 onCheckedChange={() => handleSymptomToggle(symptom.id)}
-                className="mt-1"
+                className="mt-1 flex-shrink-0"
               />
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <Label 
                   htmlFor={symptom.id} 
-                  className={`text-sm cursor-pointer ${
+                  className={`text-sm cursor-pointer break-words ${
                     symptom.urgent ? 'font-medium text-red-700 dark:text-red-300' : ''
                   }`}
                 >
                   {symptom.label}
                   {symptom.urgent && (
-                    <span className="ml-2 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-0.5 rounded">
+                    <span className="ml-2 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-0.5 rounded whitespace-nowrap">
                       Urgent
                     </span>
                   )}
@@ -309,7 +309,7 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
         <h3 className="text-lg font-semibold">Patient Information</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="firstName">First Name *</Label>
           <Input
@@ -389,7 +389,7 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
         <h3 className="text-lg font-semibold">Appointment Details</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="selectedDoctor">Preferred Doctor *</Label>
           <Select onValueChange={(value) => setAppointmentDetails(prev => ({ ...prev, selectedDoctor: value }))} value={appointmentDetails.selectedDoctor} required>
@@ -474,7 +474,7 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
         <h3 className="text-lg font-semibold">Health Information</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="hasReferral">Do you have a referral?</Label>
           <Select onValueChange={(value) => setHealthInfo(prev => ({ ...prev, hasReferral: value }))} value={healthInfo.hasReferral} required>
@@ -518,7 +518,7 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
         <h3 className="text-lg font-semibold">Insurance Information</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="hasInsurance">Do you have insurance?</Label>
           <Select onValueChange={(value) => setInsuranceInfo(prev => ({ ...prev, hasInsurance: value }))} value={insuranceInfo.hasInsurance} required>
@@ -646,25 +646,26 @@ export function ComprehensiveTriageForm({ onComplete, onBack }: ComprehensiveTri
       {renderCurrentStep()}
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between pt-6 border-t">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 pt-6 border-t">
         <Button
           variant="outline"
           onClick={currentStep === "symptoms" ? onBack : handleBack}
           disabled={currentStep === "symptoms"}
+          className="w-full sm:w-auto"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           {currentStep === "symptoms" ? "Back to Options" : "Previous"}
         </Button>
 
         {currentStep === "review" ? (
-          <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
+          <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
             Submit Appointment Request
           </Button>
         ) : (
           <Button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="ml-auto"
+            className="w-full sm:w-auto"
           >
             Continue
             <ArrowRight className="ml-2 h-4 w-4" />
