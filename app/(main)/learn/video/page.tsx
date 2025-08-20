@@ -39,7 +39,7 @@ export default function VideoPlayerPage() {
             </video>
           </div>
           <div className="p-6">
-            <h1 className="text-2xl font-bold mb-2">Video Title Placeholder</h1>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-2">Video Title Placeholder</h1>
             <p className="text-muted-foreground mb-4">
               This is a template video player page. In the future, this will show the selected video, its description, transcript, and related content.
             </p>

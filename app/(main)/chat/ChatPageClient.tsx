@@ -38,7 +38,7 @@ export default function ChatPageClient() {
           </Button>
         </div>
       </div>
-      <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mt-8 mb-4 fade-in-up text-center">Chat with Us</h1>
+              <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl mt-8 mb-4 fade-in-up text-center">Chat with Us</h1>
       <p className="text-center max-w-2xl mx-auto text-muted-foreground text-xs mb-6">
         Our virtual assistant can help you with appointment requests, prescription refills, billing questions, insurance information, and more. You can also ask about our services, locations, or get quick answers to common patient questions.
       </p>

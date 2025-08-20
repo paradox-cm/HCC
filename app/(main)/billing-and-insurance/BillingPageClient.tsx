@@ -130,7 +130,7 @@ export default function BillingPageClient() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">Billing & Insurance</h1>
+          <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl mb-4 fade-in-up">Billing & Insurance</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">Your Care, Clearly Covered</p>
         </div>
       </SectionWrapper>

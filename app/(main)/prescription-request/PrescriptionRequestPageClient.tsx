@@ -17,7 +17,7 @@ export default function PrescriptionRequestPageClient() {
           speedMultiplier={1.1}
         />
         <div className="text-center relative z-10">
-          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Prescription Renewal Request</h1>
+          <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl mb-4">Prescription Renewal Request</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Need a medication refill? Complete the form below and we'll process your request within 1 business day.
           </p>

@@ -175,7 +175,7 @@ export default function HomePageClient() {
           />
           <div className="flex flex-col items-center gap-8 text-center relative z-10">
             <div className="space-y-4 text-center flex flex-col justify-center">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl fade-in-up">Your Journey Starts Here</h1>
+              <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl fade-in-up">Your Journey Starts Here</h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed mx-auto">
                 At Houston Cardiology Consultants, we provide personalized care and cutting-edge medical expertise to
                 guide you on a transformative journey toward optimal heart health.
@@ -276,7 +276,7 @@ export default function HomePageClient() {
       {/* Meet Our Cardiologists */}
       <SectionWrapper className="bg-muted/20">
         <div className="flex flex-col items-center text-center">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Meet Our Cardiologists</h2>
+                      <h2 className="text-3xl font-bold sm:text-4xl">Meet Our Cardiologists</h2>
           <p className="mt-4 max-w-2xl text-muted-foreground md:text-lg">
             Compassionate experts dedicated to your heart health.
           </p>
@@ -298,7 +298,7 @@ export default function HomePageClient() {
       {/* Our Services Snapshot */}
       <SectionWrapper>
         <div className="flex flex-col items-center text-center">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Our Services</h2>
+                      <h2 className="text-3xl font-bold sm:text-4xl">Our Services</h2>
           <p className="mt-4 max-w-2xl text-muted-foreground md:text-lg">
             A comprehensive range of cardiac services under one roof.
           </p>
@@ -339,7 +339,7 @@ export default function HomePageClient() {
       {/* Multilingual Education Teaser - Hidden */}
       {/* <SectionWrapper>
         <div className="bg-primary text-primary-foreground rounded-2xl shadow-lg px-4 md:px-8 py-10 w-full max-w-7xl mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Understand Your Heart.</h2>
+            <h2 className="text-3xl font-bold sm:text-4xl">Understand Your Heart.</h2>
             <p className="mt-4 text-lg text-primary-foreground/80">
               Access a wealth of educational resources designed to empower you with knowledge about heart health.
             </p>

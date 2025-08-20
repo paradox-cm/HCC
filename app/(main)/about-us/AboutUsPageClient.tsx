@@ -145,7 +145,7 @@ export default function AboutUsPageClient() {
       {/* Header with Carousel */}
       <SectionWrapper className="bg-muted/20 relative overflow-hidden">
         <div className="text-center relative z-10 mb-8">
-          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">About Us</h1>
+                                <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl mb-4 fade-in-up">About Us</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Our commitment to compassionate, state-of-the-art cardiac care.
           </p>

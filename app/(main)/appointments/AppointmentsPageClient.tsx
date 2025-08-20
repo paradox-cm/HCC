@@ -105,7 +105,7 @@ function AppointmentsPageContent() {
           speedMultiplier={1.1}
         />
         <div className="text-center relative z-10">
-          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Appointments & Requests</h1>
+          <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl mb-4">Appointments & Requests</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Select the appropriate form for your needs. Our team will respond within 1 business day.
           </p>
@@ -145,7 +145,7 @@ function AppointmentsPageContent() {
           {/* Mobile Dropdown */}
           <div className="md:hidden mb-6 pt-6">
             <Select value={selectedForm} onValueChange={setSelectedForm}>
-              <SelectTrigger className="w-full bg-red-600 text-white border-red-600 hover:bg-red-700 hover:border-red-700 focus:ring-red-600 [&>svg]:text-white">
+              <SelectTrigger className="w-full bg-red-600 text-white border-red-600 hover:bg-red-700 hover:border-red-700 focus:ring-red-600 [&>svg]:text-white [&>svg]:h-6 [&>svg]:w-6">
                 <SelectValue placeholder="Select form type" />
               </SelectTrigger>
               <SelectContent>

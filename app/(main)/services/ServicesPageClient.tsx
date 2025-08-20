@@ -381,7 +381,7 @@ export default function ServicesPageClient() {
           responsive={true}
         />
         <div className="text-center relative z-10">
-          <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">Our Services</h1>
+          <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl mb-4 fade-in-up">Our Services</h1>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             We offer a full spectrum of cardiology services, diagnostics, and therapies tailored to your specific needs.
             All care is delivered with precision, compassion, and the latest medical technologies.

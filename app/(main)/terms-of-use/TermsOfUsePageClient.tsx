@@ -55,7 +55,7 @@ export default function TermsOfUsePageClient() {
     <>
       <SectionWrapper className="bg-muted/20">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Terms of Use</h1>
+          <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl">Terms of Use</h1>
           <div className="flex justify-center mt-4 mb-4">
             <Badge variant="secondary" className="text-sm">
               Effective Date: August, 2025

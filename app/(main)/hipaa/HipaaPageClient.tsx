@@ -225,7 +225,7 @@ Generated: ${new Date().toLocaleDateString()}
         <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Lock className="h-10 w-10 text-primary" />
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">HIPAA Privacy Practices</h1>
+            <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl">HIPAA Privacy Practices</h1>
           </div>
           <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
             Houston Cardiology Consultants is fully committed to protecting your health information in accordance with

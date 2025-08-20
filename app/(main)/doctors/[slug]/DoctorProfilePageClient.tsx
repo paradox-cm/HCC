@@ -92,71 +92,71 @@ export default function DoctorProfilePageClient({ params }: DoctorProfilePageCli
 
   return (
     <>
-      <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-6 md:pt-8">
-        <Button variant="outline" onClick={() => router.back()} className="mb-2">
+      <div className="px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-8 max-w-7xl mx-auto pt-4 md:pt-8">
+        <Button variant="outline" onClick={() => router.back()} className="mb-2 text-sm sm:text-base">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
       </div>
       {/* Hero Section */}
-      <div className="w-full bg-gradient-to-r from-primary/10 to-primary/5 py-8 mb-0">
-        <div className="max-w-2xl mx-auto flex flex-col items-center">
-          <Image src={doctor.photo} alt={doctor.name} width={175} height={175} className="rounded-full border-4 border-primary shadow mb-4" />
-          <h1 className="text-3xl md:text-4xl font-bold text-center mb-1">{doctor.name}</h1>
-          <div className="text-primary font-semibold text-lg mb-1 mt-2 text-center">
+      <div className="w-full bg-gradient-to-r from-primary/10 to-primary/5 py-6 md:py-8 mb-0">
+        <div className="max-w-2xl mx-auto flex flex-col items-center px-4">
+          <Image src={doctor.photo} alt={doctor.name} width={175} height={175} className="rounded-full border-4 border-primary shadow mb-4 w-32 h-32 md:w-44 md:h-44" />
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-center mb-1">{doctor.name}</h1>
+          <div className="text-primary font-semibold text-base md:text-lg mb-1 mt-2 text-center px-2">
             {doctor.title}
           </div>
-          <div className="text-muted-foreground text-center text-base mb-2">{doctor.certification}</div>
-          <Button asChild size="lg" className="mt-2" variant="default">
+          <div className="text-muted-foreground text-center text-sm md:text-base mb-2 px-2">{doctor.certification}</div>
+          <Button asChild size="lg" className="mt-2 text-sm sm:text-base" variant="default">
             <Link href="/appointments">Book Appointment</Link>
           </Button>
         </div>
       </div>
       <SectionWrapper className="pt-4 md:pt-6 pb-10">
         <Card className="max-w-2xl mx-auto shadow-lg">
-          <CardContent>
+          <CardContent className="p-4 md:p-6">
             {/* Bio Section */}
-            <div className="mb-8 pt-6">
-              <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2"><BookOpen className="h-6 w-6 text-primary" />Biography</h2>
-              <div className="text-base text-muted-foreground leading-relaxed whitespace-pre-line">
+            <div className="mb-6 md:mb-8 pt-4 md:pt-6">
+              <h2 className="text-xl md:text-2xl font-semibold mb-3 flex items-center gap-2"><BookOpen className="h-5 w-5 md:h-6 md:w-6 text-primary" />Biography</h2>
+              <div className="text-sm md:text-base text-muted-foreground leading-relaxed whitespace-pre-line">
                 {doctor.bio}
               </div>
             </div>
             {/* Philosophy/Quote Section */}
             {doctor.slug === "dr-abdul-ali" && (
-              <div className="mb-8">
-                <blockquote className="border-l-4 border-primary pl-4 italic text-lg text-muted-foreground bg-muted/50 py-3 rounded">
+              <div className="mb-6 md:mb-8">
+                <blockquote className="border-l-4 border-primary pl-3 md:pl-4 italic text-base md:text-lg text-muted-foreground bg-muted/50 py-3 rounded">
                   "His legacy is reflected in the trust he has earned, the lives he has improved, and his enduring mission to help every patient live a healthier, heart-conscious life."
                 </blockquote>
               </div>
             )}
             {doctor.slug === "dr-asif-ali" && (
-              <div className="mb-8">
-                <blockquote className="border-l-4 border-primary pl-4 italic text-lg text-muted-foreground bg-muted/50 py-3 rounded">
+              <div className="mb-6 md:mb-8">
+                <blockquote className="border-l-4 border-primary pl-3 md:pl-4 italic text-base md:text-lg text-muted-foreground bg-muted/50 py-3 rounded">
                   "Dr. Ali is widely recognized as a thought leader on topics such as student athlete cardiac arrest, personalized medicine, and the use of digital tools in chronic disease management."
                 </blockquote>
               </div>
             )}
             {doctor.slug === "dr-sajid-ali" && (
-              <div className="mb-8">
-                <blockquote className="border-l-4 border-primary pl-4 italic text-lg text-muted-foreground bg-muted/50 py-3 rounded">
+              <div className="mb-6 md:mb-8">
+                <blockquote className="border-l-4 border-primary pl-3 md:pl-4 italic text-base md:text-lg text-muted-foreground bg-muted/50 py-3 rounded">
                   "Dr. Ali's work ensures that each patient receives a flexible, customized treatment plan grounded in the most current clinical evidence and delivered with compassion."
                 </blockquote>
               </div>
             )}
-            <hr className="my-8 border-t border-muted" />
+            <hr className="my-6 md:my-8 border-t border-muted" />
             {/* Credentials Section */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2"><Award className="h-6 w-6 text-primary" />Credentials</h2>
-              <ul className="list-disc list-inside text-base text-muted-foreground">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-semibold mb-3 flex items-center gap-2"><Award className="h-5 w-5 md:h-6 md:w-6 text-primary" />Credentials</h2>
+              <ul className="list-disc list-inside text-sm md:text-base text-muted-foreground space-y-1">
                 {doctor.credentials.map((c, i) => <li key={i}>{c}</li>)}
               </ul>
             </div>
-            <hr className="my-8 border-t border-muted" />
+            <hr className="my-6 md:my-8 border-t border-muted" />
             {/* Education Section */}
             <div className="mb-4">
-              <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2"><GraduationCap className="h-6 w-6 text-primary" />Education</h2>
-              <ul className="list-disc list-inside text-base text-muted-foreground">
+              <h2 className="text-xl md:text-2xl font-semibold mb-3 flex items-center gap-2"><GraduationCap className="h-5 w-5 md:h-6 md:w-6 text-primary" />Education</h2>
+              <ul className="list-disc list-inside text-sm md:text-base text-muted-foreground space-y-1">
                 {doctor.education.map((e, i) => <li key={i}>{e}</li>)}
               </ul>
             </div>

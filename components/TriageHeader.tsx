@@ -267,7 +267,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
         </div>
 
         {/* Fixed Scroll Arrow at Bottom of Viewport */}
-        <div className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-20 transition-all duration-500 ${
+        <div className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-20 transition-all duration-500 hidden sm:block ${
           showScrollArrow ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}>
           <button

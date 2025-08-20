@@ -102,7 +102,7 @@ export default function LearnPageClient() {
       <div className="pt-[64px]">
         <SectionWrapper className="bg-muted/20">
           <div className="text-center">
-            <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 fade-in-up">Learn About Your Heart</h1>
+                                    <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl mb-4 fade-in-up">Learn About Your Heart</h1>
             <p className="mt-4 max-w-3xl mx-auto text-muted-foreground md:text-xl">
               Educational videos to help you understand and manage your cardiac health.
             </p>
@@ -116,7 +116,7 @@ export default function LearnPageClient() {
               {availableCategories.map((category) => (
                 <div key={category.name} className="space-y-6">
                   <div className="text-center">
-                    <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">{category.name}</h2>
+                                                    <h2 className="text-2xl font-bold sm:text-3xl">{category.name}</h2>
                     <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">{category.description}</p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -136,7 +136,7 @@ export default function LearnPageClient() {
             // Show filtered videos in a single grid
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">{activeCategory}</h2>
+                                            <h2 className="text-2xl font-bold sm:text-3xl">{activeCategory}</h2>
                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
                   {categories.find(cat => cat.name === activeCategory)?.description}
                 </p>
