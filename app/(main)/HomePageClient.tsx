@@ -262,14 +262,14 @@ export default function HomePageClient() {
       <SectionWrapper>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <QuickAccessCard icon={CalendarFillIcon} title="Schedule Visit" description="Book Appointment" href="/appointments" />
+          <QuickAccessCard icon={CapsuleFillIcon} title="Request Prescription" description="Request a Renewal" href="/appointments#prescription-renewal" />
+          <QuickAccessCard icon={VideoFillIcon} title="Watch Videos" description="Learn About Heart Health" href="/learn" />
           <QuickAccessCard
             icon={HandHeartFillIcon}
-            title="Manage Your Care"
-            description="Patient Portal"
-            href="/patient-portal"
+            title="Questions?"
+            description="Visit our FAQ"
+            href="/faq"
           />
-          <QuickAccessCard icon={CapsuleFillIcon} title="Request Prescription" description="Manage Prescriptions" href="/patient-portal/dashboard/prescriptions?new=1" />
-          <QuickAccessCard icon={VideoFillIcon} title="Watch Videos" description="Learn About Heart Health" href="/learn" />
         </div>
       </SectionWrapper>
 
@@ -336,8 +336,8 @@ export default function HomePageClient() {
         </div>
       </SectionWrapper>
 
-      {/* Multilingual Education Teaser */}
-      <SectionWrapper>
+      {/* Multilingual Education Teaser - Hidden */}
+      {/* <SectionWrapper>
         <div className="bg-primary text-primary-foreground rounded-2xl shadow-lg px-4 md:px-8 py-10 w-full max-w-7xl mx-auto text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Understand Your Heart.</h2>
             <p className="mt-4 text-lg text-primary-foreground/80">
@@ -348,7 +348,7 @@ export default function HomePageClient() {
               <Link href="/learn">Watch Now</Link>
             </Button>
           </div>
-        </SectionWrapper>
+        </SectionWrapper> */}
 
       {/* Location Preview */}
       <SectionWrapper>

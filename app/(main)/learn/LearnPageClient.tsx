@@ -46,7 +46,22 @@ const languages = ["ENG", "ESP", "HIN", "VIE"]
 export default function LearnPageClient() {
   const [activeCategory, setActiveCategory] = useState("All")
 
+  // Group videos by category
+  const groupedVideos = videos.reduce((acc, video) => {
+    if (!acc[video.category]) {
+      acc[video.category] = []
+    }
+    acc[video.category].push(video)
+    return acc
+  }, {} as Record<string, typeof videos>)
+
+  // Filter videos based on active category
   const filteredVideos = activeCategory === "All" ? videos : videos.filter((video) => video.category === activeCategory)
+  
+  // Get categories that have videos
+  const availableCategories = categories.filter(category => 
+    groupedVideos[category.name] && groupedVideos[category.name].length > 0
+  )
 
   // Header height: 88px (top-6 + h-16), Subnav height: 56px (py-3 + h-10)
   // Total offset: 144px
@@ -64,7 +79,7 @@ export default function LearnPageClient() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="All">All Topics</SelectItem>
-                {categories.map((category) => (
+                {availableCategories.map((category) => (
                   <SelectItem key={category.name} value={category.name}>
                     {category.name}
                   </SelectItem>
@@ -95,17 +110,49 @@ export default function LearnPageClient() {
         </SectionWrapper>
 
         <SectionWrapper>
-          {/* Video Gallery */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredVideos.map((video) => (
-              <VideoThumbnailCard
-                key={video.title}
-                title={video.title}
-                category={video.category}
-                description={video.description}
-              />
-            ))}
-          </div>
+          {activeCategory === "All" ? (
+            // Show videos grouped by category
+            <div className="space-y-12">
+              {availableCategories.map((category) => (
+                <div key={category.name} className="space-y-6">
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">{category.name}</h2>
+                    <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">{category.description}</p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {groupedVideos[category.name].map((video) => (
+                      <VideoThumbnailCard
+                        key={video.title}
+                        title={video.title}
+                        category={video.category}
+                        description={video.description}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            // Show filtered videos in a single grid
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">{activeCategory}</h2>
+                <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
+                  {categories.find(cat => cat.name === activeCategory)?.description}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {filteredVideos.map((video) => (
+                  <VideoThumbnailCard
+                    key={video.title}
+                    title={video.title}
+                    category={video.category}
+                    description={video.description}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           <p className="text-xs text-muted-foreground text-center pt-8">
             // TODO: Clicking a video will open a new page with embedded video, transcription, and summary.
           </p>
