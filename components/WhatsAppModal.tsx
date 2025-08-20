@@ -49,7 +49,7 @@ export function WhatsAppModal({ open, onClose, context }: WhatsAppModalProps) {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 pr-8">
             <WhatsappFillIcon className="h-5 w-5 text-green-600" />
             Message us on WhatsApp
           </DialogTitle>

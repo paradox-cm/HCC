@@ -284,7 +284,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
       <Dialog open={currentStep === "emergency"} onOpenChange={() => setCurrentStep("initial")}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-md mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600 text-lg sm:text-xl">
+            <DialogTitle className="flex items-center gap-2 text-red-600 text-lg sm:text-xl pr-8">
               <AlertTriangle className="h-6 w-6" />
               Emergency Information
             </DialogTitle>
@@ -337,7 +337,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
       <Dialog open={show911Confirmation} onOpenChange={setShow911Confirmation}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-sm mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600 text-lg sm:text-xl">
+            <DialogTitle className="flex items-center gap-2 text-red-600 text-lg sm:text-xl pr-8">
               <AlertTriangle className="h-6 w-6" />
               Call 911?
             </DialogTitle>
@@ -371,7 +371,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
       <Dialog open={currentStep === "existing-patient"} onOpenChange={() => setCurrentStep("initial")}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-lg mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl pr-8">
               <User className="h-6 w-6 text-green-600" />
               What do you need help with today?
             </DialogTitle>
@@ -433,7 +433,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
       <Dialog open={currentStep === "new-patient"} onOpenChange={() => setCurrentStep("initial")}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-lg mx-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl pr-8">
               <UserPlus className="h-6 w-6 text-blue-600" />
               Welcome! What brings you to HCC today?
             </DialogTitle>
@@ -485,7 +485,7 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
         <DialogContent className="w-[calc(100vw-2rem)] max-w-2xl mx-auto max-h-[calc(100vh-2rem)] sm:max-h-[85vh] flex flex-col sm:translate-y-[-50%] sm:top-[50%] top-4 translate-y-0 pt-4 pb-4">
           <DialogHeader className="flex-shrink-0">
             <div className="flex flex-col gap-4">
-              <DialogTitle className="flex items-center gap-3 text-lg sm:text-xl">
+              <DialogTitle className="flex items-center gap-3 text-lg sm:text-xl pr-8">
                 <Stethoscope className="h-7 w-7 text-red-600" />
                 <span className="leading-tight">Cardiac Care Appointment</span>
               </DialogTitle>
