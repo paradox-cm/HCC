@@ -77,8 +77,8 @@ export function TriageHeader({ onScrollToContent }: TriageHeaderProps) {
             className="absolute inset-0 animate-grid-move"
             style={{
               backgroundImage: `
-                linear-gradient(90deg, transparent 45px, rgba(59, 130, 246, 0.3) 46px, rgba(59, 130, 246, 0.3) 51px, transparent 52px),
-                linear-gradient(0deg, transparent 45px, rgba(59, 130, 246, 0.3) 46px, rgba(59, 130, 246, 0.3) 51px, transparent 52px)
+                linear-gradient(90deg, transparent 45px, rgba(59, 130, 246, 0.33) 46px, rgba(59, 130, 246, 0.33) 51px, transparent 52px),
+                linear-gradient(0deg, transparent 45px, rgba(59, 130, 246, 0.33) 46px, rgba(59, 130, 246, 0.33) 51px, transparent 52px)
               `,
               backgroundSize: '48px 48px'
             }}
