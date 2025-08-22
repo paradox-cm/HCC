@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { NewPatientForm } from "@/components/forms/new-patient-form"
 import { ExistingPatientForm } from "@/components/forms/existing-patient-form"
 import { PrescriptionRenewalForm } from "@/components/forms/prescription-renewal-form"
-import { PreoperativeClearanceForm } from "@/components/forms/preoperative-clearance-form"
+import { ReferralForm } from "@/components/forms/referral-form"
 
 interface TriageData {
   doctor?: string
@@ -66,7 +66,7 @@ function AppointmentsPageContent() {
     }
     
     // Handle form parameter for direct form selection
-    if (form && ["new-patient", "existing-patient", "prescription", "clearance"].includes(form)) {
+    if (form && ["new-patient", "existing-patient", "prescription", "referral"].includes(form)) {
       setSelectedForm(form)
     }
   }, [searchParams])
@@ -75,7 +75,7 @@ function AppointmentsPageContent() {
     { value: "new-patient", label: "New Patient" },
     { value: "existing-patient", label: "Existing Patient" },
     { value: "prescription", label: "Prescription Renewal" },
-    { value: "clearance", label: "Pre-Op Clearance" },
+    { value: "referral", label: "Referral" },
   ]
 
   const renderForm = () => {
@@ -86,8 +86,8 @@ function AppointmentsPageContent() {
         return <ExistingPatientForm triageData={triageData} />
       case "prescription":
         return <PrescriptionRenewalForm triageData={triageData} />
-      case "clearance":
-        return <PreoperativeClearanceForm triageData={triageData} />
+      case "referral":
+        return <ReferralForm triageData={triageData} />
       default:
         return <NewPatientForm triageData={triageData} />
     }
@@ -171,8 +171,8 @@ function AppointmentsPageContent() {
                 <TabsTrigger value="prescription" className="py-2">
                   Prescription Renewal
                 </TabsTrigger>
-                <TabsTrigger value="clearance" className="py-2">
-                  Pre-Op Clearance
+                <TabsTrigger value="referral" className="py-2">
+                  Referral
                 </TabsTrigger>
               </TabsList>
             </Tabs>
