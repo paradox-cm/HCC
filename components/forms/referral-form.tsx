@@ -602,7 +602,7 @@ export function ReferralForm({ triageData }: ReferralFormProps) {
         </Button>
         <p className="text-xs text-muted-foreground">
           We will review your referral request and contact you within 1 business day to schedule your appointment. 
-          Urgent referrals will be prioritized and contacted within 4 hours during business hours.
+          Urgent referrals will be prioritized.
         </p>
       </CardFooter>
     </Card>
